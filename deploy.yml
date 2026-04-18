@@ -1,0 +1,121 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  # ── Validate ─────────────────────────────────────────────────────────────
+  validate:
+    name: Validate HTML & Links
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Check all generator scripts run without errors
+        run: |
+          python3 generate_lessons_v2.py
+          python3 generate_lessons_v3.py
+          python3 generate_lessons_v4.py
+          python3 generate_lessons_v5.py
+
+      - name: Verify all expected lesson files exist
+        run: |
+          files=(
+            "lessons/01-ml-ecosystem.html"
+            "lessons/01-numpy.html"
+            "lessons/01-pandas.html"
+            "lessons/01-eda.html"
+            "lessons/02-linear-algebra.html"
+            "lessons/02-calculus.html"
+            "lessons/02-probability.html"
+            "lessons/03-data-cleaning.html"
+            "lessons/03-preprocessing.html"
+            "lessons/03-encoding.html"
+            "lessons/03-feature-selection.html"
+            "lessons/04-regression.html"
+            "lessons/04-classification.html"
+            "lessons/04-svm.html"
+            "lessons/04-trees.html"
+            "lessons/04-ensemble.html"
+            "lessons/05-clustering.html"
+            "lessons/05-dimreduction.html"
+            "lessons/05-association.html"
+            "lessons/06-bias-variance.html"
+            "lessons/06-clf-metrics.html"
+            "lessons/06-reg-metrics.html"
+            "lessons/06-tuning.html"
+            "lessons/07-perceptron.html"
+            "lessons/07-architecture.html"
+            "lessons/07-optimization.html"
+            "lessons/07-advanced.html"
+            "lessons/08-rl-framework.html"
+            "lessons/08-algorithms.html"
+            "lessons/09-persistence.html"
+            "lessons/09-api.html"
+            "lessons/09-docker.html"
+            "lessons/09-cloud.html"
+          )
+          missing=0
+          for f in "${files[@]}"; do
+            if [ ! -f "$f" ]; then
+              echo "MISSING: $f"
+              missing=$((missing+1))
+            fi
+          done
+          if [ $missing -gt 0 ]; then
+            echo "$missing lesson file(s) missing — did you regenerate after editing?"
+            exit 1
+          fi
+          echo "All 33 lesson files present ✓"
+
+      - name: Check no 'yourusername' placeholder remains
+        run: |
+          if grep -r "yourusername" lessons/ index.html about.html 2>/dev/null; then
+            echo "ERROR: 'yourusername' placeholder found — replace with Muhammad-waqas1"
+            exit 1
+          fi
+          echo "No placeholder text found ✓"
+
+  # ── Deploy ────────────────────────────────────────────────────────────────
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: validate
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

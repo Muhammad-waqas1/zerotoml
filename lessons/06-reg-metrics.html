@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Regression Metrics | ZeroToML</title>
+  <meta name="description" content="MAE, MSE, RMSE, R², and MAPE — when to use each, with residual analysis and a full model comparison." />
+  <link rel="canonical" href="https:// Muhammad-waqas1.github.io/zerotoml/lessons/06-reg-metrics.html" />
+  <meta property="og:title" content="Regression Metrics | ZeroToML" />
+  <meta property="og:description" content="MAE, MSE, RMSE, R², and MAPE — when to use each, with residual analysis and a full model comparison." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono" style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/ Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center" style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7"/></svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center" style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/ Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+        
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list hidden">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list hidden">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list hidden">
+            <li><a href="04-regression.html" class="sidebar-lesson">4.1 Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson">4.2 Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson">4.3 Support Vector Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson">4.4 Tree-based Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson">4.5 Ensemble Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list hidden">
+            <li><a href="05-clustering.html" class="sidebar-lesson">5.1 Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson">5.2 Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson">5.3 Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson">6.1 Bias vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson">6.2 Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson active">6.3 Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson">6.4 Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list hidden">
+            <li><a href="07-perceptron.html" class="sidebar-lesson">7.1 Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson">7.2 Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson">7.3 Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson">7.4 CNNs & RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list hidden">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson">8.1 The RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson">8.2 Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson">9.1 Model Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson">9.2 Building APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson">9.3 Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson">9.4 Cloud Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+         onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')"></div>
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 06 — Model Evaluation</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Regression Metrics</span>
+        </nav>
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 06</span>
+            <span class="lesson-badge lesson-badge--intermediate">Intermediate</span>
+            <span class="lesson-badge">18 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">Regression Metrics</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">MAE, MSE, RMSE, R², and MAPE — when to use each, with residual analysis and a full model comparison.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/ Muhammad-waqas1/zerotoml/blob/main/lessons/06-reg-metrics.html" target="_blank" rel="noopener"
+               class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </header>
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="overview">Overview of Regression Metrics</h2>
+          <p>For regression, our model outputs a continuous number and we measure how far predictions are from the truth. Each metric penalises errors differently — the right choice depends on whether outliers matter, whether you need interpretability, and whether you want a normalised score.</p>
+
+          <h2 id="mae">MAE — Mean Absolute Error</h2>
+          <div class="math-block"><span class="math-label">MAE</span>$$\text{MAE} = \frac{1}{m}\sum_{i=1}^m |\hat{y}^{(i)} - y^{(i)}|$$<span class="math-caption">Average absolute error. Same units as the target. Robust to outliers (uses absolute value, not squared). Interpretable: "on average, predictions are off by X units."</span></div>
+
+          <h2 id="mse-rmse">MSE and RMSE</h2>
+          <div class="math-block"><span class="math-label">MSE and RMSE</span>$$\text{MSE} = \frac{1}{m}\sum_{i=1}^m (\hat{y}^{(i)} - y^{(i)})^2 \qquad \text{RMSE} = \sqrt{\text{MSE}}$$<span class="math-caption">MSE penalises large errors quadratically — a prediction off by 10 contributes 100× more than one off by 1. RMSE brings units back to the target scale. RMSE &gt; MAE always (unless all errors are equal).</span></div>
+
+          <h2 id="r2">R² — Coefficient of Determination</h2>
+          <div class="math-block"><span class="math-label">R² Score</span>$$R^2 = 1 - \frac{\text{SS}_{\text{res}}}{\text{SS}_{\text{tot}}} = 1 - \frac{\sum_i(y_i-\hat{y}_i)^2}{\sum_i(y_i-\bar{y})^2}$$<span class="math-caption">$R^2 = 1$: perfect fit. $R^2 = 0$: model no better than always predicting the mean. $R^2 < 0$: model is <em>worse</em> than the mean baseline. Scale-free — comparable across different datasets.</span></div>
+
+          <h2 id="mape">MAPE — Mean Absolute Percentage Error</h2>
+          <div class="math-block"><span class="math-label">MAPE</span>$$\text{MAPE} = \frac{100}{m}\sum_{i=1}^m \left|\frac{y_i - \hat{y}_i}{y_i}\right| \%$$<span class="math-caption">Scale-free, expressed as a percentage. Intuitive for business stakeholders. Breaks when $y_i \approx 0$. Use SMAPE as a more robust alternative.</span></div>
+
+          <h2 id="full-comparison">Full Metrics Comparison</h2>
+          <div class="code-block"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.metrics import (mean_absolute_error, mean_squared_error,
+                              r2_score, mean_absolute_percentage_error)
+from sklearn.datasets import fetch_california_housing
+from sklearn.ensemble import GradientBoostingRegressor, RandomForestRegressor
+from sklearn.linear_model import Ridge
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+
+data = fetch_california_housing()
+X, y = data.data, data.target
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+
+models = {
+    "Ridge":             Pipeline([("sc", StandardScaler()), ("m", Ridge())]),
+    "Random Forest":     RandomForestRegressor(n_estimators=100, random_state=42),
+    "Gradient Boosting": GradientBoostingRegressor(n_estimators=200, learning_rate=0.1, random_state=42),
+}
+
+print(f"{'Model':20s} {'MAE':>8s} {'RMSE':>8s} {'R²':>8s} {'MAPE':>8s}")
+print("-" * 60)
+for name, model in models.items():
+    model.fit(X_tr, y_tr)
+    y_pred = model.predict(X_te)
+    mae  = mean_absolute_error(y_te, y_pred)
+    rmse = np.sqrt(mean_squared_error(y_te, y_pred))
+    r2   = r2_score(y_te, y_pred)
+    mape = mean_absolute_percentage_error(y_te, y_pred) * 100
+    print(f"{name:20s} {mae:8.4f} {rmse:8.4f} {r2:8.4f} {mape:7.2f}%")</code></pre></div>
+
+          <h2 id="residual-plots">Residual Plots</h2>
+          <div class="code-block"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code class="language-python">import scipy.stats as stats
+
+gb = GradientBoostingRegressor(n_estimators=200, learning_rate=0.1, random_state=42)
+gb.fit(X_tr, y_tr)
+y_pred = gb.predict(X_te)
+residuals = y_te - y_pred
+
+fig, axes = plt.subplots(1, 3, figsize=(15, 4))
+
+# 1. Predicted vs. Actual (should hug the diagonal)
+axes[0].scatter(y_pred, y_te, alpha=0.3, s=10, color="#4a8fa8")
+lim = [min(y_pred.min(), y_te.min()), max(y_pred.max(), y_te.max())]
+axes[0].plot(lim, lim, "r--", lw=1.5)
+axes[0].set_xlabel("Predicted"); axes[0].set_ylabel("Actual")
+axes[0].set_title(f"Predicted vs. Actual  (R²={r2_score(y_te, y_pred):.4f})")
+
+# 2. Residuals vs. Fitted (should show no pattern — random scatter around 0)
+axes[1].scatter(y_pred, residuals, alpha=0.3, s=10, color="#5c8a58")
+axes[1].axhline(0, color="red", ls="--", lw=1.5)
+axes[1].set_xlabel("Fitted values"); axes[1].set_ylabel("Residuals")
+axes[1].set_title("Residuals vs. Fitted")
+
+# 3. Q-Q plot (residuals should be Gaussian)
+stats.probplot(residuals, plot=axes[2])
+axes[2].set_title("Normal Q-Q Plot")
+
+plt.tight_layout(); plt.show()</code></pre></div>
+
+          <h2 id="when-to-use">Choosing the Right Metric</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">MAE</span><span class="def-desc">When outliers are real and shouldn't dominate. Robust, interpretable in original units. Use for median prediction.</span></div>
+            <div class="def-row"><span class="def-term">RMSE</span><span class="def-desc">When large errors are especially bad. Penalises outliers more. The standard optimisation target for regression.</span></div>
+            <div class="def-row"><span class="def-term">R²</span><span class="def-desc">When you need a normalised score to compare across datasets. Intuitive: "fraction of variance explained."</span></div>
+            <div class="def-row"><span class="def-term">MAPE</span><span class="def-desc">When percentage errors are meaningful (e.g., forecasting). Avoid when target can be zero or near-zero.</span></div>
+          </div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li>MAE: average absolute error. Robust to outliers. Same units as target.</li>
+            <li>RMSE: square root of mean squared error. Penalises large errors more heavily. Most common.</li>
+            <li>R²: fraction of variance explained. Scale-free, comparable across datasets. 1.0 is perfect.</li>
+            <li>Always plot predicted vs. actual and residuals — numbers alone don't reveal patterns.</li>
+          </ul>
+        </article>
+        <nav class="prev-next-nav">
+          <a href="06-clf-metrics.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg><div class="text-left"><div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div><div class="text-sm font-serif">6.2 Classification Metrics</div></div></a>
+          <a href="06-tuning.html" class="prev-next-btn"><div class="text-right"><div class="text-xs font-mono" style="color:var(--text-dim)">Next</div><div class="text-sm font-serif">6.4 Hyperparameter Tuning</div></div><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </nav>
+      </div>
+    </main>
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150" style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono" style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs" style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed</span>
+      <a href="https://github.com/ Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

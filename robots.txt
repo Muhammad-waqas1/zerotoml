@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://Muhammad-waqas1.github.io/zerotoml/sitemap.xml

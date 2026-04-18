@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Clustering: K-Means, Hierarchical & DBSCAN | ZeroToML</title>
+  <meta name="description"
+    content="Partition, hierarchical, and density-based clustering — with elbow method, silhouette score, and dendrograms." />
+  <link rel="canonical" href="https://yourusername.github.io/zerotoml/lessons/05-clustering.html" />
+  <meta property="og:title" content="Clustering: K-Means, Hierarchical & DBSCAN | ZeroToML" />
+  <meta property="og:description"
+    content="Partition, hierarchical, and density-based clustering — with elbow method, silhouette score, and dendrograms." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
+            style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+            class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7" />
+            </svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list hidden">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list hidden">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list hidden">
+            <li><a href="04-regression.html" class="sidebar-lesson">4.1 Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson">4.2 Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson">4.3 Support Vector Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson">4.4 Tree-based Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson">4.5 Ensemble Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list">
+            <li><a href="05-clustering.html" class="sidebar-lesson active">5.1 Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson">5.2 Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson">5.3 Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list hidden">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson"  >6.1 Bias
+                vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson"  >6.2
+                Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson"  >6.3
+                Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson"  >6.4
+                Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list hidden">
+            <li><a href="07-perceptron.html" class="sidebar-lesson"  >7.1
+                Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson"  >7.2
+                Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson"  >7.3
+                Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson"  >7.4 CNNs &
+                RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list hidden">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson"  >8.1 The
+                RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson"  >8.2
+                Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson"  >9.1 Model
+                Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson"  >9.2 Building
+                APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson"  >9.3
+                Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson"  >9.4 Cloud
+                Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+      onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')">
+    </div>
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 05 — Unsupervised Learning</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Clustering: K-Means, Hierarchical & DBSCAN</span>
+        </nav>
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 05</span>
+            <span class="lesson-badge lesson-badge--intermediate">Intermediate</span>
+            <span class="lesson-badge">24 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">
+            Clustering: K-Means, Hierarchical & DBSCAN</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">Partition, hierarchical, and
+            density-based clustering — with elbow method, silhouette score, and dendrograms.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml/blob/main/lessons/05-clustering.html" target="_blank"
+              rel="noopener" class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </header>
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="what-is-clustering">What is Clustering?</h2>
+          <p>Clustering assigns data points to groups (clusters) such that points in the same cluster are more similar
+            to each other than to points in other clusters — without using any labels. It's used for customer
+            segmentation, anomaly detection, image compression, and as a preprocessing step for supervised learning.</p>
+
+          <h2 id="kmeans">K-Means Clustering</h2>
+          <p>The most widely used clustering algorithm. Iteratively assigns points to the nearest centroid and updates
+            centroids to the mean of their assigned points:</p>
+          <div class="math-block"><span class="math-label">K-Means Objective (Inertia)</span>$$J =
+            \sum_{k=1}^K\sum_{\mathbf{x}\in C_k}\|\mathbf{x}-\boldsymbol{\mu}_k\|^2$$<span class="math-caption">Minimise
+              the total within-cluster sum of squared distances to centroids. NP-hard in general, but the Lloyd's
+              heuristic converges fast in practice.</span></div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import make_blobs
+
+# Synthetic 2D clusters
+X, y_true = make_blobs(n_samples=500, centers=4, cluster_std=1.0, random_state=42)
+X = StandardScaler().fit_transform(X)
+
+# ── Elbow Method: find optimal K
+inertias, silhouettes = [], []
+from sklearn.metrics import silhouette_score
+K_range = range(2, 11)
+for k in K_range:
+    km = KMeans(n_clusters=k, init="k-means++", n_init=10, random_state=42)
+    labels = km.fit_predict(X)
+    inertias.append(km.inertia_)
+    silhouettes.append(silhouette_score(X, labels))
+
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+ax1.plot(K_range, inertias, marker="o", color="#4a8fa8")
+ax1.set_title("Elbow Method — Inertia vs. K")
+ax1.set_xlabel("Number of Clusters K"); ax1.set_ylabel("Inertia (WCSS)")
+
+ax2.plot(K_range, silhouettes, marker="o", color="#5c8a58")
+ax2.set_title("Silhouette Score vs. K")
+ax2.set_xlabel("K"); ax2.set_ylabel("Silhouette Score")
+plt.tight_layout(); plt.show()
+
+# Fit with best K (both methods agree: k=4)
+km_best = KMeans(n_clusters=4, init="k-means++", n_init=10, random_state=42)
+labels = km_best.fit_predict(X)
+
+plt.figure(figsize=(7,5))
+colors = ["#4a8fa8","#5c8a58","#b85c2a","#c4891a"]
+for k in range(4):
+    mask = labels == k
+    plt.scatter(X[mask,0], X[mask,1], c=colors[k], s=20, alpha=0.7, label=f"Cluster {k}")
+plt.scatter(km_best.cluster_centers_[:,0], km_best.cluster_centers_[:,1],
+            marker="X", s=200, c="black", zorder=5, label="Centroids")
+plt.title(f"K-Means (K=4)  Silhouette: {silhouette_score(X,labels):.3f}")
+plt.legend(); plt.tight_layout(); plt.show()</code></pre>
+          </div>
+          <div class="callout callout--warning">
+            <div class="callout-icon">⚠️</div>
+            <div><strong>K-Means limitations:</strong> assumes spherical clusters of equal size; sensitive to outliers;
+              must specify $K$ in advance; sensitive to initialisation (use <code>init="k-means++"</code> and
+              <code>n_init=10</code>). Always scale features first — K-Means uses Euclidean distance.</div>
+          </div>
+
+          <h2 id="hierarchical">Hierarchical Clustering</h2>
+          <p>Builds a tree of clusters (dendrogram) without needing to specify $K$ upfront. Two approaches:</p>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Agglomerative</span><span class="def-desc">Bottom-up. Start with
+                each point as its own cluster; repeatedly merge the two most similar clusters until one cluster remains.
+                Most common.</span></div>
+            <div class="def-row"><span class="def-term">Divisive</span><span class="def-desc">Top-down. Start with one
+                cluster; recursively split. Less common.</span></div>
+          </div>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Linkage: Single</span><span class="def-desc">Distance between
+                closest points. Creates "chaining" — elongated clusters.</span></div>
+            <div class="def-row"><span class="def-term">Linkage: Complete</span><span class="def-desc">Distance between
+                farthest points. Tends to create compact clusters.</span></div>
+            <div class="def-row"><span class="def-term">Linkage: Average</span><span class="def-desc">Average of all
+                pairwise distances. Good default.</span></div>
+            <div class="def-row"><span class="def-term">Linkage: Ward</span><span class="def-desc">Minimises variance
+                within clusters. Usually the best choice for compact, similar-sized clusters.</span></div>
+          </div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">from sklearn.cluster import AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram, linkage
+import matplotlib.pyplot as plt
+
+# Dendrogram — cut at any height to get K clusters
+Z = linkage(X[:50], method="ward")   # use small sample for visibility
+fig, ax = plt.subplots(figsize=(12, 4))
+dendrogram(Z, ax=ax, color_threshold=5.0)
+ax.set_title("Hierarchical Clustering Dendrogram (Ward linkage)")
+ax.set_xlabel("Sample index"); ax.set_ylabel("Distance")
+plt.tight_layout(); plt.show()
+
+# Cut to get 4 clusters
+agg = AgglomerativeClustering(n_clusters=4, linkage="ward")
+labels_agg = agg.fit_predict(X)
+print(f"Silhouette (Agglomerative): {silhouette_score(X, labels_agg):.4f}")</code></pre>
+          </div>
+
+          <h2 id="dbscan">DBSCAN — Density-Based Clustering</h2>
+          <p>DBSCAN discovers clusters of arbitrary shape and automatically identifies outliers — no need to specify
+            $K$.</p>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Core point</span><span class="def-desc">Has at least
+                <code>min_samples</code> points within radius $\epsilon$.</span></div>
+            <div class="def-row"><span class="def-term">Border point</span><span class="def-desc">Within $\epsilon$ of a
+                core point, but not a core point itself.</span></div>
+            <div class="def-row"><span class="def-term">Noise point</span><span class="def-desc">Not a core point and
+                not within $\epsilon$ of any core point. Label = <code>-1</code>.</span></div>
+          </div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">from sklearn.cluster import DBSCAN
+from sklearn.datasets import make_moons
+import matplotlib.pyplot as plt
+import numpy as np
+
+X_moons, _ = make_moons(n_samples=300, noise=0.08, random_state=42)
+X_moons = StandardScaler().fit_transform(X_moons)
+
+# K-Means fails on non-spherical shapes; DBSCAN handles it naturally
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+# K-Means
+km = KMeans(n_clusters=2, random_state=42)
+axes[0].scatter(X_moons[:,0], X_moons[:,1], c=km.fit_predict(X_moons),
+               cmap="RdYlGn", s=20, alpha=0.8)
+axes[0].set_title("K-Means (K=2) — fails on non-spherical data")
+
+# DBSCAN
+db = DBSCAN(eps=0.2, min_samples=5)
+labels_db = db.fit_predict(X_moons)
+n_clusters = len(set(labels_db)) - (1 if -1 in labels_db else 0)
+noise_pts  = (labels_db == -1).sum()
+axes[1].scatter(X_moons[:,0], X_moons[:,1], c=labels_db,
+               cmap="RdYlGn", s=20, alpha=0.8)
+axes[1].set_title(f"DBSCAN — {n_clusters} clusters, {noise_pts} noise points")
+
+plt.tight_layout(); plt.show()
+
+# Choosing eps: k-distance graph (use elbow of sorted distances)
+from sklearn.neighbors import NearestNeighbors
+nbrs = NearestNeighbors(n_neighbors=5).fit(X_moons)
+distances, _ = nbrs.kneighbors(X_moons)
+distances = np.sort(distances[:, -1])    # distance to 5th nearest neighbour
+plt.plot(distances, color="#4a8fa8")
+plt.title("k-Distance Graph — Elbow suggests eps value")
+plt.xlabel("Points sorted by distance"); plt.ylabel("5th NN distance")
+plt.tight_layout(); plt.show()</code></pre>
+          </div>
+
+          <h2 id="which-algorithm">Choosing a Clustering Algorithm</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">K-Means</span><span class="def-desc">Large datasets, spherical
+                clusters, known K. Very fast — $O(mKd)$ per iteration.</span></div>
+            <div class="def-row"><span class="def-term">Hierarchical</span><span class="def-desc">Unknown K, want
+                interpretable dendrogram, small-medium data. $O(m^2)$ memory.</span></div>
+            <div class="def-row"><span class="def-term">DBSCAN</span><span class="def-desc">Arbitrary-shaped clusters,
+                outlier detection, don't know K. Sensitive to $\epsilon$ and <code>min_samples</code>.</span></div>
+          </div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li>K-Means: minimise inertia. Use elbow + silhouette score to pick $K$. Always scale. Use
+              <code>k-means++</code> init.</li>
+            <li>Hierarchical: dendrogram lets you choose $K$ after training. Ward linkage is usually best.</li>
+            <li>DBSCAN: density-based, arbitrary shapes, auto-detects outliers. Tune $\epsilon$ via k-distance graph.
+            </li>
+          </ul>
+        </article>
+        <nav class="prev-next-nav">
+          <a href="04-ensemble.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <div class="text-left">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div>
+              <div class="text-sm font-serif">4.5 Ensemble Methods</div>
+            </div>
+          </a>
+          <a href="05-dimreduction.html" class="prev-next-btn">
+            <div class="text-right">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Next</div>
+              <div class="text-sm font-serif">5.2 Dimensionality Reduction</div>
+            </div><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </nav>
+      </div>
+    </main>
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150"
+              style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
+      style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
+          style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed</span>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

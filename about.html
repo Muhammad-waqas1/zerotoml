@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About ZeroToML — The Story, The Curriculum, The Ecosystem</title>
+    <meta name="description"
+        content="The full story behind ZeroToML — what it is, who built it, why it exists, and how to use it to go from zero to deployed ML engineer." />
+    <meta name="author" content="Muhammad Waqas" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://Muhammad-waqas1.github.io/zerotoml/about.html" />
+    <meta property="og:title" content="About ZeroToML" />
+    <meta property="og:description"
+        content="The full story behind ZeroToML — what it is, who built it, and how to use it." />
+    <meta property="og:image" content="https://Muhammad-waqas1.github.io/zerotoml/images/og-cover.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/svg+xml" href=" images/zerotoml.png" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+
+    <style>
+        /* About page specific prose */
+        .about-prose h2 {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: var(--text-ink);
+            margin-top: 3.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.625rem;
+            border-bottom: 1.5px solid var(--border);
+        }
+
+        .about-prose h3 {
+            font-family: var(--font-display);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-ink);
+            margin-top: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-prose p {
+            font-family: var(--font-body);
+            font-size: 1.0625rem;
+            line-height: 1.85;
+            color: var(--text-body);
+            margin-bottom: 1.2rem;
+        }
+
+        .about-prose strong {
+            color: var(--text-ink);
+        }
+
+        .about-prose a {
+            color: var(--sky);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .about-prose a:hover {
+            color: var(--sky-light);
+        }
+
+        .stat-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            border: 1.5px solid var(--border);
+            background: var(--bg-elevated);
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <a href="index.html" class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
+                        style="background:var(--sky);color:var(--bg-base)">ML</div>
+                    <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+                </a>
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="lessons/01-ml-ecosystem.html" class="nav-link">Curriculum</a>
+                    <a href="about.html" class="nav-link active">About</a>
+                    <a href="index.html#tools" class="nav-link">Tools</a>
+                    <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+                        class="nav-link">GitHub</a>
+                </div>
+                <button id="mobile-menu-btn"
+                    class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+                    style="border-color:var(--border);color:var(--text-muted)">
+                    <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                    <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+            <a href="index.html" class="mobile-nav-link">Home</a>
+            <a href="lessons/01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+            <a href="about.html" class="mobile-nav-link">About</a>
+            <a href="index.html#tools" class="mobile-nav-link">Tools</a>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+                class="mobile-nav-link">GitHub ↗</a>
+        </div>
+    </nav>
+
+    <!-- PAGE HERO -->
+    <section class="pt-32 pb-16 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-40 pointer-events-none"></div>
+        <div class="absolute top-16 left-1/2 -translate-x-1/2 w-[400px] h-[200px] rounded-full blur-3xl pointer-events-none"
+            style="background:radial-gradient(ellipse,rgba(74,143,168,0.12) 0%,transparent 70%)"></div>
+        <div class="max-w-3xl mx-auto relative">
+            <!-- Breadcrumb -->
+            <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+                <a href="index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+                <span style="color:var(--border-strong)">/</span>
+                <span style="color:var(--text-muted)">About</span>
+            </nav>
+            <p class="font-mono text-sm uppercase tracking-widest mb-4" style="color:var(--sky)">The Full Story</p>
+            <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-5" style="color:var(--text-ink)">
+                About ZeroToML
+            </h1>
+            <p class="font-serif text-xl leading-relaxed mb-8" style="color:var(--text-muted)">
+                A free, open-source machine learning education platform — from Python setup to production deployment.
+                Built by one developer, for every developer who ever wanted to learn ML properly.
+            </p>
+            <div class="flex flex-wrap gap-2">
+                <span class="stat-pill">9 Modules</span>
+                <span class="stat-pill">33 Lessons</span>
+                <span class="stat-pill">3 Companion Tools</span>
+                <span class="stat-pill">100% Free</span>
+                <span class="stat-pill">Open Source · MIT</span>
+                <span class="stat-pill">GitHub Pages</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <div class="max-w-3xl mx-auto px-4 pb-24">
+        <article class="about-prose">
+
+            <h2 id="what-is-zerotoml">What is ZeroToML?</h2>
+            <p>ZeroToML is a <strong>free, structured, end-to-end machine learning curriculum</strong> hosted on GitHub
+                Pages. It covers everything from setting up a Python environment and understanding NumPy arrays, all the
+                way to training neural networks, building production REST APIs, containerising with Docker, and
+                deploying to AWS.</p>
+            <p>It is not a course. It is not a YouTube channel. It is a <strong>self-contained reference site</strong> —
+                written the way you'd want a knowledgeable friend to explain things: direct, mathematically honest, with
+                real code that actually runs.</p>
+            <p>Every lesson follows the same structure: <strong>intuition first</strong> (what is this thing and why
+                does it exist?), <strong>mathematics second</strong> (the equations, rendered with KaTeX), and
+                <strong>code third</strong> (working Python you can copy and run immediately).</p>
+
+            <h2 id="who-built-it">Who Built It?</h2>
+            <p>ZeroToML was built by <strong>Muhammad Waqas</strong> — a self-taught developer who went through the ML
+                learning process the hard way: watching scattered YouTube videos, reading documentation that assumed too
+                much prior knowledge, and finding that "beginner" tutorials skipped the parts that actually matter.</p>
+            <p>After building several tools and going through the process of genuinely understanding ML from first
+                principles, the goal became clear: build the resource that should have existed. A single place where
+                someone with solid Python knowledge can sit down and, module by module, become a machine learning
+                practitioner — not just someone who can call <code>model.fit()</code>.</p>
+            <p>All tools built alongside ZeroToML — PyOrbit IDE, Hyperplane Hero, and the Markdown Converter — are
+                <strong>also free, open source, and hosted on GitHub Pages</strong>. The philosophy is consistent:
+                useful tools should be free and should run in the browser.</p>
+            <a href="https://github.com/Muhammad-waqas1" target="_blank" rel="noopener"
+                class="inline-flex items-center gap-2 text-sm font-mono mt-1 mb-2 not-prose" style="color:var(--sky)">
+                <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                </svg>
+                github.com/Muhammad-waqas1
+            </a>
+
+            <h2 id="the-philosophy">The Teaching Philosophy</h2>
+            <p>Most ML tutorials fall into one of two failure modes. The first is <em>hand-waving</em> — "the neural
+                network just learns!" — which leaves you unable to debug anything or understand why your model isn't
+                working. The second is <em>academic overload</em> — theorems and proofs before any context — which loses
+                most people before they see why any of it matters.</p>
+            <p>ZeroToML takes a different approach: every concept starts with a real-world question that makes you
+                <em>want</em> the answer. Then the math is introduced as the precise answer to that question. Then the
+                code shows you how to implement it. This order is intentional — by the time you read an equation, you
+                already know what it's trying to say.</p>
+            <p>The other principle is <strong>"no black boxes at the cost of understanding."</strong> We implement
+                linear regression from scratch in NumPy before ever touching scikit-learn. We write a backpropagation
+                loop in raw Python before opening Keras. We build a Q-Learning agent with a plain dictionary before
+                loading Stable-Baselines3. The goal is that when you use the abstraction, you understand exactly what
+                it's doing underneath.</p>
+
+            <h2 id="curriculum-overview">The Curriculum — All 9 Modules</h2>
+            <p>The curriculum is structured as a single continuous path. Each module's final lesson links to the first
+                lesson of the next. You can also jump directly to any module if you already have the prerequisites.</p>
+
+            <h3 id="mod-01">Module 01 — Environment & Data Foundations</h3>
+            <p>The unsung prerequisite. Before any algorithm, you need a reproducible workspace, fast numerical
+                computation, and fluency with tabular data. This module covers Conda environments, Jupyter/VS Code
+                setup, NumPy arrays and broadcasting, Pandas DataFrames and GroupBy, and a full EDA workflow with
+                Matplotlib and Seaborn — including outlier detection, missing value analysis, and correlation heatmaps.
+            </p>
+
+            <h3 id="mod-02">Module 02 — Mathematical Pillars</h3>
+            <p>The three mathematical foundations that ML is built on: <strong>linear algebra</strong> (vectors, matrix
+                multiplication, the normal equation, eigenvalues), <strong>calculus</strong> (derivatives, partial
+                derivatives, the gradient, chain rule, and gradient descent from scratch), and <strong>probability &
+                    statistics</strong> (Bayes' theorem, PDFs/CDFs, key distributions, and hypothesis testing —
+                including how to detect data drift with the KS test).</p>
+
+            <h3 id="mod-03">Module 03 — Feature Engineering</h3>
+            <p>The art that separates good models from great ones. Covers the MCAR/MAR/MNAR framework for missing data,
+                KNN imputation, data type fixes, IQR outlier clipping, the three scalers (Standard, MinMax, Robust) and
+                when to use each, the most common data leakage mistake, one-hot and target encoding with proper K-fold
+                protection, and feature selection via filter/wrapper/embedded methods plus PCA.</p>
+
+            <h3 id="mod-04">Module 04 — Supervised Learning</h3>
+            <p>The deep dive. Simple and multiple linear regression (including the normal equation derivation),
+                polynomial regression with regularisation, logistic regression and cross-entropy loss, KNN with decision
+                boundary visualisation, SVMs from hard-margin through kernels, CART decision trees (Gini impurity,
+                entropy, pruning), and ensemble methods — Random Forest, XGBoost, LightGBM, and CatBoost all benchmarked
+                side-by-side.</p>
+
+            <h3 id="mod-05">Module 05 — Unsupervised Learning</h3>
+            <p>K-Means with elbow method and silhouette scoring, hierarchical clustering with all four linkage types and
+                full dendrogram, DBSCAN with the k-distance graph trick for picking epsilon. For dimensionality
+                reduction: PCA (with scree plot and cumulative variance), t-SNE (with its limitations clearly
+                explained), and LDA as supervised dimensionality reduction. Plus Apriori and ECLAT for association rule
+                learning — support, confidence, and lift explained clearly.</p>
+
+            <h3 id="mod-06">Module 06 — Model Evaluation & Optimization</h3>
+            <p>Bias-variance decomposition with learning curves and validation curves. The confusion matrix and
+                everything derived from it: precision, recall, F1, ROC-AUC, PR-AUC. Regression metrics: MAE, MSE, RMSE,
+                R², and MAPE — with residual analysis. Hyperparameter tuning: GridSearchCV, RandomizedSearchCV with
+                continuous distributions, and Bayesian optimisation with Optuna (including parameter importance plots).
+            </p>
+
+            <h3 id="mod-07">Module 07 — Deep Learning</h3>
+            <p>Built from the ground up. Perceptron from scratch in NumPy, all activation functions with their
+                derivatives plotted. MLP architecture with Keras Sequential API, BatchNorm, Dropout, EarlyStopping.
+                Manual backpropagation through a two-layer network — every gradient derived. Five optimisers
+                benchmarked. CNNs on MNIST with two conv blocks. LSTMs and GRUs for time-series. Transfer learning with
+                frozen MobileNetV2.</p>
+
+            <h3 id="mod-08">Module 08 — Reinforcement Learning</h3>
+            <p>The RL framework: agent, environment, state, action, reward, policy, discounted return, and the Bellman
+                equation. Full tabular Q-Learning on FrozenLake — Q-table, epsilon-greedy, convergence plot. DQN from
+                scratch in TensorFlow with experience replay buffer and target network. Double DQN, Dueling DQN,
+                Prioritised Replay, and Rainbow explained. Stable-Baselines3 for production.</p>
+
+            <h3 id="mod-09">Module 09 — MLOps & Deployment</h3>
+            <p>The finish line. Saving models with Joblib + Pickle, versioning artefacts with JSON metadata. Building a
+                FastAPI service with Pydantic validation, batch endpoints, health checks, and Pytest tests. Dockerfile
+                best practices (slim base, layer order, non-root user, HEALTHCHECK), Docker Compose for multi-service
+                setup, pushing to ECR. Deploying to Streamlit Community Cloud, Render, and AWS (EC2/ECS/Lambda). GitHub
+                Actions CI/CD — test → build → push → deploy on every commit.</p>
+
+            <h2 id="companion-tools">Companion Tools</h2>
+            <p>Three tools were built alongside the curriculum. They are all standalone — you don't need ZeroToML to use
+                them — but they integrate naturally with the learning path.</p>
+
+            <h3 id="pyorbit">PyOrbit IDE — Run the Lesson Code Instantly</h3>
+            <p><a href="https://Muhammad-waqas1.github.io/pyorbit-ide" target="_blank" rel="noopener">PyOrbit</a> is a
+                zero-backend Python Data Science IDE that runs entirely in your browser via Pyodide WebAssembly. NumPy,
+                Pandas, and Matplotlib are pre-loaded. You can paste any code snippet from any ZeroToML lesson and
+                execute it without installing anything. Features include the Monaco Editor (VS Code's engine) with a
+                custom dark theme, inline Matplotlib visualisations, an on-demand package installer for any
+                <code>micropip</code>-compatible library, six built-in code snippets, resizable panels, and
+                <code>Ctrl+Enter</code> to run.</p>
+            <p><strong>How to use with ZeroToML:</strong> Open PyOrbit in a second browser tab. As you read a lesson,
+                copy any code block into the editor and run it. Change the parameters. Break it on purpose and read the
+                error. This active experimentation is the difference between reading about ML and actually learning it.
+            </p>
+
+            <h3 id="hyperplane-hero">Hyperplane Hero — Master SVMs Through Play</h3>
+            <p><a href="https://Muhammad-waqas1.github.io/hyperplane-hero" target="_blank" rel="noopener">Hyperplane
+                    Hero</a> is a browser-based game that teaches Support Vector Machines through direct manipulation.
+                You drag a glowing hyperplane across a 2D feature space, rotate it to separate red and blue data points,
+                and maximise the margin. Five levels, each teaching a new SVM concept: linear hyperplanes and maximum
+                margin, support vectors, the RBF kernel for circular data, polynomial kernels for curved boundaries, and
+                soft margins with the hyperparameter C.</p>
+            <p><strong>How to use with ZeroToML:</strong> Read <a href="lessons/04-svm.html">Lesson 4.3 — Support Vector
+                    Machines</a> first. Then play Hyperplane Hero. The game will make the math you just read feel
+                tangible — you'll physically feel why the margin matters and what kernels are actually doing.</p>
+
+            <h3 id="markdown-converter">Rich Text → Markdown Converter — For Taking Notes</h3>
+            <p><a href="https://Muhammad-waqas1.github.io/rich-text-markdown-converter" target="_blank"
+                    rel="noopener">The Markdown Converter</a> is a privacy-first browser tool that converts rich text
+                and HTML to clean Markdown instantly. Full formatting support — headers, bold, italic, lists, links,
+                tables, and code blocks. Everything processes locally in your browser; nothing is sent to any server. It
+                works offline once loaded.</p>
+            <p><strong>How to use with ZeroToML:</strong> Take notes in any rich text editor or paste copied content
+                from the web, then convert to clean Markdown to keep in your personal notes repo. It's also useful for
+                converting HTML documentation or rich-text ML reports to Markdown for GitHub READMEs.</p>
+
+            <h2 id="tech-stack">Technical Stack</h2>
+            <p>ZeroToML is intentionally built with the smallest possible dependency footprint — no build tools, no
+                bundlers, no frameworks. The entire site is static HTML, CSS, and vanilla JavaScript that deploys
+                directly to GitHub Pages.</p>
+
+            <div class="not-prose my-8">
+                <div class="def-list">
+                    <div class="def-row"><span class="def-term">HTML / CSS / JS</span><span class="def-desc">Pure
+                            vanilla stack. No React, no Vue, no build step. Every file is readable and editable
+                            directly.</span></div>
+                    <div class="def-row"><span class="def-term">Tailwind CSS</span><span class="def-desc">Loaded via CDN
+                            for utility classes. The custom earthy-sky-coder theme is entirely in
+                            <code>assets/css/main.css</code> via CSS custom properties.</span></div>
+                    <div class="def-row"><span class="def-term">KaTeX</span><span class="def-desc">Client-side LaTeX
+                            rendering for all mathematical equations. Loaded via CDN, renders on page load.</span></div>
+                    <div class="def-row"><span class="def-term">Prism.js</span><span class="def-desc">Syntax
+                            highlighting for Python and Bash code blocks. Uses the Tomorrow Night theme on dark code
+                            panels.</span></div>
+                    <div class="def-row"><span class="def-term">Google Fonts</span><span class="def-desc">Lora (display
+                            headings) + Source Serif 4 (body text) + JetBrains Mono (code, labels, badges).</span></div>
+                    <div class="def-row"><span class="def-term">GitHub Pages</span><span class="def-desc">Free static
+                            hosting. Deployed automatically from the <code>main</code> branch. Custom domain
+                            compatible.</span></div>
+                    <div class="def-row"><span class="def-term">Python generator</span><span class="def-desc">All lesson
+                            pages are generated from Python scripts (<code>generate_lessons_v2.py</code> through
+                            <code>v5.py</code>). Edit content strings, re-run, pages update.</span></div>
+                </div>
+            </div>
+
+            <h2 id="design">Design — The Earthy Sky Coder Theme</h2>
+            <p>The visual design is called the <strong>Earthy Sky Coder</strong> theme — a permanent single theme (no
+                dark/light toggle). The palette is built around warm parchment backgrounds (<code>#f0e9dc</code>), sky
+                blue primary accents (<code>#4a8fa8</code>), sage green secondary accents (<code>#5c8a58</code>),
+                terracotta warning tones (<code>#b85c2a</code>), and night-sky code blocks (<code>#1c1812</code>). The
+                contrast is warm and easy to read for long study sessions.</p>
+            <p>All design tokens are CSS custom properties defined in <code>assets/css/main.css</code>. The three-column
+                layout on lesson pages (curriculum sidebar + main content + table of contents) collapses cleanly on
+                smaller screens — the sidebar becomes a slide-in overlay on tablet and the ToC hides below 1280px.</p>
+
+            <h2 id="how-to-contribute">How to Contribute</h2>
+            <p>ZeroToML is fully open source under the MIT license. Contributions are welcome and genuinely appreciated.
+                The easiest way to contribute is to add a lesson or fix an error in an existing one.</p>
+            <p>Each lesson is a Python string in one of the generator scripts (<code>generate_lessons_v2.py</code>
+                through <code>v5.py</code>). You edit the string, run the script, and the HTML page is regenerated. No
+                frontend build step required.</p>
+            <p>If you find a mathematical error, an incorrect code snippet, a broken link, or a concept that could be
+                explained more clearly — <a href="https://github.com/Muhammad-waqas1/zerotoml/issues" target="_blank"
+                    rel="noopener">open an issue</a> or <a href="https://github.com/Muhammad-waqas1/zerotoml"
+                    target="_blank" rel="noopener">submit a pull request</a>. Every correction matters.</p>
+
+            <h2 id="get-started">Get Started</h2>
+            <p>The curriculum is designed to be read in order, but each module is also self-contained enough to jump to
+                if you have the prerequisites. Here are three entry points depending on where you are:</p>
+
+        </article>
+
+        <!-- Entry point cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-2 mb-12">
+            <a href="lessons/01-ml-ecosystem.html" class="module-card group block">
+                <div class="module-number">01</div>
+                <div class="flex-1">
+                    <h4 class="font-display font-bold mb-1 group-hover:text-[var(--sky)] transition-colors text-sm"
+                        style="color:var(--text-ink)">Complete Beginner</h4>
+                    <p class="text-xs font-serif" style="color:var(--text-muted)">Start at Module 01 — setup Python,
+                        learn NumPy and Pandas, then follow the path in order.</p>
+                </div>
+            </a>
+            <a href="lessons/04-regression.html" class="module-card group block">
+                <div class="module-number">04</div>
+                <div class="flex-1">
+                    <h4 class="font-display font-bold mb-1 group-hover:text-[var(--sky)] transition-colors text-sm"
+                        style="color:var(--text-ink)">Know Python & Math</h4>
+                    <p class="text-xs font-serif" style="color:var(--text-muted)">Jump to Module 04 — supervised
+                        learning. You'll cover the algorithms that power most production ML.</p>
+                </div>
+            </a>
+            <a href="lessons/09-persistence.html" class="module-card group block">
+                <div class="module-number">09</div>
+                <div class="flex-1">
+                    <h4 class="font-display font-bold mb-1 group-hover:text-[var(--sky)] transition-colors text-sm"
+                        style="color:var(--text-ink)">Know ML Already</h4>
+                    <p class="text-xs font-serif" style="color:var(--text-muted)">Jump to Module 09 — MLOps. Learn to
+                        package, deploy, and monitor models in production.</p>
+                </div>
+            </a>
+        </div>
+
+        <div class="flex flex-col sm:flex-row gap-4">
+            <a href="lessons/01-ml-ecosystem.html" class="btn-primary">
+                Start Learning Now
+                <svg class="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                </svg>
+            </a>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="btn-secondary">
+                <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path
+                        d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                </svg>
+                Star on GitHub ↗
+            </a>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t py-10 px-4 mt-4" style="border-color:var(--border);background:var(--bg-surface)">
+        <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
+            style="color:var(--text-dim)">
+            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
+                    style="background:var(--sky);color:var(--bg-base)">ML</div>
+                ZeroToML
+            </a>
+            <span>© 2025 ZeroToML — MIT Licensed · <a href="https://github.com/Muhammad-waqas1" target="_blank"
+                    rel="noopener" class="hover:text-[var(--sky)] transition-colors">Muhammad Waqas</a></span>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+                class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+        </div>
+    </footer>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>

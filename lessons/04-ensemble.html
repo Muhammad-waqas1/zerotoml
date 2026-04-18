@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ensemble Methods | ZeroToML</title>
+  <meta name="description"
+    content="Bagging vs. Boosting — Random Forest, XGBoost, LightGBM, and CatBoost with early stopping and hyperparameter tuning." />
+  <link rel="canonical" href="https://yourusername.github.io/zerotoml/lessons/04-ensemble.html" />
+  <meta property="og:title" content="Ensemble Methods | ZeroToML" />
+  <meta property="og:description"
+    content="Bagging vs. Boosting — Random Forest, XGBoost, LightGBM, and CatBoost with early stopping and hyperparameter tuning." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
+            style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+            class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7" />
+            </svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list hidden">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list hidden">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list">
+            <li><a href="04-regression.html" class="sidebar-lesson">4.1 Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson">4.2 Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson">4.3 Support Vector Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson">4.4 Tree-based Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson active">4.5 Ensemble Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list hidden">
+            <li><a href="05-clustering.html" class="sidebar-lesson">5.1 Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson">5.2 Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson">5.3 Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list hidden">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson"  >6.1 Bias
+                vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson"  >6.2
+                Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson"  >6.3
+                Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson"  >6.4
+                Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list hidden">
+            <li><a href="07-perceptron.html" class="sidebar-lesson"  >7.1
+                Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson"  >7.2
+                Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson"  >7.3
+                Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson"  >7.4 CNNs &
+                RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list hidden">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson"  >8.1 The
+                RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson"  >8.2
+                Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson"  >9.1 Model
+                Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson"  >9.2 Building
+                APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson"  >9.3
+                Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson"  >9.4 Cloud
+                Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+      onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')">
+    </div>
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 04 — Supervised Learning</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Ensemble Methods</span>
+        </nav>
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 04</span>
+            <span class="lesson-badge lesson-badge--intermediate">Intermediate</span>
+            <span class="lesson-badge">26 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">
+            Ensemble Methods</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">Bagging vs. Boosting — Random
+            Forest, XGBoost, LightGBM, and CatBoost with early stopping and hyperparameter tuning.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml/blob/main/lessons/04-ensemble.html" target="_blank"
+              rel="noopener" class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </header>
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="why-ensemble">The Wisdom of Crowds</h2>
+          <p>A single decision tree is high-variance — small changes in training data produce wildly different trees.
+            Ensemble methods combine many weak learners into one strong learner. Two fundamentally different strategies
+            exist: <strong>Bagging</strong> (parallel, reduces variance) and <strong>Boosting</strong> (sequential,
+            reduces bias).</p>
+
+          <h2 id="bagging">Bagging — Bootstrap Aggregating</h2>
+          <p>Train $T$ models on different <strong>bootstrap samples</strong> (random sampling with replacement) of the
+            training data. Average predictions for regression; majority vote for classification.</p>
+          <div class="math-block"><span class="math-label">Variance Reduction via
+              Averaging</span>$$\text{Var}\!\left(\frac{1}{T}\sum_{t=1}^T h_t\right) = \frac{\rho\sigma^2 +
+            (1-\rho)\sigma^2/T}{1} \xrightarrow{T\to\infty} \rho\sigma^2$$<span class="math-caption">$\rho$: correlation
+              between trees. $\sigma^2$: individual tree variance. More trees + less correlation = lower ensemble
+              variance. Bias stays constant.</span></div>
+
+          <h2 id="random-forest">Random Forest</h2>
+          <p>Bagging + one extra trick: at each split, only a <strong>random subset of $\sqrt{n}$ features</strong> is
+            considered. This de-correlates the trees ($\rho$ decreases), reducing ensemble variance further.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">from sklearn.ensemble import RandomForestClassifier
+from sklearn.datasets import make_classification
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.metrics import classification_report
+import pandas as pd, numpy as np, matplotlib.pyplot as plt
+
+X, y = make_classification(n_samples=2000, n_features=20, n_informative=12,
+                            n_redundant=4, random_state=42)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, stratify=y)
+
+rf = RandomForestClassifier(
+    n_estimators=200,        # number of trees
+    max_features="sqrt",     # features per split: sqrt(n) for classification
+    max_depth=None,          # grow full trees (RF controls variance via averaging)
+    min_samples_leaf=1,
+    bootstrap=True,          # use bootstrap samples (default)
+    oob_score=True,          # free validation on out-of-bag samples
+    n_jobs=-1,
+    random_state=42,
+)
+rf.fit(X_train, y_train)
+print(f"OOB score:  {rf.oob_score_:.4f}")    # Free, unbiased estimate of test accuracy
+print(f"Test score: {rf.score(X_test, y_test):.4f}")
+print(classification_report(y_test, rf.predict(X_test)))
+
+# Feature importance
+feat_imp = pd.Series(rf.feature_importances_,
+                     index=[f"feat_{i}" for i in range(20)]).sort_values(ascending=False)
+feat_imp.head(10).sort_values().plot.barh(color="#5c8a58", figsize=(8,5))
+plt.title("Random Forest Feature Importance (top 10)")
+plt.xlabel("Mean Decrease in Impurity"); plt.tight_layout(); plt.show()</code></pre>
+          </div>
+
+          <h2 id="boosting">Boosting — Sequential Error Correction</h2>
+          <p>Build models sequentially. Each new model focuses on examples the previous ensemble got wrong. This
+            directly targets and reduces <strong>bias</strong>.</p>
+
+          <h2 id="xgboost">XGBoost — Extreme Gradient Boosting</h2>
+          <p>The algorithm that dominated Kaggle tabular competitions for years. It fits each new tree to the
+            <em>negative gradient</em> of the loss (pseudo-residuals), with regularisation terms on the tree structure
+            itself:</p>
+          <div class="math-block"><span class="math-label">XGBoost Objective</span>$$\mathcal{L}^{(t)} = \sum_i
+            l(y_i,\hat{y}_i^{(t-1)}+f_t(\mathbf{x}_i)) + \Omega(f_t) \qquad \Omega(f)=\gamma T +
+            \frac{1}{2}\lambda\|\mathbf{w}\|^2$$<span class="math-caption">$T$: number of leaves. $\gamma$: minimum gain
+              to make a split. $\lambda$: L2 regularisation on leaf weights. Both are tunable.</span></div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import xgboost as xgb
+import lightgbm as lgb
+from catboost import CatBoostClassifier
+from sklearn.model_selection import cross_val_score
+import numpy as np
+
+# ── XGBoost
+xgb_model = xgb.XGBClassifier(
+    n_estimators=300,
+    learning_rate=0.05,    # shrinkage: smaller = more trees needed, less overfitting
+    max_depth=5,
+    subsample=0.8,         # row subsampling per tree (like bagging)
+    colsample_bytree=0.8,  # feature subsampling per tree (like Random Forest)
+    reg_alpha=0.1,         # L1 regularisation on leaf weights
+    reg_lambda=1.0,        # L2 regularisation on leaf weights
+    use_label_encoder=False,
+    eval_metric="logloss",
+    random_state=42,
+    n_jobs=-1,
+)
+
+# ── LightGBM — faster, handles categorical natively, leaf-wise splitting
+lgb_model = lgb.LGBMClassifier(
+    n_estimators=300,
+    learning_rate=0.05,
+    num_leaves=31,         # controls complexity (not max_depth). Rule of thumb: 2^max_depth/2
+    min_child_samples=20,  # regularisation
+    colsample_bytree=0.8,
+    subsample=0.8,
+    random_state=42,
+    n_jobs=-1,
+    verbose=-1,
+)
+
+# ── CatBoost — handles categoricals natively, great default settings
+cat_model = CatBoostClassifier(
+    iterations=300,
+    learning_rate=0.05,
+    depth=6,
+    random_seed=42,
+    verbose=0,
+)
+
+for name, model in [("XGBoost", xgb_model), ("LightGBM", lgb_model), ("CatBoost", cat_model)]:
+    cv = cross_val_score(model, X, y, cv=5, scoring="roc_auc", n_jobs=-1)
+    print(f"{name:10s}  AUC: {cv.mean():.4f} ± {cv.std():.4f}")</code></pre>
+          </div>
+
+          <h2 id="early-stopping">Early Stopping</h2>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">from sklearn.model_selection import train_test_split
+
+X_tr, X_val, y_tr, y_val = train_test_split(X_train, y_train, test_size=0.1)
+
+xgb_es = xgb.XGBClassifier(n_estimators=1000, learning_rate=0.05, max_depth=5,
+                             eval_metric="auc", random_state=42)
+xgb_es.fit(X_tr, y_tr,
+           eval_set=[(X_val, y_val)],
+           early_stopping_rounds=30,   # stop if no improvement for 30 rounds
+           verbose=100)
+print(f"Best iteration: {xgb_es.best_iteration}")</code></pre>
+          </div>
+
+          <h2 id="rf-vs-boosting">Random Forest vs. Gradient Boosting</h2>
+          <div class="comparison-grid">
+            <div class="comparison-col">
+              <h4 class="text-xs font-mono uppercase tracking-wider mb-2" style="color:var(--text-muted)">Random Forest
+              </h4>
+              <ul class="lesson-list">
+                <li>Parallel training — fast on multi-core.</li>
+                <li>Very few hyperparameters to tune. Robust defaults.</li>
+                <li>Handles noisy data well (averaging).</li>
+                <li>Good default for quick baselines.</li>
+              </ul>
+            </div>
+            <div class="comparison-col">
+              <h4 class="text-xs font-mono uppercase tracking-wider mb-2" style="color:var(--text-muted)">Gradient
+                Boosting (XGB/LGB)</h4>
+              <ul class="lesson-list">
+                <li>Sequential — slower to train.</li>
+                <li>More hyperparameters; needs careful tuning.</li>
+                <li>Better peak performance on tabular data.</li>
+                <li>State-of-the-art for most Kaggle tabular tasks.</li>
+              </ul>
+            </div>
+          </div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li><strong>Bagging</strong>: parallel training on bootstrap samples → reduces variance. Random Forest adds
+              feature subsampling to de-correlate trees further.</li>
+            <li><strong>Gradient Boosting</strong>: sequential residual fitting → reduces bias. XGBoost adds
+              regularisation on tree structure itself.</li>
+            <li>LightGBM: leaf-wise splitting, faster training. CatBoost: native categoricals, great defaults.</li>
+            <li>Always use <strong>early stopping</strong> with a validation set for boosting models.</li>
+          </ul>
+        </article>
+        <nav class="prev-next-nav">
+          <a href="04-trees.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <div class="text-left">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div>
+              <div class="text-sm font-serif">4.4 Tree-based Models</div>
+            </div>
+          </a>
+          <a href="05-clustering.html" class="prev-next-btn">
+            <div class="text-right">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Next</div>
+              <div class="text-sm font-serif">5.1 Clustering</div>
+            </div><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </nav>
+      </div>
+    </main>
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150"
+              style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
+      style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
+          style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed</span>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

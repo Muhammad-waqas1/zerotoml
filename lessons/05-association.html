@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Association Rule Learning | ZeroToML</title>
+  <meta name="description"
+    content="Apriori and ECLAT algorithms — support, confidence, and lift for market basket analysis and recommendation systems." />
+  <link rel="canonical" href="https://yourusername.github.io/zerotoml/lessons/05-association.html" />
+  <meta property="og:title" content="Association Rule Learning | ZeroToML" />
+  <meta property="og:description"
+    content="Apriori and ECLAT algorithms — support, confidence, and lift for market basket analysis and recommendation systems." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
+            style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+            class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7" />
+            </svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list hidden">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list hidden">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list hidden">
+            <li><a href="04-regression.html" class="sidebar-lesson">4.1 Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson">4.2 Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson">4.3 Support Vector Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson">4.4 Tree-based Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson">4.5 Ensemble Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list">
+            <li><a href="05-clustering.html" class="sidebar-lesson">5.1 Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson">5.2 Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson active">5.3 Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list hidden">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson"  >6.1 Bias
+                vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson"  >6.2
+                Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson"  >6.3
+                Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson"  >6.4
+                Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list hidden">
+            <li><a href="07-perceptron.html" class="sidebar-lesson"  >7.1
+                Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson"  >7.2
+                Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson"  >7.3
+                Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson"  >7.4 CNNs &
+                RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list hidden">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson"  >8.1 The
+                RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson"  >8.2
+                Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson"  >9.1 Model
+                Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson"  >9.2 Building
+                APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson"  >9.3
+                Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson"  >9.4 Cloud
+                Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+      onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')">
+    </div>
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 05 — Unsupervised Learning</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Association Rule Learning</span>
+        </nav>
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 05</span>
+            <span class="lesson-badge lesson-badge--intermediate">Intermediate</span>
+            <span class="lesson-badge">20 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">
+            Association Rule Learning</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">Apriori and ECLAT algorithms —
+            support, confidence, and lift for market basket analysis and recommendation systems.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml/blob/main/lessons/05-association.html" target="_blank"
+              rel="noopener" class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </header>
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="what-is-arl">Association Rule Learning</h2>
+          <p>Association rule learning mines <strong>frequent co-occurrence patterns</strong> in transactional data:
+            "customers who bought X also bought Y". It's the backbone of market basket analysis, recommendation systems,
+            and cross-selling strategies.</p>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Itemset</span><span class="def-desc">Any subset of items. E.g.,
+                {bread, butter, milk}.</span></div>
+            <div class="def-row"><span class="def-term">Transaction</span><span class="def-desc">One purchase/session.
+                E.g., the set of items a customer bought in a single visit.</span></div>
+            <div class="def-row"><span class="def-term">Rule</span><span class="def-desc">$X \Rightarrow Y$: if $X$
+                appears in a transaction, $Y$ tends to also appear.</span></div>
+          </div>
+
+          <h2 id="metrics">The Three Core Metrics</h2>
+          <div class="math-block"><span class="math-label">Support, Confidence, Lift</span>$$\text{Support}(X) =
+            \frac{|\{t : X\subseteq t\}|}{|T|} \qquad \text{Confidence}(X\Rightarrow Y) = \frac{\text{Support}(X\cup
+            Y)}{\text{Support}(X)}$$$$\text{Lift}(X\Rightarrow Y) = \frac{\text{Confidence}(X\Rightarrow
+            Y)}{\text{Support}(Y)}$$<span class="math-caption">Lift &gt; 1: $X$ and $Y$ co-occur more than by chance.
+              Lift = 1: independent. Lift &lt; 1: anti-correlated.</span></div>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Support</span><span class="def-desc">How often does the itemset
+                appear? Low support → ignore (too rare to be actionable).</span></div>
+            <div class="def-row"><span class="def-term">Confidence</span><span class="def-desc">Given $X$, how often is
+                $Y$ also present? High confidence but low lift → $Y$ is just popular (a useless rule).</span></div>
+            <div class="def-row"><span class="def-term">Lift</span><span class="def-desc">The most important metric.
+                Measures how much more likely $Y$ is given $X$, compared to its base rate. Always use lift, not just
+                confidence.</span></div>
+          </div>
+
+          <h2 id="apriori">The Apriori Algorithm</h2>
+          <p>Apriori exploits the <strong>Apriori property</strong>: if an itemset is infrequent, all its supersets are
+            also infrequent. This prunes the exponential search space drastically.</p>
+          <ol class="lesson-list">
+            <li>Find all frequent 1-itemsets (items with support ≥ min_support).</li>
+            <li>Generate candidate 2-itemsets from frequent 1-itemsets; prune those with infrequent subsets.</li>
+            <li>Count support of surviving candidates; keep frequent ones.</li>
+            <li>Repeat until no new frequent itemsets are found.</li>
+            <li>Generate rules from all frequent itemsets; filter by min_confidence and min_lift.</li>
+          </ol>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python"># pip install mlxtend
+import pandas as pd
+from mlxtend.frequent_patterns import apriori, association_rules
+from mlxtend.preprocessing import TransactionEncoder
+
+# Simulated grocery transactions
+dataset = [
+    ["milk",  "bread",  "butter", "eggs"],
+    ["milk",  "bread",  "diapers","beer", "cola"],
+    ["milk",  "bread",  "butter"],
+    ["eggs",  "diapers","beer",   "cola"],
+    ["bread", "butter", "eggs",   "milk"],
+    ["beer",  "cola",   "diapers"],
+    ["milk",  "bread",  "butter", "diapers"],
+    ["bread", "eggs",   "milk"],
+    ["diapers","beer",  "cola",   "bread"],
+    ["milk",  "eggs",   "bread"],
+]
+
+# Encode to one-hot
+te = TransactionEncoder()
+X  = pd.DataFrame(te.fit_transform(dataset), columns=te.columns_)
+print("One-hot encoded transactions:")
+print(X.astype(int).to_string()); print()
+
+# Mine frequent itemsets
+frequent = apriori(X, min_support=0.3, use_colnames=True)
+frequent["length"] = frequent["itemsets"].apply(len)
+print(f"Found {len(frequent)} frequent itemsets (min_support=0.30)")
+print(frequent.sort_values("support", ascending=False).head(10))
+
+# Generate association rules
+rules = association_rules(frequent, metric="lift", min_threshold=1.0)
+rules = rules.sort_values("lift", ascending=False)
+print(f"
+Total rules (lift ≥ 1.0): {len(rules)}")
+print(rules[["antecedents","consequents","support","confidence","lift"]].head(8).to_string())</code></pre>
+          </div>
+
+          <h2 id="eclat">ECLAT Algorithm</h2>
+          <p>ECLAT (Equivalence CLAss Transformation) uses a <strong>vertical data format</strong> — for each item,
+            store the set of transaction IDs (tidset) containing it. Support is computed by set intersection size, which
+            is faster than scanning the database repeatedly.</p>
+          <div class="comparison-grid">
+            <div class="comparison-col">
+              <h4 class="text-xs font-mono uppercase tracking-wider mb-2" style="color:var(--text-muted)">Apriori</h4>
+              <ul class="lesson-list">
+                <li>Horizontal format: scan database at each pass.</li>
+                <li>Easy to understand and implement.</li>
+                <li>Multiple database scans (one per itemset size).</li>
+                <li>Better when database is very large but items are few.</li>
+              </ul>
+            </div>
+            <div class="comparison-col">
+              <h4 class="text-xs font-mono uppercase tracking-wider mb-2" style="color:var(--text-muted)">ECLAT</h4>
+              <ul class="lesson-list">
+                <li>Vertical format: tidsets per item.</li>
+                <li>Support = intersection of tidsets. Fewer database scans.</li>
+                <li>Faster for dense datasets.</li>
+                <li>High memory usage (stores all tidsets).</li>
+              </ul>
+            </div>
+          </div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">def eclat(transactions, min_support=0.3):
+    n = len(transactions)
+    # Build vertical representation: item -> set of transaction IDs
+    tidsets = {}
+    for tid, trans in enumerate(transactions):
+        for item in trans:
+            tidsets.setdefault(frozenset([item]), set()).add(tid)
+
+    # Filter by min_support
+    frequent = {k: v for k, v in tidsets.items()
+                if len(v)/n >= min_support}
+
+    result = dict(frequent)
+
+    # Generate 2-itemsets and beyond
+    items = list(frequent.keys())
+    for i, item1 in enumerate(items):
+        for item2 in items[i+1:]:
+            candidate = item1 | item2
+            if len(candidate) > len(item1):    # avoid duplicates
+                tidset = frequent[item1] & tidsets.get(frozenset([list(item2)[0]]), set())
+                if len(tidset)/n >= min_support:
+                    result[candidate] = tidset
+                    frequent[candidate] = tidset
+
+    return {frozenset(k): len(v)/n for k, v in result.items()}
+
+eclat_results = eclat(dataset, min_support=0.3)
+for itemset, support in sorted(eclat_results.items(), key=lambda x: -x[1])[:8]:
+    print(f"  {set(itemset)!s:40s} support={support:.2f}")</code></pre>
+          </div>
+
+          <h2 id="real-world">Real-World Applications</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Retail</span><span class="def-desc">Market basket analysis →
+                cross-selling, store layout optimisation, product bundling.</span></div>
+            <div class="def-row"><span class="def-term">E-commerce</span><span class="def-desc">"Customers also bought…"
+                recommendations. Pairs well with collaborative filtering.</span></div>
+            <div class="def-row"><span class="def-term">Medicine</span><span class="def-desc">Drug co-prescription
+                patterns, symptom co-occurrence, adverse event mining.</span></div>
+            <div class="def-row"><span class="def-term">Web analytics</span><span class="def-desc">Page navigation
+                patterns, click-stream analysis, content recommendations.</span></div>
+          </div>
+          <div class="callout callout--tip">
+            <div class="callout-icon">🌿</div>
+            <div><strong>Practical tuning guide:</strong> Start with <code>min_support=0.05–0.1</code> for retail data
+              (most items are rare). Filter rules by <code>lift &gt; 1.2</code> as a minimum, and
+              <code>confidence &gt; 0.5</code>. Too many rules → raise thresholds. No rules → lower them. Always inspect
+              the top 20 rules by lift with a domain expert before deployment.</div>
+          </div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li><strong>Support</strong>: frequency of an itemset. <strong>Confidence</strong>: conditional probability
+              $P(Y|X)$. <strong>Lift</strong>: how much more than chance — always report lift.</li>
+            <li>Apriori: horizontal format, prunes using Apriori property. Classic and easy.</li>
+            <li>ECLAT: vertical format, set intersection for support. Faster for dense datasets.</li>
+            <li>Lift &gt; 1 = useful rule. Lift = 1 = independence. Lift &lt; 1 = anti-association.</li>
+          </ul>
+        </article>
+        <nav class="prev-next-nav">
+          <a href="05-dimreduction.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <div class="text-left">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div>
+              <div class="text-sm font-serif">5.2 Dimensionality Reduction</div>
+            </div>
+          </a>
+          <a class="prev-next-btn prev-next-btn--disabled" href="#">
+            <div class="text-right">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Next</div>
+              <div class="text-sm">—</div>
+            </div><svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </nav>
+      </div>
+    </main>
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150"
+              style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete
+          </p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
+      style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
+          style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed</span>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

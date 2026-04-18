@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Backprop & Optimization | ZeroToML</title>
+  <meta name="description" content="Manual backpropagation from scratch, SGD vs. Adam, learning rate scheduling, and optimiser comparison." />
+  <link rel="canonical" href="https:// Muhammad-waqas1.github.io/zerotoml/lessons/07-optimization.html" />
+  <meta property="og:title" content="Backprop & Optimization | ZeroToML" />
+  <meta property="og:description" content="Manual backpropagation from scratch, SGD vs. Adam, learning rate scheduling, and optimiser comparison." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono" style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/ Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center" style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7"/></svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center" style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/ Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+        
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list hidden">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list hidden">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list hidden">
+            <li><a href="04-regression.html" class="sidebar-lesson">4.1 Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson">4.2 Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson">4.3 Support Vector Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson">4.4 Tree-based Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson">4.5 Ensemble Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list hidden">
+            <li><a href="05-clustering.html" class="sidebar-lesson">5.1 Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson">5.2 Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson">5.3 Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list hidden">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson">6.1 Bias vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson">6.2 Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson">6.3 Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson">6.4 Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list">
+            <li><a href="07-perceptron.html" class="sidebar-lesson">7.1 Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson">7.2 Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson active">7.3 Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson">7.4 CNNs & RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list hidden">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson">8.1 The RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson">8.2 Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson">9.1 Model Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson">9.2 Building APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson">9.3 Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson">9.4 Cloud Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+         onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')"></div>
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 07 — Deep Learning</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Backprop & Optimization</span>
+        </nav>
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 07</span>
+            <span class="lesson-badge lesson-badge--intermediate">Intermediate</span>
+            <span class="lesson-badge">24 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">Backprop & Optimization</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">Manual backpropagation from scratch, SGD vs. Adam, learning rate scheduling, and optimiser comparison.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/ Muhammad-waqas1/zerotoml/blob/main/lessons/07-optimization.html" target="_blank" rel="noopener"
+               class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </header>
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="backprop">Backpropagation</h2>
+          <p>Backpropagation is the algorithm that computes gradients of the loss with respect to every parameter in the network. It's not magic — it's the <strong>chain rule of calculus</strong> applied systematically from the output layer back to the input layer.</p>
+          <div class="math-block"><span class="math-label">Chain Rule Through Layers</span>$$\frac{\partial L}{\partial \mathbf{W}^{[l]}} = \frac{\partial L}{\partial \mathbf{A}^{[l]}} \cdot \frac{\partial \mathbf{A}^{[l]}}{\partial \mathbf{Z}^{[l]}} \cdot \frac{\partial \mathbf{Z}^{[l]}}{\partial \mathbf{W}^{[l]}}$$<span class="math-caption">Each factor is a local gradient. Forward pass stores intermediate values; backward pass multiplies them from right to left. No new calculus needed — just systematic bookkeeping.</span></div>
+          <div class="code-block"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code class="language-python">import numpy as np
+
+# Manual backprop through a 2-layer network: X -> Dense(4, ReLU) -> Dense(1, Sigmoid) -> BCE
+np.random.seed(42)
+n, d = 100, 5
+X = np.random.randn(n, d)
+y = (np.random.randn(n) > 0).astype(float)
+
+# He initialisation
+W1 = np.random.randn(d, 4) * np.sqrt(2 / d)
+b1 = np.zeros(4)
+W2 = np.random.randn(4, 1) * np.sqrt(2 / 4)
+b2 = np.zeros(1)
+
+def relu(z):    return np.maximum(0, z)
+def sigmoid(z): return 1 / (1 + np.exp(-np.clip(z, -500, 500)))
+
+lr = 0.05
+for epoch in range(1000):
+    # ── Forward pass
+    Z1 = X @ W1 + b1       # (n,4)
+    A1 = relu(Z1)           # (n,4)
+    Z2 = A1 @ W2 + b2      # (n,1)
+    A2 = sigmoid(Z2)        # (n,1)
+    y_hat = A2.squeeze()
+
+    # ── Loss (binary cross-entropy)
+    loss = -np.mean(y * np.log(y_hat + 1e-9) + (1 - y) * np.log(1 - y_hat + 1e-9))
+
+    # ── Backward pass (chain rule)
+    dL_dA2 = -(y / (y_hat + 1e-9) - (1-y) / (1-y_hat+1e-9)) / n  # (n,)
+    dL_dZ2 = (dL_dA2 * A2.squeeze() * (1 - A2.squeeze())).reshape(-1, 1)  # sigmoid deriv
+    dL_dW2 = A1.T @ dL_dZ2          # (4,1)
+    dL_db2 = dL_dZ2.sum(axis=0)     # (1,)
+    dL_dA1 = dL_dZ2 @ W2.T          # (n,4)
+    dL_dZ1 = dL_dA1 * (Z1 > 0)     # ReLU derivative
+    dL_dW1 = X.T @ dL_dZ1           # (d,4)
+    dL_db1 = dL_dZ1.sum(axis=0)     # (4,)
+
+    # ── Parameter update
+    W2 -= lr * dL_dW2; b2 -= lr * dL_db2
+    W1 -= lr * dL_dW1; b1 -= lr * dL_db1
+
+    if epoch % 200 == 0:
+        print(f"Epoch {epoch:4d}  Loss: {loss:.4f}")</code></pre></div>
+
+          <h2 id="sgd">SGD and Mini-Batch Gradient Descent</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Batch GD</span><span class="def-desc">Gradient over all $m$ samples. Exact but slow. Impractical for large datasets.</span></div>
+            <div class="def-row"><span class="def-term">SGD (batch=1)</span><span class="def-desc">One sample at a time. Very noisy — gradient fluctuates wildly. Can escape local minima. Too slow in practice.</span></div>
+            <div class="def-row"><span class="def-term">Mini-Batch GD</span><span class="def-desc">$b$ samples per step (typically 32–256). Best of both worlds. The standard in deep learning. GPU-friendly.</span></div>
+          </div>
+          <div class="math-block"><span class="math-label">Mini-Batch SGD Update</span>$$\mathbf{W} \leftarrow \mathbf{W} - \alpha \frac{1}{b}\sum_{i\in\text{batch}}\nabla_{\mathbf{W}} L^{(i)}$$</div>
+
+          <h2 id="optimizers">Advanced Optimisers</h2>
+          <div class="code-block"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+import tensorflow as tf
+from tensorflow import keras
+
+# Compare optimisers on a real task
+from sklearn.datasets import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
+
+X, y = load_breast_cancer(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+sc = StandardScaler(); X_tr = sc.fit_transform(X_tr); X_te = sc.transform(X_te)
+
+def make_model():
+    return keras.Sequential([
+        keras.layers.Input(shape=(30,)),
+        keras.layers.Dense(64, activation="relu"),
+        keras.layers.Dense(32, activation="relu"),
+        keras.layers.Dense(1,  activation="sigmoid"),
+    ])
+
+optimizers = {
+    "SGD (lr=0.01)":      keras.optimizers.SGD(learning_rate=0.01),
+    "SGD + Momentum":     keras.optimizers.SGD(learning_rate=0.01, momentum=0.9),
+    "RMSprop":            keras.optimizers.RMSprop(learning_rate=1e-3),
+    "Adam":               keras.optimizers.Adam(learning_rate=1e-3),
+    "AdamW":              keras.optimizers.AdamW(learning_rate=1e-3, weight_decay=1e-4),
+}
+
+histories = {}
+for name, opt in optimizers.items():
+    m = make_model()
+    m.compile(optimizer=opt, loss="binary_crossentropy", metrics=["accuracy"])
+    h = m.fit(X_tr, y_tr, validation_data=(X_te, y_te),
+              epochs=100, batch_size=32, verbose=0)
+    histories[name] = h.history
+
+colors = ["#4a8fa8","#5c8a58","#b85c2a","#c4891a","#7a5a8a"]
+plt.figure(figsize=(10, 5))
+for (name, h), col in zip(histories.items(), colors):
+    plt.plot(h["val_accuracy"], label=name, color=col, lw=2)
+plt.xlabel("Epoch"); plt.ylabel("Val Accuracy")
+plt.title("Optimiser Comparison — Breast Cancer")
+plt.legend(); plt.grid(alpha=0.3); plt.tight_layout(); plt.show()</code></pre></div>
+
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Momentum</span><span class="def-desc">Accumulates a velocity vector in the direction of persistent gradient. Smooths noisy updates, speeds up convergence. $v \leftarrow \beta v - \alpha\nabla L$.</span></div>
+            <div class="def-row"><span class="def-term">RMSprop</span><span class="def-desc">Per-parameter adaptive learning rates. Divides by exponential moving average of squared gradients. Prevents oscillation in ravines.</span></div>
+            <div class="def-row"><span class="def-term">Adam</span><span class="def-desc">Adaptive Moment Estimation. Combines Momentum (1st moment) and RMSprop (2nd moment). Bias-corrected. <strong>Default choice for most networks.</strong></span></div>
+            <div class="def-row"><span class="def-term">AdamW</span><span class="def-desc">Adam + decoupled weight decay regularisation. Better generalisation than Adam in practice. Modern default for transformers.</span></div>
+          </div>
+
+          <h2 id="learning-rate-schedule">Learning Rate Scheduling</h2>
+          <div class="code-block"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code class="language-python">import tensorflow as tf
+
+# Cosine annealing with warm restarts — state of the art
+lr_schedule = keras.optimizers.schedules.CosineDecayRestarts(
+    initial_learning_rate=1e-3,
+    first_decay_steps=50,    # restart every 50 steps
+    t_mul=2.0,               # double restart period each time
+    m_mul=0.9,               # multiply peak lr by 0.9 each restart
+)
+
+# Step decay: halve LR every 30 epochs
+def step_decay(epoch, lr):
+    return lr * 0.5 if epoch > 0 and epoch % 30 == 0 else lr
+
+model = make_model()
+model.compile(
+    optimizer=keras.optimizers.Adam(learning_rate=lr_schedule),
+    loss="binary_crossentropy", metrics=["accuracy"]
+)
+model.fit(X_tr, y_tr, epochs=100, batch_size=32, verbose=0,
+          callbacks=[keras.callbacks.LearningRateScheduler(step_decay)])</code></pre></div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li>Backpropagation = chain rule applied layer-by-layer from output to input. Stores forward activations, multiplies local gradients backward.</li>
+            <li>Mini-batch SGD (batch 32–256) is the standard. Full-batch is too slow; batch=1 is too noisy.</li>
+            <li>Adam is the default optimiser. AdamW is preferred when regularisation is important.</li>
+            <li>Learning rate scheduling (cosine decay, ReduceLROnPlateau) improves final performance.</li>
+          </ul>
+        </article>
+        <nav class="prev-next-nav">
+          <a href="07-architecture.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg><div class="text-left"><div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div><div class="text-sm font-serif">7.2 Network Architecture</div></div></a>
+          <a href="07-advanced.html" class="prev-next-btn"><div class="text-right"><div class="text-xs font-mono" style="color:var(--text-dim)">Next</div><div class="text-sm font-serif">7.4 CNNs & RNNs</div></div><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </nav>
+      </div>
+    </main>
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150" style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono" style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs" style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed</span>
+      <a href="https://github.com/ Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

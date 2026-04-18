@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pandas for Data Science | ZeroToML</title>
+  <meta name="description"
+    content="DataFrames, Series, GroupBy, and Pivot Tables — the complete toolkit for tabular data wrangling." />
+  <link rel="canonical" href="https://Muhammad-waqas1.github.io/zerotoml/lessons/01-pandas.html" />
+  <meta property="og:title" content="Pandas for Data Science | ZeroToML" />
+  <meta property="og:description"
+    content="DataFrames, Series, GroupBy, and Pivot Tables — the complete toolkit for tabular data wrangling." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
+            style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+            class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7" />
+            </svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+
+    <!-- Left Curriculum Sidebar -->
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson active">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list hidden">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list hidden">
+            <li><a href="04-regression.html" class="sidebar-lesson"  >4.1
+                Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson"  >4.2
+                Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson"  >4.3 Support Vector
+                Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson"  >4.4 Tree-based
+                Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson"  >4.5 Ensemble
+                Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list hidden">
+            <li><a href="05-clustering.html" class="sidebar-lesson"  >5.1
+                Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson"  >5.2
+                Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson"  >5.3
+                Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list hidden">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson"  >6.1 Bias
+                vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson"  >6.2
+                Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson"  >6.3
+                Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson"  >6.4
+                Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list hidden">
+            <li><a href="07-perceptron.html" class="sidebar-lesson"  >7.1
+                Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson"  >7.2
+                Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson"  >7.3
+                Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson"  >7.4 CNNs &
+                RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list hidden">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson"  >8.1 The
+                RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson"  >8.2
+                Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson"  >9.1 Model
+                Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson"  >9.2 Building
+                APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson"  >9.3
+                Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson"  >9.4 Cloud
+                Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+      onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')">
+    </div>
+
+    <!-- Main Content -->
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 01 — Environment & Data Foundations</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Pandas for Data Science</span>
+        </nav>
+
+        <!-- Lesson Header -->
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 01</span>
+            <span class="lesson-badge lesson-badge--beginner">Beginner</span>
+            <span class="lesson-badge">22 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">
+            Pandas for Data Science</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">DataFrames, Series, GroupBy, and
+            Pivot Tables — the complete toolkit for tabular data wrangling.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml/blob/main/lessons/01-pandas.html" target="_blank"
+              rel="noopener" class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">
+              Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </header>
+
+        <!-- Article Body -->
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="why-pandas">Why Pandas?</h2>
+          <p>Real-world data is messy, heterogeneous, and labelled. NumPy works on uniform arrays; Pandas adds column
+            names, row labels, mixed types, and a rich API for data wrangling — the day-to-day reality of ML
+            engineering.</p>
+
+          <h2 id="core-structures">Core Data Structures</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Series</span><span class="def-desc">1-D labelled array. Like a
+                NumPy array with an index. Think: one column of a spreadsheet.</span></div>
+            <div class="def-row"><span class="def-term">DataFrame</span><span class="def-desc">2-D labelled table of
+                Series. Think: the spreadsheet itself. Columns can have different dtypes.</span></div>
+          </div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import pandas as pd
+import numpy as np
+
+# ── Series
+s = pd.Series([10, 20, 30, 40], index=["a","b","c","d"])
+print(s["b"])          # 20  (label-based)
+print(s.iloc[1])       # 20  (position-based)
+print(s[s > 15])       # b:20  c:30  d:40
+
+# ── DataFrame — from dict
+df = pd.DataFrame({
+    "name":    ["Alice", "Bob",  "Carol", "Dan"],
+    "age":     [28,       35,    22,       41  ],
+    "salary":  [75000,    92000, 58000,    110000],
+    "dept":    ["Eng",    "Mkt", "Eng",    "Eng" ],
+})
+
+# Inspect
+print(df.shape)         # (4, 4)
+print(df.dtypes)        # object, int64, int64, object
+print(df.head(2))       # first 2 rows
+print(df.describe())    # count, mean, std, min, quartiles, max
+print(df.info())        # dtypes + non-null counts</code></pre>
+          </div>
+
+          <h2 id="selection">Selection & Filtering</h2>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python"># Column selection
+df["age"]                    # Series
+df[["name","salary"]]        # DataFrame
+
+# Row selection
+df.loc[0]                    # row with label 0
+df.loc[1:2, "name":"salary"] # rows 1-2, cols name to salary (inclusive)
+df.iloc[0:2, 0:3]            # positional: rows 0-1, cols 0-2
+
+# Boolean filtering
+senior    = df[df["age"] > 30]
+eng_high  = df[(df["dept"] == "Eng") & (df["salary"] > 70000)]
+top3      = df.nlargest(3, "salary")
+
+# Assign a new column
+df["seniority"] = df["age"].apply(lambda x: "senior" if x >= 35 else "junior")
+df["bonus"]     = df["salary"] * 0.1          # vectorised</code></pre>
+          </div>
+
+          <h2 id="groupby">GroupBy: Split-Apply-Combine</h2>
+          <p>The most powerful Pandas pattern. Split the data into groups, apply an aggregation function, combine the
+            results.</p>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import pandas as pd
+
+# Avg salary & headcount per department
+dept_stats = df.groupby("dept")["salary"].agg(["mean","count","std"])
+print(dept_stats)
+
+# Multiple columns
+summary = df.groupby("dept").agg(
+    avg_salary  = ("salary", "mean"),
+    max_salary  = ("salary", "max"),
+    avg_age     = ("age",    "mean"),
+    headcount   = ("name",   "count"),
+)
+
+# Custom aggregation
+dept_salary_range = df.groupby("dept")["salary"].agg(
+    lambda x: x.max() - x.min()
+)
+
+# Transform: broadcast group-level stats back to original rows
+df["dept_avg_salary"] = df.groupby("dept")["salary"].transform("mean")</code></pre>
+          </div>
+
+          <h2 id="pivot">Pivot Tables</h2>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import pandas as pd, numpy as np
+
+sales = pd.DataFrame({
+    "month":    ["Jan","Jan","Feb","Feb","Mar","Mar"],
+    "product":  ["A",  "B",  "A",  "B",  "A",  "B"],
+    "revenue":  [1200, 800, 1500, 950, 1100, 1300],
+})
+
+# Pivot: rows=month, cols=product, values=revenue
+pivot = sales.pivot_table(
+    values  = "revenue",
+    index   = "month",
+    columns = "product",
+    aggfunc = "sum",        # default is mean
+    fill_value = 0          # fill NaN with 0
+)
+print(pivot)
+
+# Reverse: melt wide → long format (common for plotting)
+melted = pivot.reset_index().melt(id_vars="month", var_name="product", value_name="revenue")</code></pre>
+          </div>
+
+          <h2 id="io">Reading & Writing Data</h2>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import pandas as pd
+
+# CSV
+df = pd.read_csv("data.csv", parse_dates=["date"], index_col="id")
+df.to_csv("output.csv", index=False)
+
+# Excel
+df = pd.read_excel("data.xlsx", sheet_name="Sheet1")
+df.to_excel("output.xlsx", index=False)
+
+# Parquet (fast, compressed — preferred for large datasets)
+df = pd.read_parquet("data.parquet")
+df.to_parquet("output.parquet", index=False)
+
+# From a URL
+df = pd.read_csv("https://raw.githubusercontent.com/mwaskom/seaborn-data/master/titanic.csv")</code></pre>
+          </div>
+
+          <h2 id="performance">Performance Tips</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Use vectorised ops</span><span class="def-desc">Prefer
+                <code>df["col"] * 2</code> over <code>df["col"].apply(lambda x: x*2)</code>. The former is C-level; the
+                latter is Python-level.</span></div>
+            <div class="def-row"><span class="def-term">Use category dtype</span><span class="def-desc">Convert
+                low-cardinality string columns: <code>df["dept"] = df["dept"].astype("category")</code>. Cuts memory
+                5–10× for large DataFrames.</span></div>
+            <div class="def-row"><span class="def-term">Avoid iterrows()</span><span
+                class="def-desc"><code>iterrows()</code> is 100× slower than vectorised operations. Almost always
+                replaceable with <code>.apply()</code>, <code>.transform()</code>, or direct array ops.</span></div>
+            <div class="def-row"><span class="def-term">Read with dtypes</span><span class="def-desc">Pass
+                <code>dtype=</code> to <code>read_csv()</code> to avoid loading everything as float64, saving
+                memory.</span></div>
+          </div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li><strong>DataFrame</strong>: 2-D labelled table. <strong>Series</strong>: 1-D labelled array.</li>
+            <li>Use <code>.loc[]</code> for label-based, <code>.iloc[]</code> for positional selection.</li>
+            <li><strong>GroupBy</strong>: split → apply aggregation → combine. The workhorse of data analysis.</li>
+            <li><strong>Pivot tables</strong>: reshape data from long to wide format (and back with
+              <code>melt()</code>).</li>
+            <li>Use category dtype, vectorised ops, and Parquet for performance.</li>
+          </ul>
+        </article>
+
+        <!-- Prev / Next -->
+        <nav class="prev-next-nav">
+          <a href="01-numpy.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <div class="text-left">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div>
+              <div class="text-sm font-serif">1.2 NumPy Mastery</div>
+            </div>
+          </a>
+          <a href="01-eda.html" class="prev-next-btn">
+            <div class="text-right">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Next</div>
+              <div class="text-sm font-serif">1.4 Exploratory Data Analysis</div>
+            </div><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </nav>
+
+      </div>
+    </main>
+
+    <!-- Right ToC Sidebar -->
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150"
+              style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete
+          </p>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
+      style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
+          style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed</span>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

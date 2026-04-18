@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <!-- Main pages -->
+  <url>
+    <loc>https://Muhammad-waqas1.github.io/zerotoml/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>https://Muhammad-waqas1.github.io/zerotoml/about.html</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Module 01 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/01-ml-ecosystem.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/01-numpy.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/01-pandas.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/01-eda.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Module 02 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/02-linear-algebra.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/02-calculus.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/02-probability.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Module 03 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/03-data-cleaning.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/03-preprocessing.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/03-encoding.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/03-feature-selection.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Module 04 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/04-regression.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/04-classification.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/04-svm.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/04-trees.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/04-ensemble.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+
+  <!-- Module 05 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/05-clustering.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/05-dimreduction.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/05-association.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- Module 06 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/06-bias-variance.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/06-clf-metrics.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/06-reg-metrics.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/06-tuning.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Module 07 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/07-perceptron.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/07-architecture.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/07-optimization.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/07-advanced.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Module 08 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/08-rl-framework.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/08-algorithms.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- Module 09 -->
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/09-persistence.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/09-api.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/09-docker.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://Muhammad-waqas1.github.io/zerotoml/lessons/09-cloud.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+</urlset>

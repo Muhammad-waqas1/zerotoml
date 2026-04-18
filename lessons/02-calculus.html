@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Calculus & Gradient Descent | ZeroToML</title>
+  <meta name="description"
+    content="Partial derivatives, the chain rule, and gradient descent — the machinery that makes every ML model learn." />
+  <link rel="canonical" href="https://Muhammad-waqas1.github.io/zerotoml/lessons/02-calculus.html" />
+  <meta property="og:title" content="Calculus & Gradient Descent | ZeroToML" />
+  <meta property="og:description"
+    content="Partial derivatives, the chain rule, and gradient descent — the machinery that makes every ML model learn." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
+            style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+            class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7" />
+            </svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
+            style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+
+    <!-- Left Curriculum Sidebar -->
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list hidden">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson active">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list hidden">
+            <li><a href="04-regression.html" class="sidebar-lesson"  >4.1
+                Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson"  >4.2
+                Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson"  >4.3 Support Vector
+                Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson"  >4.4 Tree-based
+                Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson"  >4.5 Ensemble
+                Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list hidden">
+            <li><a href="05-clustering.html" class="sidebar-lesson"  >5.1
+                Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson"  >5.2
+                Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson"  >5.3
+                Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list hidden">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson"  >6.1 Bias
+                vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson"  >6.2
+                Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson"  >6.3
+                Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson"  >6.4
+                Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list hidden">
+            <li><a href="07-perceptron.html" class="sidebar-lesson"  >7.1
+                Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson"  >7.2
+                Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson"  >7.3
+                Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson"  >7.4 CNNs &
+                RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list hidden">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson"  >8.1 The
+                RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson"  >8.2
+                Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+             
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson"  >9.1 Model
+                Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson"  >9.2 Building
+                APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson"  >9.3
+                Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson"  >9.4 Cloud
+                Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+      onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')">
+    </div>
+
+    <!-- Main Content -->
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+
+        <!-- Breadcrumb -->
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 02 — Mathematical Pillars</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Calculus & Gradient Descent</span>
+        </nav>
+
+        <!-- Lesson Header -->
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 02</span>
+            <span class="lesson-badge lesson-badge--beginner">Beginner</span>
+            <span class="lesson-badge">22 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">
+            Calculus & Gradient Descent</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">Partial derivatives, the chain
+            rule, and gradient descent — the machinery that makes every ML model learn.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml/blob/main/lessons/02-calculus.html" target="_blank"
+              rel="noopener" class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">
+              Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+              </svg>
+            </a>
+          </div>
+        </header>
+
+        <!-- Article Body -->
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="why-calculus">Why Calculus for ML?</h2>
+          <p>Every learning algorithm is an optimisation algorithm. Training a model means finding parameter values that
+            minimise a loss function — and calculus tells us how to move the parameters in the right direction. You
+            don't need to derive integrals; you need to understand <strong>derivatives</strong> and <strong>gradient
+              descent</strong>.</p>
+
+          <h2 id="derivatives">Derivatives: Measuring Change</h2>
+          <p>The derivative $f'(x)$ measures the instantaneous rate of change of $f$ at $x$. Geometrically: the slope of
+            the tangent line.</p>
+          <div class="math-block"><span class="math-label">Derivative Definition</span>$$f'(x) = \lim_{h o 0}
+            rac{f(x+h) - f(x)}{h}$$</div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+# Numerical derivative (finite difference approximation)
+def numerical_grad(f, x, h=1e-5):
+    return (f(x + h) - f(x - h)) / (2 * h)   # central difference
+
+f = lambda x: x**2 - 3*x + 2
+print(f"f'(4) ≈ {numerical_grad(f, 4):.4f}")   # should be 2*4-3 = 5.0
+
+# Visualise f and its derivative
+x = np.linspace(-1, 5, 300)
+fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
+ax1.plot(x, f(x), color="#4a8fa8", lw=2);  ax1.set_title("f(x) = x² - 3x + 2")
+ax1.axhline(0, color="gray", lw=0.5);      ax1.axvline(0, color="gray", lw=0.5)
+df = 2*x - 3
+ax2.plot(x, df, color="#b85c2a", lw=2); ax2.set_title("f'(x) = 2x - 3")
+ax2.axhline(0, color="gray", lw=0.5);   ax2.axvline(1.5, color="green", ls="--", label="minimum at x=1.5")
+ax2.legend(); plt.tight_layout(); plt.show()</code></pre>
+          </div>
+
+          <h2 id="partial-derivatives">Partial Derivatives</h2>
+          <p>When a function has multiple inputs (like a loss with many parameters), the <strong>partial
+              derivative</strong> $\partial L/\partial w_j$ measures how $L$ changes when we nudge $w_j$ while holding
+            all other parameters fixed.</p>
+          <div class="math-block"><span class="math-label">Partial Derivative of MSE</span>$$L(\mathbf{w}) =
+            rac{1}{m}\sum_i(\mathbf{w}^T\mathbf{x}^{(i)} - y^{(i)})^2 \qquad rac{\partial L}{\partial w_j} =
+            rac{2}{m}\sum_i(\hat{y}^{(i)} - y^{(i)})\,x_j^{(i)}$$</div>
+
+          <h2 id="gradient">The Gradient</h2>
+          <p>The <strong>gradient</strong> $
+            abla_\mathbf{w} L$ stacks all partial derivatives into a vector. It points in the direction of <em>steepest
+              ascent</em>. To minimise the loss, we step in the <em>opposite</em> direction.</p>
+          <div class="math-block"><span class="math-label">Gradient of MSE</span>$$
+            abla_\mathbf{w} L = rac{2}{m}\mathbf{X}^T(\mathbf{X}\mathbf{w} - \mathbf{y})$$<span class="math-caption">In
+              matrix form — one line of NumPy code. The gradient is a vector of the same shape as $\mathbf{w}$.</span>
+          </div>
+
+          <h2 id="chain-rule">Chain Rule</h2>
+          <p>When functions are composed — as in $L(\hat{y}(\mathbf{w}))$ — the chain rule computes the overall
+            derivative as a product of local derivatives:</p>
+          <div class="math-block"><span class="math-label">Chain Rule</span>$$rac{dL}{dw} = rac{dL}{d\hat{y}} \cdot
+            rac{d\hat{y}}{dw}$$<span class="math-caption">Backpropagation in neural networks is just the chain rule
+              applied recursively through layers.</span></div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import numpy as np
+
+# Manual backprop through: L = MSE(sigmoid(Xw), y)
+def sigmoid(z): return 1 / (1 + np.exp(-np.clip(z, -500, 500)))
+
+X = np.random.randn(100, 3)
+y = (np.random.randn(100) > 0).astype(float)
+w = np.zeros(3)
+
+# Forward pass
+z     = X @ w                              # pre-activation: (100,)
+p     = sigmoid(z)                         # prediction: (100,)
+loss  = -np.mean(y * np.log(p + 1e-9) + (1-y) * np.log(1-p + 1e-9))
+
+# Backward pass (chain rule)
+# dL/dp = -(y/p - (1-y)/(1-p)) / m
+# dp/dz = p*(1-p)   [sigmoid derivative]
+# dz/dw = X
+# Combined:  dL/dw = X.T @ (p - y) / m
+grad  = X.T @ (p - y) / len(y)
+
+print(f"Loss: {loss:.4f}, Grad norm: {np.linalg.norm(grad):.4f}")</code></pre>
+          </div>
+
+          <h2 id="gradient-descent">Gradient Descent</h2>
+          <p>Update parameters iteratively in the direction of negative gradient:</p>
+          <div class="math-block"><span class="math-label">Gradient Descent Update</span>$$\mathbf{w} \leftarrow
+            \mathbf{w} - lpha
+            abla_\mathbf{w} L$$<span class="math-caption">$lpha$ (learning rate): controls step size. Too large:
+              overshoots, diverges. Too small: converges slowly.</span></div>
+          <div class="code-block">
+            <div class="code-header"><span class="code-lang">Python</span><button class="copy-btn"
+                onclick="copyCode(this)">Copy</button></div>
+            <pre><code class="language-python">import numpy as np
+import matplotlib.pyplot as plt
+
+np.random.seed(42)
+X = np.c_[np.ones(200), np.random.randn(200, 2)]   # add bias col
+w_true = np.array([1.0, 2.5, -1.0])
+y = X @ w_true + np.random.randn(200) * 0.5
+
+def mse_grad(X, y, w):
+    residual = X @ w - y
+    return 2 * X.T @ residual / len(y)
+
+# Batch gradient descent
+w = np.zeros(3); lr = 0.05; history = []
+for i in range(500):
+    loss = np.mean((X @ w - y)**2)
+    history.append(loss)
+    w -= lr * mse_grad(X, y, w)
+
+print(f"Recovered w: {w.round(3)} (true: {w_true})")
+
+plt.plot(history, color="#4a8fa8", lw=2)
+plt.xlabel("Iteration"); plt.ylabel("MSE Loss")
+plt.title("Gradient Descent Convergence")
+plt.yscale("log"); plt.grid(True, alpha=0.3); plt.show()</code></pre>
+          </div>
+
+          <h2 id="variants">SGD, Mini-Batch, and Adam</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Batch GD</span><span class="def-desc">Use all $m$ samples per
+                step. Exact gradient, smooth convergence, slow on large data.</span></div>
+            <div class="def-row"><span class="def-term">SGD</span><span class="def-desc">Use 1 sample per step. Noisy,
+                but fast. The noise can help escape local minima.</span></div>
+            <div class="def-row"><span class="def-term">Mini-batch GD</span><span class="def-desc">Use $b$ samples
+                (e.g., $b=32$). Best of both worlds — used in practice for all deep learning.</span></div>
+            <div class="def-row"><span class="def-term">Adam</span><span class="def-desc">Adaptive moment estimation.
+                Maintains per-parameter learning rates. Default choice for neural networks.</span></div>
+          </div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li>Derivatives measure instantaneous rate of change — the slope at a point.</li>
+            <li>The gradient $
+              abla_\mathbf{w}L$ points in the direction of steepest ascent. We step against it to minimise.</li>
+            <li>Chain rule: compose derivatives through layers of a computational graph → backpropagation.</li>
+            <li>Gradient descent: $\mathbf{w} \leftarrow \mathbf{w} - lpha
+              abla L$. Mini-batch GD is used in practice.</li>
+          </ul>
+        </article>
+
+        <!-- Prev / Next -->
+        <nav class="prev-next-nav">
+          <a href="02-linear-algebra.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none"
+              viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+            </svg>
+            <div class="text-left">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div>
+              <div class="text-sm font-serif">2.1 Linear Algebra</div>
+            </div>
+          </a>
+          <a href="02-probability.html" class="prev-next-btn">
+            <div class="text-right">
+              <div class="text-xs font-mono" style="color:var(--text-dim)">Next</div>
+              <div class="text-sm font-serif">2.3 Probability & Statistics</div>
+            </div><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+            </svg>
+          </a>
+        </nav>
+
+      </div>
+    </main>
+
+    <!-- Right ToC Sidebar -->
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150"
+              style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete
+          </p>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
+      style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
+          style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed</span>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
+        class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+
+</html>

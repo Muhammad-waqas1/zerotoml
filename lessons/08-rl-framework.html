@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>The RL Framework | ZeroToML</title>
+  <meta name="description" content="Agent, environment, state, action, reward, policy, and the Bellman equation — the foundations of Reinforcement Learning." />
+  <link rel="canonical" href="https://Muhammad-waqas1.github.io/zerotoml/lessons/08-rl-framework.html" />
+  <meta property="og:title" content="The RL Framework | ZeroToML" />
+  <meta property="og:description" content="Agent, environment, state, action, reward, policy, and the Bellman equation — the foundations of Reinforcement Learning." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.10/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.getElementById('lesson-content'),{delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],throwOnError:false});"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism-tomorrow.min.css" />
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-python.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-bash.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-docker.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/components/prism-yaml.min.js"></script>
+  <link rel="manifest" href="../manifest.json" />
+  <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
+  <link rel="stylesheet" href="../assets/css/main.css" />
+</head>
+<body>
+  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <a href="../index.html" class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono" style="background:var(--sky);color:var(--bg-base)">ML</div>
+          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
+        </a>
+        <div class="hidden md:flex items-center gap-1">
+          <a href="../index.html" class="nav-link">Home</a>
+          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
+          <a href="../about.html" class="nav-link">About</a>
+             <a href="../index.html#tools" class="nav-link">Tools</a>
+          <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="nav-link">GitHub</a>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center" style="border-color:var(--border);color:var(--text-muted)">
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7"/></svg>
+          </button>
+          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center" style="border-color:var(--border);color:var(--text-muted)">
+            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
+      <a href="../index.html" class="mobile-nav-link">Home</a>
+      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
+      <a href="../index.html#about" class="mobile-nav-link">About</a>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="mobile-nav-link">GitHub ↗</a>
+    </div>
+  </nav>
+  <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
+    <aside id="curriculum-sidebar" class="lesson-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4 px-1" style="color:var(--text-dim)">Curriculum</p>
+        
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-1">
+            <span class="sidebar-module-num">01</span>
+            <span style="flex:1">Environment & Data Foundations</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-1" class="sidebar-lesson-list hidden">
+            <li><a href="01-ml-ecosystem.html" class="sidebar-lesson">1.1 The ML Ecosystem</a></li>
+            <li><a href="01-numpy.html" class="sidebar-lesson">1.2 NumPy Mastery</a></li>
+            <li><a href="01-pandas.html" class="sidebar-lesson">1.3 Pandas for Data Science</a></li>
+            <li><a href="01-eda.html" class="sidebar-lesson">1.4 Exploratory Data Analysis</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-2">
+            <span class="sidebar-module-num">02</span>
+            <span style="flex:1">Mathematical Pillars</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-2" class="sidebar-lesson-list hidden">
+            <li><a href="02-linear-algebra.html" class="sidebar-lesson">2.1 Linear Algebra</a></li>
+            <li><a href="02-calculus.html" class="sidebar-lesson">2.2 Calculus & Gradient Descent</a></li>
+            <li><a href="02-probability.html" class="sidebar-lesson">2.3 Probability & Statistics</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-3">
+            <span class="sidebar-module-num">03</span>
+            <span style="flex:1">Feature Engineering</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-3" class="sidebar-lesson-list hidden">
+            <li><a href="03-data-cleaning.html" class="sidebar-lesson">3.1 Data Cleaning</a></li>
+            <li><a href="03-preprocessing.html" class="sidebar-lesson">3.2 Preprocessing & Scaling</a></li>
+            <li><a href="03-encoding.html" class="sidebar-lesson">3.3 Categorical Encoding</a></li>
+            <li><a href="03-feature-selection.html" class="sidebar-lesson">3.4 Feature Selection & PCA</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-4">
+            <span class="sidebar-module-num">04</span>
+            <span style="flex:1">Supervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-4" class="sidebar-lesson-list hidden">
+            <li><a href="04-regression.html" class="sidebar-lesson">4.1 Regression</a></li>
+            <li><a href="04-classification.html" class="sidebar-lesson">4.2 Classification</a></li>
+            <li><a href="04-svm.html" class="sidebar-lesson">4.3 Support Vector Machines</a></li>
+            <li><a href="04-trees.html" class="sidebar-lesson">4.4 Tree-based Models</a></li>
+            <li><a href="04-ensemble.html" class="sidebar-lesson">4.5 Ensemble Methods</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-5">
+            <span class="sidebar-module-num">05</span>
+            <span style="flex:1">Unsupervised Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-5" class="sidebar-lesson-list hidden">
+            <li><a href="05-clustering.html" class="sidebar-lesson">5.1 Clustering</a></li>
+            <li><a href="05-dimreduction.html" class="sidebar-lesson">5.2 Dimensionality Reduction</a></li>
+            <li><a href="05-association.html" class="sidebar-lesson">5.3 Association Rule Learning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-6">
+            <span class="sidebar-module-num">06</span>
+            <span style="flex:1">Model Evaluation</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-6" class="sidebar-lesson-list hidden">
+            <li><a href="06-bias-variance.html" class="sidebar-lesson">6.1 Bias vs. Variance</a></li>
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson">6.2 Classification Metrics</a></li>
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson">6.3 Regression Metrics</a></li>
+            <li><a href="06-tuning.html" class="sidebar-lesson">6.4 Hyperparameter Tuning</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-7">
+            <span class="sidebar-module-num">07</span>
+            <span style="flex:1">Deep Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-7" class="sidebar-lesson-list hidden">
+            <li><a href="07-perceptron.html" class="sidebar-lesson">7.1 Perceptron Foundations</a></li>
+            <li><a href="07-architecture.html" class="sidebar-lesson">7.2 Network Architecture</a></li>
+            <li><a href="07-optimization.html" class="sidebar-lesson">7.3 Backprop & Optimization</a></li>
+            <li><a href="07-advanced.html" class="sidebar-lesson">7.4 CNNs & RNNs</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-8">
+            <span class="sidebar-module-num">08</span>
+            <span style="flex:1">Reinforcement Learning</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(180deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-8" class="sidebar-lesson-list">
+            <li><a href="08-rl-framework.html" class="sidebar-lesson active">8.1 The RL Framework</a></li>
+            <li><a href="08-algorithms.html" class="sidebar-lesson">8.2 Q-Learning & DQN</a></li>
+          </ul>
+        </div>
+        <div class="sidebar-module">
+          <button class="sidebar-module-btn" data-module="mod-9">
+            <span class="sidebar-module-num">09</span>
+            <span style="flex:1">MLOps & Deployment</span>
+            <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <ul id="mod-9" class="sidebar-lesson-list hidden">
+            <li><a href="09-persistence.html" class="sidebar-lesson">9.1 Model Persistence</a></li>
+            <li><a href="09-api.html" class="sidebar-lesson">9.2 Building APIs</a></li>
+            <li><a href="09-docker.html" class="sidebar-lesson">9.3 Containerization</a></li>
+            <li><a href="09-cloud.html" class="sidebar-lesson">9.4 Cloud Deployment</a></li>
+          </ul>
+        </div>
+      </div>
+    </aside>
+    <div id="sidebar-overlay" class="fixed inset-0 z-30 hidden lg:hidden" style="background:rgba(30,24,16,0.5)"
+         onclick="document.getElementById('curriculum-sidebar').classList.remove('sidebar-open');this.classList.add('hidden')"></div>
+    <main class="lesson-main">
+      <div class="max-w-3xl mx-auto px-4 sm:px-6 py-12">
+        <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+          <a href="../index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">Module 08 — Reinforcement Learning</span>
+          <span style="color:var(--border-strong)">/</span>
+          <span style="color:var(--text-muted)">The RL Framework</span>
+        </nav>
+        <header class="mb-12">
+          <div class="flex flex-wrap items-center gap-2 mb-4">
+            <span class="lesson-badge">Module 08</span>
+            <span class="lesson-badge lesson-badge--intermediate">Intermediate</span>
+            <span class="lesson-badge">22 min read</span>
+          </div>
+          <h1 class="font-display text-4xl sm:text-5xl font-bold leading-tight mb-4" style="color:var(--text-ink)">The RL Framework</h1>
+          <p class="font-serif text-lg leading-relaxed" style="color:var(--text-muted)">Agent, environment, state, action, reward, policy, and the Bellman equation — the foundations of Reinforcement Learning.</p>
+          <div class="mt-5 flex items-center gap-4 text-xs font-mono" style="color:var(--text-dim)">
+            <span>Updated 2025</span>
+            <span style="color:var(--border-strong)">·</span>
+            <a href="https://github.com/Muhammad-waqas1/zerotoml/blob/main/lessons/08-rl-framework.html" target="_blank" rel="noopener"
+               class="hover:text-[var(--sky)] transition-colors flex items-center gap-1">Edit on GitHub
+              <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+            </a>
+          </div>
+        </header>
+        <article id="lesson-content" class="lesson-prose">
+          <h2 id="what-is-rl">What is Reinforcement Learning?</h2>
+          <p>RL is fundamentally different from supervised and unsupervised learning. There is no labelled dataset. Instead, an <strong>agent</strong> learns by interacting with an <strong>environment</strong>, taking actions and receiving feedback in the form of rewards. The goal: learn a <em>policy</em> — a strategy for choosing actions — that maximises cumulative reward over time.</p>
+
+          <div class="callout callout--info"><div class="callout-icon">💡</div><div><strong>Real-world examples:</strong> training a robot to walk (each step = action, not falling = reward), teaching a chess engine to play (each move = action, winning = reward), tuning a recommendation system (each recommendation = action, click = reward), training ChatGPT with RLHF (each response = action, human preference = reward signal).</div></div>
+
+          <h2 id="components">The Five Core Components</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Agent</span><span class="def-desc">The learner and decision-maker. It observes states, takes actions, and receives rewards. Could be a robot, a game-playing program, or a trading algorithm.</span></div>
+            <div class="def-row"><span class="def-term">Environment</span><span class="def-desc">Everything outside the agent. It receives actions and returns the next state and reward. Could be a physical world, a game simulator, or a financial market.</span></div>
+            <div class="def-row"><span class="def-term">State $s$</span><span class="def-desc">A complete description of the environment at a given moment. The agent uses the current state to decide its next action. Example: board position in chess, sensor readings of a robot.</span></div>
+            <div class="def-row"><span class="def-term">Action $a$</span><span class="def-desc">A choice the agent can make from the action space $\mathcal{A}$. Discrete (move left/right, attack/defend) or continuous (steering angle, throttle).</span></div>
+            <div class="def-row"><span class="def-term">Reward $r$</span><span class="def-desc">A scalar signal from the environment after each action. Encodes the goal: positive for good outcomes, negative for bad. The agent maximises total future reward, not just immediate reward.</span></div>
+          </div>
+
+          <h2 id="rl-loop">The RL Interaction Loop</h2>
+          <div class="math-block"><span class="math-label">Agent–Environment Loop</span>$$s_0 \xrightarrow{a_0} (r_1, s_1) \xrightarrow{a_1} (r_2, s_2) \xrightarrow{a_2} \cdots$$<span class="math-caption">At each timestep $t$: agent observes $s_t$, selects action $a_t \sim \pi(a|s_t)$, environment returns reward $r_{t+1}$ and next state $s_{t+1}$.</span></div>
+          <div class="code-block"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code class="language-python">import gymnasium as gym   # pip install gymnasium
+
+# Classic CartPole environment: balance a pole on a cart
+env = gym.make("CartPole-v1", render_mode=None)
+
+# State: [cart_pos, cart_velocity, pole_angle, pole_angular_velocity]
+# Action: 0 = push left, 1 = push right
+# Reward: +1 for every timestep the pole stays upright
+# Episode ends: pole falls (angle > 12°) or cart moves off screen or 500 steps
+
+obs, info = env.reset(seed=42)
+print(f"Initial state: {obs}")       # 4-dim vector
+print(f"Action space:  {env.action_space}")    # Discrete(2)
+print(f"Obs space:     {env.observation_space}") # Box(4,)
+
+# ── Random agent (baseline — no learning)
+total_reward = 0
+obs, _ = env.reset()
+for step in range(500):
+    action = env.action_space.sample()   # random action
+    obs, reward, terminated, truncated, info = env.step(action)
+    total_reward += reward
+    if terminated or truncated:
+        break
+
+print(f"Random agent survived {step+1} steps, total reward: {total_reward}")</code></pre></div>
+
+          <h2 id="policy-value">Policy and Value Functions</h2>
+          <p>The <strong>policy</strong> $\pi(a|s)$ is the agent's strategy — a probability distribution over actions given the current state. The agent's goal is to find the optimal policy $\pi^*$ that maximises expected return.</p>
+          <div class="math-block"><span class="math-label">Discounted Return</span>$$G_t = \sum_{k=0}^{\infty} \gamma^k R_{t+k+1} = R_{t+1} + \gamma R_{t+2} + \gamma^2 R_{t+3} + \cdots$$<span class="math-caption">$\gamma \in [0,1)$: discount factor. Future rewards are worth less than immediate ones. $\gamma \approx 0$: myopic. $\gamma \approx 1$: far-sighted.</span></div>
+          <div class="math-block"><span class="math-label">State-Value and Action-Value Functions</span>$$V^\pi(s) = \mathbb{E}_\pi[G_t \mid s_t = s] \qquad Q^\pi(s,a) = \mathbb{E}_\pi[G_t \mid s_t = s, a_t = a]$$<span class="math-caption">$V^\pi(s)$: expected return from state $s$ following policy $\pi$. $Q^\pi(s,a)$: expected return from taking action $a$ in state $s$ then following $\pi$. The optimal Q-function $Q^*(s,a)$ gives the best possible return.</span></div>
+
+          <h2 id="bellman">The Bellman Equation</h2>
+          <p>The cornerstone of RL — a recursive relationship expressing $V^\pi(s)$ in terms of immediate reward and successor state values:</p>
+          <div class="math-block"><span class="math-label">Bellman Optimality Equation</span>$$Q^*(s,a) = \mathbb{E}\left[R_{t+1} + \gamma \max_{a'} Q^*(s_{t+1}, a') \mid s_t=s, a_t=a\right]$$<span class="math-caption">The optimal Q-value of $(s,a)$ equals the immediate reward plus the discounted best Q-value achievable from the next state. This is the update target in Q-Learning.</span></div>
+
+          <h2 id="exploration">Exploration vs. Exploitation</h2>
+          <p>The central dilemma of RL: <strong>exploit</strong> what you know (choose the action with highest estimated reward) vs. <strong>explore</strong> new actions (discover potentially better ones). The $\epsilon$-greedy strategy balances both:</p>
+          <div class="math-block"><span class="math-label">$\epsilon$-Greedy Policy</span>$$a_t = \begin{cases} \arg\max_a Q(s_t,a) & \text{with probability } 1-\epsilon \\ \text{random action} & \text{with probability } \epsilon \end{cases}$$</div>
+          <div class="code-block"><div class="code-header"><span class="code-lang">Python</span><button class="copy-btn" onclick="copyCode(this)">Copy</button></div>
+<pre><code class="language-python">import numpy as np
+
+class EpsilonGreedy:
+    def __init__(self, n_actions, eps_start=1.0, eps_end=0.01, eps_decay=0.995):
+        self.n_actions  = n_actions
+        self.eps        = eps_start
+        self.eps_end    = eps_end
+        self.eps_decay  = eps_decay
+
+    def select_action(self, q_values):
+        if np.random.random() < self.eps:
+            return np.random.randint(self.n_actions)   # explore
+        return np.argmax(q_values)                      # exploit
+
+    def decay(self):
+        self.eps = max(self.eps_end, self.eps * self.eps_decay)
+
+# Epsilon decays from 1.0 → 0.01 over ~1000 steps
+eg = EpsilonGreedy(n_actions=2)
+for i in range(10):
+    eg.decay()
+    if i % 2 == 0:
+        print(f"  Step {i*100+100:4d}: eps = {eg.eps:.4f}")</code></pre></div>
+
+          <h2 id="rl-taxonomy">RL Algorithm Taxonomy</h2>
+          <div class="def-list">
+            <div class="def-row"><span class="def-term">Model-Free</span><span class="def-desc">Agent doesn't build a model of the environment. Learns directly from experience. Q-Learning, DQN, PPO, SAC fall here. Most practical algorithms.</span></div>
+            <div class="def-row"><span class="def-term">Model-Based</span><span class="def-desc">Agent builds an internal world model to simulate future states. More sample-efficient but harder to train correctly. AlphaZero, Dreamer.</span></div>
+            <div class="def-row"><span class="def-term">Value-Based</span><span class="def-desc">Learn Q-values; derive policy by taking the action with highest Q. Q-Learning, DQN.</span></div>
+            <div class="def-row"><span class="def-term">Policy-Based</span><span class="def-desc">Directly optimise the policy $\pi_\theta$ via gradient ascent on expected return. REINFORCE, PPO, SAC.</span></div>
+            <div class="def-row"><span class="def-term">Actor-Critic</span><span class="def-desc">Combine both: actor (policy) + critic (value function). Reduces variance of policy gradient estimates. A2C, PPO, SAC.</span></div>
+          </div>
+
+          <h2 id="summary">Summary</h2>
+          <ul class="lesson-list">
+            <li>RL = agent + environment. Agent learns by trial-and-error, not from labelled data.</li>
+            <li>Goal: maximise discounted return $G_t = \sum \gamma^k R_{t+k+1}$.</li>
+            <li>$Q^*(s,a)$: optimal action-value. Bellman equation expresses it recursively.</li>
+            <li>$\epsilon$-greedy: explore randomly with prob $\epsilon$, exploit best known action otherwise. Decay $\epsilon$ over time.</li>
+          </ul>
+        </article>
+        <nav class="prev-next-nav">
+          <a href="07-advanced.html" class="prev-next-btn"><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg><div class="text-left"><div class="text-xs font-mono" style="color:var(--text-dim)">Previous</div><div class="text-sm font-serif">7.4 CNNs & RNNs</div></div></a>
+          <a href="08-algorithms.html" class="prev-next-btn"><div class="text-right"><div class="text-xs font-mono" style="color:var(--text-dim)">Next</div><div class="text-sm font-serif">8.2 Q-Learning & DQN</div></div><svg class="w-4 h-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg></a>
+        </nav>
+      </div>
+    </main>
+    <aside class="toc-sidebar">
+      <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
+        <p class="text-xs font-mono uppercase tracking-widest mb-4" style="color:var(--text-dim)">On This Page</p>
+        <nav id="toc-nav"></nav>
+        <div class="mt-8 pt-5 border-t" style="border-color:var(--border)">
+          <p class="text-xs font-mono uppercase tracking-widest mb-2" style="color:var(--text-dim)">Progress</p>
+          <div class="w-full rounded-full h-1.5" style="background:var(--bg-elevated)">
+            <div id="reading-progress-bar" class="h-1.5 rounded-full transition-all duration-150" style="width:0%;background:var(--sky)"></div>
+          </div>
+          <p class="text-xs font-mono mt-2" style="color:var(--text-dim)"><span id="progress-percent">0</span>% complete</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
+    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono" style="color:var(--text-dim)">
+      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs" style="background:var(--sky);color:var(--bg-base)">ML</div>
+        ZeroToML
+      </a>
+      <span>© 2025 ZeroToML — MIT Licensed · Muhammad-waqas1</span>
+      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
+    </div>
+  </footer>
+  <script src="../assets/js/main.js"></script>
+</body>
+</html>

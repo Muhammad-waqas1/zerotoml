@@ -1,0 +1,42 @@
+name: Create Release from Changelog
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'CHANGELOG.md' # Only runs when this file changes
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # Needed to create releases
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get latest version from Changelog
+        id: get_version
+        run: |
+          # Extracts the first version [x.y.z] found in CHANGELOG.md
+          VERSION=$(grep -m 1 -oE '[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Extract Release Notes
+        id: extract_notes
+        uses: f-razavi/changelog-reader-action@v1
+        with:
+          version: ${{ steps.get_version.outputs.VERSION }}
+          path: ./CHANGELOG.md
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.VERSION }}
+          name: Release ${{ steps.get_version.outputs.VERSION }}
+          body: ${{ steps.extract_notes.outputs.changes }}
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
