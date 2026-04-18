@@ -23,34 +23,36 @@ jobs:
           import re
           import os
 
+          # Read the changelog
           with open('CHANGELOG.md', 'r', encoding='utf-8') as f:
               content = f.read()
 
-          # Find the first version header like ## [1.0.0]
-          # It captures everything until the next header or the end of the file
-          pattern = r'## \[(.*?)\](.*?)(?=\n## \[|$)'
-          match = re.search(pattern, content, re.DOTALL)
-
-          if match:
-              version = match.group(1).strip()
-              # Clean up the release notes (the text after the version header)
-              notes = match.group(2).strip()
-              
-              # Strip the date line if it exists (e.g., "— 2025-04-18")
-              notes = re.sub(r'^.*?(\n|$)', '', notes, count=1).strip()
-
-              # Write to GitHub Output
-              with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-                  print(f'VERSION={version}', file=fh)
-              
-              # GitHub Actions uses a special delimiter for multi-line strings
-              with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
-                  print(f'NOTES<<EOF', file=fh)
-                  print(notes, file=fh)
-                  print('EOF', file=fh)
-          else:
-              print("Could not find a valid version header in CHANGELOG.md")
+          # 1. Extract the first version number found in brackets [X.Y.Z]
+          version_match = re.search(r'## \[(.*?)\]', content)
+          if not version_match:
+              print("No version header found!")
               exit(1)
+          
+          version = version_match.group(1).strip()
+
+          # 2. Extract notes for this version
+          # It looks for everything between the first ## header and the next one
+          pattern = r'## \[' + re.escape(version) + r'\](.*?)(?=\n## \[|$)'
+          notes_match = re.search(pattern, content, re.DOTALL)
+          
+          if notes_match:
+              raw_notes = notes_match.group(1).strip()
+              # Remove the date line (everything until the first newline)
+              notes = re.sub(r'^.*?(\n|$)', '', raw_notes, count=1).strip()
+          else:
+              notes = "Initial Release"
+
+          # 3. Securely set outputs for the next step
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              print(f'VERSION={version}', file=fh)
+              print(f'NOTES<<EOF', file=fh)
+              print(notes, file=fh)
+              print('EOF', file=fh)
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
