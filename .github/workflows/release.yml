@@ -5,37 +5,61 @@ on:
     branches:
       - main
     paths:
-      - 'CHANGELOG.md' # Only runs when this file changes
+      - 'CHANGELOG.md'
 
 jobs:
   release:
     runs-on: ubuntu-latest
     permissions:
-      contents: write # Needed to create releases
+      contents: write
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Get latest version from Changelog
-        id: get_version
+      - name: Get latest version and notes
+        id: parse_changelog
+        shell: python
         run: |
-          # Extracts the first version [x.y.z] found in CHANGELOG.md
-          VERSION=$(grep -m 1 -oE '[0-9]+\.[0-9]+\.[0-9]+' CHANGELOG.md)
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          import re
+          import os
 
-      - name: Extract Release Notes
-        id: extract_notes
-        uses: f-razavi/changelog-reader-action@v1
-        with:
-          version: ${{ steps.get_version.outputs.VERSION }}
-          path: ./CHANGELOG.md
+          # Read the changelog
+          with open('CHANGELOG.md', 'r', encoding='utf-8') as f:
+              content = f.read()
+
+          # 1. Extract the first version number found in brackets [X.Y.Z]
+          version_match = re.search(r'## \[(.*?)\]', content)
+          if not version_match:
+              print("No version header found!")
+              exit(1)
+          
+          version = version_match.group(1).strip()
+
+          # 2. Extract notes for this version
+          # It looks for everything between the first ## header and the next one
+          pattern = r'## \[' + re.escape(version) + r'\](.*?)(?=\n## \[|$)'
+          notes_match = re.search(pattern, content, re.DOTALL)
+          
+          if notes_match:
+              raw_notes = notes_match.group(1).strip()
+              # Remove the date line (everything until the first newline)
+              notes = re.sub(r'^.*?(\n|$)', '', raw_notes, count=1).strip()
+          else:
+              notes = "Initial Release"
+
+          # 3. Securely set outputs for the next step
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as fh:
+              print(f'VERSION={version}', file=fh)
+              print(f'NOTES<<EOF', file=fh)
+              print(notes, file=fh)
+              print('EOF', file=fh)
 
       - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
-          tag_name: v${{ steps.get_version.outputs.VERSION }}
-          name: Release ${{ steps.get_version.outputs.VERSION }}
-          body: ${{ steps.extract_notes.outputs.changes }}
+          tag_name: v${{ steps.parse_changelog.outputs.VERSION }}
+          name: Release ${{ steps.parse_changelog.outputs.VERSION }}
+          body: ${{ steps.parse_changelog.outputs.NOTES }}
           draft: false
           prerelease: false
         env:
