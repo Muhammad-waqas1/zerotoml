@@ -79,3 +79,4 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Sidebar: removed "soon" labels and opacity dimming — all lessons render uniformly
 - Logo: updated from Σ to ML monogram
 - Navbar: added About and Tools links
+ 
