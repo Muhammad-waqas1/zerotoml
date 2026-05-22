@@ -28,52 +28,14 @@
   <link rel="manifest" href="../manifest.json" />
   <link rel="icon" type="image/svg+xml" href="../images/zerotoml.png" />
   <link rel="stylesheet" href="../assets/css/main.css" />
+  <script src="../assets/js/layout.js" defer></script>
 </head>
 
 <body>
-  <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <a href="../index.html" class="flex items-center gap-2.5">
-          <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
-            style="background:var(--sky);color:var(--bg-base)">ML</div>
-          <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
-        </a>
-        <div class="hidden md:flex items-center gap-1">
-          <a href="../index.html" class="nav-link">Home</a>
-          <a href="01-ml-ecosystem.html" class="nav-link active">Curriculum</a>
-          <a href="../about.html" class="nav-link">About</a>
-             <a href="../index.html#tools" class="nav-link">Tools</a>
-          <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-            class="nav-link">GitHub</a>
-        </div>
-        <div class="flex items-center gap-2">
-          <button id="sidebar-toggle" class="lg:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
-            style="border-color:var(--border);color:var(--text-muted)">
-            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h10M4 18h7" />
-            </svg>
-          </button>
-          <button id="mobile-menu-btn" class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
-            style="border-color:var(--border);color:var(--text-muted)">
-            <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-            <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      </div>
-    </div>
-    <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
-      <a href="../index.html" class="mobile-nav-link">Home</a>
-      <a href="01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
-      <a href="../index.html#about" class="mobile-nav-link">About</a>
-      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-        class="mobile-nav-link">GitHub ↗</a>
-    </div>
-  </nav>
+
+  <!-- navbar -->
+  <div id="navbar-placeholder"></div>
+
   <div class="pt-16 flex min-h-screen max-w-[1400px] mx-auto">
     <aside id="curriculum-sidebar" class="lesson-sidebar">
       <div class="sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto p-4">
@@ -162,20 +124,20 @@
           <button class="sidebar-module-btn" data-module="mod-6">
             <span class="sidebar-module-num">06</span>
             <span style="flex:1">Model Evaluation</span>
-             
+
             <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
               fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
           <ul id="mod-6" class="sidebar-lesson-list hidden">
-            <li><a href="06-bias-variance.html" class="sidebar-lesson"  >6.1 Bias
+            <li><a href="06-bias-variance.html" class="sidebar-lesson">6.1 Bias
                 vs. Variance</a></li>
-            <li><a href="06-clf-metrics.html" class="sidebar-lesson"  >6.2
+            <li><a href="06-clf-metrics.html" class="sidebar-lesson">6.2
                 Classification Metrics</a></li>
-            <li><a href="06-reg-metrics.html" class="sidebar-lesson"  >6.3
+            <li><a href="06-reg-metrics.html" class="sidebar-lesson">6.3
                 Regression Metrics</a></li>
-            <li><a href="06-tuning.html" class="sidebar-lesson"  >6.4
+            <li><a href="06-tuning.html" class="sidebar-lesson">6.4
                 Hyperparameter Tuning</a></li>
           </ul>
         </div>
@@ -183,20 +145,20 @@
           <button class="sidebar-module-btn" data-module="mod-7">
             <span class="sidebar-module-num">07</span>
             <span style="flex:1">Deep Learning</span>
-             
+
             <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
               fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
           <ul id="mod-7" class="sidebar-lesson-list hidden">
-            <li><a href="07-perceptron.html" class="sidebar-lesson"  >7.1
+            <li><a href="07-perceptron.html" class="sidebar-lesson">7.1
                 Perceptron Foundations</a></li>
-            <li><a href="07-architecture.html" class="sidebar-lesson"  >7.2
+            <li><a href="07-architecture.html" class="sidebar-lesson">7.2
                 Network Architecture</a></li>
-            <li><a href="07-optimization.html" class="sidebar-lesson"  >7.3
+            <li><a href="07-optimization.html" class="sidebar-lesson">7.3
                 Backprop & Optimization</a></li>
-            <li><a href="07-advanced.html" class="sidebar-lesson"  >7.4 CNNs &
+            <li><a href="07-advanced.html" class="sidebar-lesson">7.4 CNNs &
                 RNNs</a></li>
           </ul>
         </div>
@@ -204,16 +166,16 @@
           <button class="sidebar-module-btn" data-module="mod-8">
             <span class="sidebar-module-num">08</span>
             <span style="flex:1">Reinforcement Learning</span>
-             
+
             <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
               fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
           <ul id="mod-8" class="sidebar-lesson-list hidden">
-            <li><a href="08-rl-framework.html" class="sidebar-lesson"  >8.1 The
+            <li><a href="08-rl-framework.html" class="sidebar-lesson">8.1 The
                 RL Framework</a></li>
-            <li><a href="08-algorithms.html" class="sidebar-lesson"  >8.2
+            <li><a href="08-algorithms.html" class="sidebar-lesson">8.2
                 Q-Learning & DQN</a></li>
           </ul>
         </div>
@@ -221,20 +183,20 @@
           <button class="sidebar-module-btn" data-module="mod-9">
             <span class="sidebar-module-num">09</span>
             <span style="flex:1">MLOps & Deployment</span>
-             
+
             <svg class="chevron w-3 h-3 ml-1 flex-shrink-0" style="transition:transform 0.2s;transform:rotate(0deg)"
               fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
           </button>
           <ul id="mod-9" class="sidebar-lesson-list hidden">
-            <li><a href="09-persistence.html" class="sidebar-lesson"  >9.1 Model
+            <li><a href="09-persistence.html" class="sidebar-lesson">9.1 Model
                 Persistence</a></li>
-            <li><a href="09-api.html" class="sidebar-lesson"  >9.2 Building
+            <li><a href="09-api.html" class="sidebar-lesson">9.2 Building
                 APIs</a></li>
-            <li><a href="09-docker.html" class="sidebar-lesson"  >9.3
+            <li><a href="09-docker.html" class="sidebar-lesson">9.3
                 Containerization</a></li>
-            <li><a href="09-cloud.html" class="sidebar-lesson"  >9.4 Cloud
+            <li><a href="09-cloud.html" class="sidebar-lesson">9.4 Cloud
                 Deployment</a></li>
           </ul>
         </div>
@@ -307,7 +269,8 @@
           <h2 id="kernel-trick">The Kernel Trick</h2>
           <p>Many datasets aren't linearly separable. We can map inputs to a higher-dimensional space $\phi(\mathbf{x})$
             where a linear separator exists. The <strong>kernel trick</strong> computes inner products in that space
-            <em>without</em> ever computing $\phi$ explicitly:</p>
+            <em>without</em> ever computing $\phi$ explicitly:
+          </p>
           <div class="math-block"><span class="math-label">Kernel
               Function</span>$$K(\mathbf{x},\mathbf{x}')=\phi(\mathbf{x})^\top\phi(\mathbf{x}')$$</div>
           <div class="def-list">
@@ -444,19 +407,11 @@ print(f"SVR R²: {svr.score(X_test_reg, y_test_reg):.4f}")</code></pre>
       </div>
     </aside>
   </div>
-  <footer class="border-t py-8 px-4 mt-8" style="border-color:var(--border)">
-    <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
-      style="color:var(--text-dim)">
-      <a href="../index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-        <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
-          style="background:var(--sky);color:var(--bg-base)">ML</div>
-        ZeroToML
-      </a>
-      <span>© 2025 ZeroToML — MIT Licensed</span>
-      <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-        class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
-    </div>
-  </footer>
+
+  <!-- footer  -->
+  <div id="footer-mini-placeholder"></div>
+
+
   <script src="../assets/js/main.js"></script>
 </body>
 

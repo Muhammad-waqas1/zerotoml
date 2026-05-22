@@ -27,64 +27,28 @@
         rel="stylesheet" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="manifest" href="manifest.json" />
-    <link rel="icon" type="image/svg+xml" href=" images/zerotoml.png" />
+    <link rel="icon" type="image/svg+xml" href="images/zerotoml.png" />
     <link rel="stylesheet" href="assets/css/main.css" />
+
+    <script src="assets/js/layout.js" defer></script>
 </head>
 
 <body>
 
     <!-- NAVBAR -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="index.html" class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
-                        style="background:var(--sky);color:var(--bg-base)">ML</div>
-                    <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
-                </a>
-                <div class="hidden md:flex items-center gap-1">
-                    <a href="index.html" class="nav-link active">Home</a>
-                    <a href="lessons/01-ml-ecosystem.html" class="nav-link">Curriculum</a>
-                    <a href="about.html" class="nav-link">About</a>
-                    <a href="#tools" class="nav-link">Tools</a>
-                    <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-                        class="nav-link">GitHub</a>
-                </div>
-                <button id="mobile-menu-btn"
-                    class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
-                    style="border-color:var(--border);color:var(--text-muted)" aria-label="Open menu">
-                    <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
-            <a href="index.html" class="mobile-nav-link">Home</a>
-            <a href="lessons/01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
-            <a href="about.html" class="mobile-nav-link">About</a>
-            <a href="#tools" class="mobile-nav-link">Tools</a>
-            <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-                class="mobile-nav-link">GitHub ↗</a>
-        </div>
-    </nav>
+    <div id="navbar-placeholder"></div>
 
     <!-- HERO -->
-    <section class="pt-32 pb-24 px-4 relative overflow-hidden">
+    <section class="pt-20 pb-24 px-4 relative overflow-hidden">
         <div class="absolute inset-0 grid-bg opacity-50 pointer-events-none"></div>
         <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl pointer-events-none"
             style="background:radial-gradient(ellipse,rgba(74,143,168,0.14) 0%,transparent 70%)"></div>
         <div class="max-w-4xl mx-auto text-center relative">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono mb-8 tracking-widest uppercase fade-up"
+            <!-- <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono mb-8 tracking-widest uppercase fade-up"
                 style="border-color:rgba(74,143,168,0.4);background:var(--sky-dim);color:var(--sky)">
                 <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background:var(--sky)"></span>
                 Open Source · Free Forever · All 9 Modules Live
-            </div>
+            </div> -->
             <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl leading-tight mb-6 fade-up delay-100"
                 style="color:var(--text-ink)">
                 Machine Learning<br /><span class="text-gradient">from First Principles</span>
@@ -111,7 +75,7 @@
                 </a>
             </div>
             <!-- Stats -->
-            <div class="mt-16 grid grid-cols-4 gap-4 sm:gap-8 border rounded-2xl p-6 fade-up delay-400"
+            <div class="mt-10 grid grid-cols-4 gap-4 sm:gap-8 border rounded-2xl p-6 fade-up delay-400"
                 style="border-color:var(--border);background:var(--bg-surface)">
                 <div class="text-center">
                     <div class="text-3xl font-display font-bold" style="color:var(--text-ink)">9</div>
@@ -329,6 +293,82 @@
         </div>
     </section>
 
+    <!-- PRACTICAL RESOURCES SECTION -->
+    <section id="practical" class="py-20 px-4">
+        <div class="max-w-6xl mx-auto">
+            <div class="relative overflow-hidden rounded-2xl border p-8 sm:p-12"
+                style="border-color:rgba(184,92,42,0.35);background:var(--bg-surface)">
+                <!-- background accent -->
+                <div class="absolute inset-0 pointer-events-none opacity-30"
+                    style="background:radial-gradient(ellipse at 80% 50%,var(--terra-dim) 0%,transparent 65%)"></div>
+                <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div>
+                        <p class="font-mono text-sm uppercase tracking-widest mb-3" style="color:var(--terra)">Practical
+                            Resources</p>
+                        <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">
+                            Professional ML Lifecycle<br />&amp; Architectures</h2>
+                        <p class="font-serif leading-relaxed mb-6" style="color:var(--text-muted)">Theory meets
+                            production. Ten real-world ML domains — Computer Vision, NLP/LLMs, Tabular ML, GenAI, Time
+                            Series, Recommendation Systems, GNNs, Audio, Anomaly Detection, and Multi-modal AI — each
+                            with full pipeline diagrams, folder structures, artifact checkpoints, and expert tips.</p>
+                        <div class="flex flex-wrap gap-2 mb-8">
+                            <span class="tag">10 ML Domains</span>
+                            <span class="tag">Pipeline Diagrams</span>
+                            <span class="tag">Folder Structures</span>
+                            <span class="tag">Production Patterns</span>
+                            <span class="tag">Expert Tips</span>
+                        </div>
+                        <a href="pratical.html" class="btn-primary inline-flex items-center gap-2">
+                            Explore ML Lifecycle
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </a>
+                    </div>
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
+                            <!-- <div class="text-2xl mb-2">👁️</div> -->
+                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">Computer
+                                Vision</div>
+                            <div class="text-xs font-mono" style="color:var(--text-dim)">CNN · YOLO · ViT</div>
+                        </div>
+                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
+                            <!-- <div class="text-2xl mb-2">🗣️</div> -->
+                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">NLP / LLMs
+                            </div>
+                            <div class="text-xs font-mono" style="color:var(--text-dim)">BERT · GPT · RAG</div>
+                        </div>
+                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
+                            <!-- <div class="text-2xl mb-2">📊</div> -->
+                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">Tabular ML
+                            </div>
+                            <div class="text-xs font-mono" style="color:var(--text-dim)">XGBoost · Feature Eng.</div>
+                        </div>
+                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
+                            <!-- <div class="text-2xl mb-2">⏱️</div> -->
+                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">Time Series
+                            </div>
+                            <div class="text-xs font-mono" style="color:var(--text-dim)">ARIMA · LSTM · Prophet</div>
+                        </div>
+                        <div class="p-4 rounded-xl border col-span-2"
+                            style="border-color:rgba(184,92,42,0.3);background:var(--terra-dim)">
+                            <div class="flex items-center gap-3">
+                                <!-- <div class="text-2xl">✨</div> -->
+                                <div>
+                                    <div class="font-display font-bold text-sm" style="color:var(--text-ink)">+6 more
+                                        domains</div>
+                                    <div class="text-xs font-mono" style="color:var(--text-dim)">GenAI · Rec Sys · GNN
+                                        · Audio · Anomaly · Multi-modal</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- TOOLS SECTION -->
     <section id="tools" class="py-20 px-4">
         <div class="max-w-6xl mx-auto">
@@ -542,93 +582,7 @@
     </section>
 
     <!-- FOOTER -->
-    <footer class="border-t py-14 px-4" style="border-color:var(--border);background:var(--bg-surface)">
-        <div class="max-w-6xl mx-auto">
-            <div class="flex flex-col md:flex-row justify-between items-start gap-10">
-                <div class="max-w-xs">
-                    <a href="index.html" class="flex items-center gap-2 mb-3">
-                        <div class="w-7 h-7 rounded-md flex items-center justify-center font-bold text-xs font-mono"
-                            style="background:var(--sky);color:var(--bg-base)">ML</div>
-                        <span class="font-display font-bold text-lg" style="color:var(--text-ink)">ZeroToML</span>
-                    </a>
-                    <p class="text-sm font-serif leading-relaxed mb-4" style="color:var(--text-muted)">Free, open-source
-                        ML education — from Python setup to cloud deployment. Built with care by Muhammad Waqas.</p>
-                    <a href="https://github.com/Muhammad-waqas1" target="_blank" rel="noopener"
-                        class="inline-flex items-center gap-2 text-xs font-mono hover:text-[var(--sky)] transition-colors"
-                        style="color:var(--text-dim)">
-                        <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                            <path
-                                d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-                        </svg>
-                        @Muhammad-waqas1
-                    </a>
-                </div>
-                <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
-                    <div>
-                        <h4 class="text-xs font-mono uppercase tracking-wider mb-4" style="color:var(--text-muted)">
-                            Start Here</h4>
-                        <ul class="space-y-2 text-sm font-serif" style="color:var(--text-dim)">
-                            <li><a href="lessons/01-ml-ecosystem.html"
-                                    class="hover:text-[var(--sky)] transition-colors">1.1 ML Ecosystem</a></li>
-                            <li><a href="lessons/01-numpy.html" class="hover:text-[var(--sky)] transition-colors">1.2
-                                    NumPy</a></li>
-                            <li><a href="lessons/01-pandas.html" class="hover:text-[var(--sky)] transition-colors">1.3
-                                    Pandas</a></li>
-                            <li><a href="lessons/01-eda.html" class="hover:text-[var(--sky)] transition-colors">1.4
-                                    EDA</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-mono uppercase tracking-wider mb-4" style="color:var(--text-muted)">Key
-                            Lessons</h4>
-                        <ul class="space-y-2 text-sm font-serif" style="color:var(--text-dim)">
-                            <li><a href="lessons/04-regression.html"
-                                    class="hover:text-[var(--sky)] transition-colors">4.1 Regression</a></li>
-                            <li><a href="lessons/04-ensemble.html" class="hover:text-[var(--sky)] transition-colors">4.5
-                                    Ensembles</a></li>
-                            <li><a href="lessons/07-architecture.html"
-                                    class="hover:text-[var(--sky)] transition-colors">7.2 Neural Nets</a></li>
-                            <li><a href="lessons/09-cloud.html" class="hover:text-[var(--sky)] transition-colors">9.4
-                                    Deployment</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-mono uppercase tracking-wider mb-4" style="color:var(--text-muted)">
-                            Tools</h4>
-                        <ul class="space-y-2 text-sm font-serif" style="color:var(--text-dim)">
-                            <li><a href="https://Muhammad-waqas1.github.io/pyorbit-ide" target="_blank" rel="noopener"
-                                    class="hover:text-[var(--sky)] transition-colors">PyOrbit IDE ↗</a></li>
-                            <li><a href="https://Muhammad-waqas1.github.io/hyperplane-hero" target="_blank"
-                                    rel="noopener" class="hover:text-[var(--sky)] transition-colors">Hyperplane Hero
-                                    ↗</a></li>
-                            <li><a href="https://Muhammad-waqas1.github.io/rich-text-markdown-converter" target="_blank"
-                                    rel="noopener" class="hover:text-[var(--sky)] transition-colors">MD Converter ↗</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="text-xs font-mono uppercase tracking-wider mb-4" style="color:var(--text-muted)">
-                            Project</h4>
-                        <ul class="space-y-2 text-sm font-serif" style="color:var(--text-dim)">
-                            <li><a href="about.html" class="hover:text-[var(--sky)] transition-colors">About</a></li>
-                            <li><a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-                                    class="hover:text-[var(--sky)] transition-colors">GitHub</a></li>
-                            <li><a href="https://github.com/Muhammad-waqas1/zerotoml/issues" target="_blank"
-                                    rel="noopener" class="hover:text-[var(--sky)] transition-colors">Report Issue</a>
-                            </li>
-                            <li><a href="LICENSE" class="hover:text-[var(--sky)] transition-colors">MIT License</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <div class="border-t mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
-                style="border-color:var(--border);color:var(--text-dim)">
-                <span>© 2025 ZeroToML — MIT Licensed · <a href="https://github.com/Muhammad-waqas1" target="_blank"
-                        rel="noopener" class="hover:text-[var(--sky)] transition-colors">Muhammad Waqas</a></span>
-                <span>9 modules · 33 lessons · 3 tools · 100% free</span>
-            </div>
-        </div>
-    </footer>
+    <div id="footer-placeholder"></div>
 
     <script src="assets/js/main.js"></script>
 </body>

@@ -24,7 +24,7 @@
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/svg+xml" href=" images/zerotoml.png" />
     <link rel="stylesheet" href="assets/css/main.css" />
-
+    <script src="assets/js/layout.js" defer></script>
     <style>
         /* About page specific prose */
         .about-prose h2 {
@@ -87,45 +87,7 @@
 <body>
 
     <!-- NAVBAR -->
-    <nav id="navbar" class="fixed top-0 left-0 right-0 z-50">
-        <div class="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <a href="index.html" class="flex items-center gap-2.5">
-                    <div class="w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm font-mono"
-                        style="background:var(--sky);color:var(--bg-base)">ML</div>
-                    <span class="font-display text-lg font-bold" style="color:var(--text-ink)">ZeroToML</span>
-                </a>
-                <div class="hidden md:flex items-center gap-1">
-                    <a href="index.html" class="nav-link">Home</a>
-                    <a href="lessons/01-ml-ecosystem.html" class="nav-link">Curriculum</a>
-                    <a href="about.html" class="nav-link active">About</a>
-                    <a href="index.html#tools" class="nav-link">Tools</a>
-                    <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-                        class="nav-link">GitHub</a>
-                </div>
-                <button id="mobile-menu-btn"
-                    class="md:hidden w-9 h-9 rounded-lg border flex items-center justify-center"
-                    style="border-color:var(--border);color:var(--text-muted)">
-                    <svg id="hamburger-icon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16M4 18h16" />
-                    </svg>
-                    <svg id="close-icon" class="w-4 h-4 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
-        </div>
-        <div id="mobile-menu" class="hidden md:hidden px-4 py-3 flex flex-col gap-1">
-            <a href="index.html" class="mobile-nav-link">Home</a>
-            <a href="lessons/01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
-            <a href="about.html" class="mobile-nav-link">About</a>
-            <a href="index.html#tools" class="mobile-nav-link">Tools</a>
-            <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-                class="mobile-nav-link">GitHub ↗</a>
-        </div>
-    </nav>
+    <div id="navbar-placeholder"></div>
 
     <!-- PAGE HERO -->
     <section class="pt-32 pb-16 px-4 relative overflow-hidden">
@@ -150,7 +112,7 @@
             <div class="flex flex-wrap gap-2">
                 <span class="stat-pill">9 Modules</span>
                 <span class="stat-pill">33 Lessons</span>
-                <span class="stat-pill">3 Companion Tools</span>
+                <span class="stat-pill">4 Practical Resources</span>
                 <span class="stat-pill">100% Free</span>
                 <span class="stat-pill">Open Source · MIT</span>
                 <span class="stat-pill">GitHub Pages</span>
@@ -172,7 +134,8 @@
                 real code that actually runs.</p>
             <p>Every lesson follows the same structure: <strong>intuition first</strong> (what is this thing and why
                 does it exist?), <strong>mathematics second</strong> (the equations, rendered with KaTeX), and
-                <strong>code third</strong> (working Python you can copy and run immediately).</p>
+                <strong>code third</strong> (working Python you can copy and run immediately).
+            </p>
 
             <h2 id="who-built-it">Who Built It?</h2>
             <p>ZeroToML was built by <strong>Muhammad Waqas</strong> — a self-taught developer who went through the ML
@@ -184,7 +147,8 @@
                 practitioner — not just someone who can call <code>model.fit()</code>.</p>
             <p>All tools built alongside ZeroToML — PyOrbit IDE, Hyperplane Hero, and the Markdown Converter — are
                 <strong>also free, open source, and hosted on GitHub Pages</strong>. The philosophy is consistent:
-                useful tools should be free and should run in the browser.</p>
+                useful tools should be free and should run in the browser.
+            </p>
             <a href="https://github.com/Muhammad-waqas1" target="_blank" rel="noopener"
                 class="inline-flex items-center gap-2 text-sm font-mono mt-1 mb-2 not-prose" style="color:var(--sky)">
                 <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
@@ -202,7 +166,8 @@
             <p>ZeroToML takes a different approach: every concept starts with a real-world question that makes you
                 <em>want</em> the answer. Then the math is introduced as the precise answer to that question. Then the
                 code shows you how to implement it. This order is intentional — by the time you read an equation, you
-                already know what it's trying to say.</p>
+                already know what it's trying to say.
+            </p>
             <p>The other principle is <strong>"no black boxes at the cost of understanding."</strong> We implement
                 linear regression from scratch in NumPy before ever touching scikit-learn. We write a backpropagation
                 loop in raw Python before opening Keras. We build a Q-Learning agent with a plain dictionary before
@@ -285,7 +250,8 @@
                 execute it without installing anything. Features include the Monaco Editor (VS Code's engine) with a
                 custom dark theme, inline Matplotlib visualisations, an on-demand package installer for any
                 <code>micropip</code>-compatible library, six built-in code snippets, resizable panels, and
-                <code>Ctrl+Enter</code> to run.</p>
+                <code>Ctrl+Enter</code> to run.
+            </p>
             <p><strong>How to use with ZeroToML:</strong> Open PyOrbit in a second browser tab. As you read a lesson,
                 copy any code block into the editor and run it. Change the parameters. Break it on purpose and read the
                 error. This active experimentation is the difference between reading about ML and actually learning it.
@@ -311,6 +277,17 @@
             <p><strong>How to use with ZeroToML:</strong> Take notes in any rich text editor or paste copied content
                 from the web, then convert to clean Markdown to keep in your personal notes repo. It's also useful for
                 converting HTML documentation or rich-text ML reports to Markdown for GitHub READMEs.</p>
+
+            <h3 id="ml-lifecycle">Professional ML Lifecycle &amp; Architectures — Real-World Pipelines</h3>
+            <p><a href="pratical.html">The ML Lifecycle page</a> is a definitive guide to real-world ML project
+                architectures across ten domains: Computer Vision, NLP/LLMs, Tabular ML, Generative AI, Time Series,
+                Recommendation Systems, Graph Neural Networks, Audio ML, Anomaly Detection, and Multi-modal AI. Each
+                domain includes an end-to-end pipeline diagram, a recommended folder structure, artifact checkpoints at
+                every stage, and production-grade tips drawn from how these systems are actually built in industry.</p>
+            <p><strong>How to use with ZeroToML:</strong> Work through the curriculum modules first to build the
+                theoretical and practical foundation — then consult the ML Lifecycle page to see how those concepts
+                compose into complete production pipelines. It bridges the gap between "I understand the algorithm" and
+                "I can architect a real system."</p>
 
             <h2 id="tech-stack">Technical Stack</h2>
             <p>ZeroToML is intentionally built with the smallest possible dependency footprint — no build tools, no
@@ -418,20 +395,7 @@
     </div>
 
     <!-- FOOTER -->
-    <footer class="border-t py-10 px-4 mt-4" style="border-color:var(--border);background:var(--bg-surface)">
-        <div class="max-w-[1400px] mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono"
-            style="color:var(--text-dim)">
-            <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
-                <div class="w-5 h-5 rounded flex items-center justify-center font-bold text-xs"
-                    style="background:var(--sky);color:var(--bg-base)">ML</div>
-                ZeroToML
-            </a>
-            <span>© 2025 ZeroToML — MIT Licensed · <a href="https://github.com/Muhammad-waqas1" target="_blank"
-                    rel="noopener" class="hover:text-[var(--sky)] transition-colors">Muhammad Waqas</a></span>
-            <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener"
-                class="hover:text-[var(--sky)] transition-colors">GitHub ↗</a>
-        </div>
-    </footer>
+    <div id="footer-mini-placeholder"></div>
 
     <script src="assets/js/main.js"></script>
 </body>

@@ -109,11 +109,11 @@ Nine modules, each building on the last. Start from zero, finish with a deployed
 
 ---
 
-## 🛠 Companion Tools
+##  Companion Tools
 
 Three browser-based tools built alongside the curriculum — all free, all open source, all hosted on GitHub Pages.
 
-### 🐍 PyOrbit IDE — Serverless Python Data Science IDE
+###  PyOrbit IDE — Serverless Python Data Science IDE
 
 > **Run the lesson code live, instantly, in your browser.**
 
@@ -124,20 +124,20 @@ A zero-backend Python Data Science IDE powered by **Pyodide WebAssembly**. NumPy
 
 | Feature | Detail |
 |---------|--------|
-| 🐍 Python 3.11 | Full runtime via Pyodide WebAssembly |
-| 📊 Data Science Stack | NumPy, Pandas, Matplotlib pre-loaded |
-| 🖊️ Monaco Editor | VS Code engine with custom `pyorbit-dark` theme |
-| 📦 Package Installer | Install any `micropip`-compatible package on demand |
-| 📈 Inline Plots | Matplotlib figures render in the Visualisation tab |
-| ✂️ 6 Code Snippets | NumPy, Pandas, Matplotlib, Stats, Heatmap built in |
-| ⌨️ Keyboard Shortcuts | `Ctrl/⌘+Enter` to run · `Ctrl/⌘+K` to clear |
-| 📱 Responsive | Stacked layout on mobile |
+|  Python 3.11 | Full runtime via Pyodide WebAssembly |
+|  Data Science Stack | NumPy, Pandas, Matplotlib pre-loaded |
+|  Monaco Editor | VS Code engine with custom `pyorbit-dark` theme |
+|  Package Installer | Install any `micropip`-compatible package on demand |
+|  Inline Plots | Matplotlib figures render in the Visualisation tab |
+|  6 Code Snippets | NumPy, Pandas, Matplotlib, Stats, Heatmap built in |
+|  Keyboard Shortcuts | `Ctrl/⌘+Enter` to run · `Ctrl/⌘+K` to clear |
+|  Responsive | Stacked layout on mobile |
 
 **How to use with ZeroToML:** Open PyOrbit in a second tab while reading any lesson. Paste the code blocks directly — no setup needed. Change parameters, break things intentionally, read the error messages. This is how you actually learn.
 
 ---
 
-### ⚔️ Hyperplane Hero — Interactive SVM Learning Game
+### Hyperplane Hero — Interactive SVM Learning Game
 
 > **Master Support Vector Machines by playing a browser game.**
 
@@ -157,7 +157,7 @@ Instead of reading dry theory, you drag a glowing hyperplane sword across a 2D f
 
 ---
 
-### 📝 Rich Text → Markdown Converter
+###  Rich Text → Markdown Converter
 
 > **Privacy-first, browser-native markdown conversion.**
 
@@ -172,16 +172,45 @@ Convert rich text and HTML to clean Markdown instantly. All processing happens i
 
 ---
 
+##  Practical Resources
+
+### Professional ML Lifecycle & Architectures
+
+> **Bridge the gap between algorithm and production system.**
+
+[![Live](https://img.shields.io/badge/Live-ml--lifecycle-b85c2a?style=flat-square)](https://Muhammad-waqas1.github.io/zerotoml/pratical.html)
+
+A definitive guide to real-world ML project architectures across **10 domains** — each with end-to-end pipeline diagrams, recommended folder structures, artifact checkpoints, and production-grade expert tips.
+
+| Domain | Key Architectures |
+|--------|-------------------|
+| Computer Vision | CNN pipelines, YOLO object detection, ViT |
+| NLP / LLMs | BERT fine-tuning, GPT APIs, RAG pipelines |
+| Tabular ML | XGBoost workflows, feature stores, drift monitoring |
+| Generative AI | Diffusion models, prompt engineering, evaluation |
+| Time Series | ARIMA, LSTM forecasting, Prophet pipelines |
+| Recommendation Systems | Collaborative filtering, two-tower models |
+| Graph Neural Networks | Node classification, link prediction |
+| Audio ML | ASR, speaker diarisation, audio classification |
+| Anomaly Detection | Isolation Forest, autoencoders, streaming |
+| Multi-modal AI | Vision-language models, fusion architectures |
+
+**When to use it:** Complete the curriculum modules to build the theoretical foundation, then consult the ML Lifecycle page to see how those concepts compose into complete production systems.
+
+---
+
 ## The Complete Learning Loop
 
 ```
-📖 READ a lesson (ZeroToML)
+ READ a lesson (ZeroToML)
     ↓
-⚡ RUN the code (PyOrbit IDE — no setup)
+ RUN the code (PyOrbit IDE — no setup)
     ↓
-🎮 PLAY to reinforce (Hyperplane Hero — after Lesson 4.3)
+ PLAY to reinforce (Hyperplane Hero — after Lesson 4.3)
     ↓
-🚀 DEPLOY a real model (Module 09 — FastAPI + Docker + AWS)
+ ARCHITECT a real system (ML Lifecycle — production patterns)
+    ↓
+ DEPLOY a real model (Module 09 — FastAPI + Docker + AWS)
 ```
 
 ---

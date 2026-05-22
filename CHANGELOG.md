@@ -5,6 +5,24 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.1.0] — 2026-05-22
+
+### Added — Professional ML Lifecycle & Architectures
+
+- `pratical.html`: New standalone guide covering real-world ML project architectures across 10 domains — Computer Vision, NLP/LLMs, Tabular ML, Generative AI, Time Series, Recommendation Systems, Graph Neural Networks, Audio ML, Anomaly Detection, and Multi-modal AI
+- Each domain includes an end-to-end pipeline diagram, recommended folder structure, artifact checkpoints, and production-grade expert tips
+- Pipeline diagrams are fully responsive with horizontal scroll on mobile
+
+### Changed — Site Integration
+
+- `index.html`: Added "Practical Resources" section between the Features Strip and Tools Section — features a two-column card with domain previews and a direct link to the ML Lifecycle page
+- `index.html`: Updated footer stat strip to reflect the new lifecycle guide
+- `about.html`: Added `#ml-lifecycle` subsection under Companion Tools describing the page and how it bridges curriculum learning to production system design
+- `about.html`: Updated stat pill from "3 Companion Tools" to "4 Practical Resources"
+- `README.md`: Added `Practical Resources` section with a full domain table and updated the Complete Learning Loop to include the ML Lifecycle step
+
+---
+
 ## [1.0.0] — 2025-04-18
 
 ### Added — All 9 Modules Complete 🎉
@@ -79,4 +97,3 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Sidebar: removed "soon" labels and opacity dimming — all lessons render uniformly
 - Logo: updated from Σ to ML monogram
 - Navbar: added About and Tools links
- 
