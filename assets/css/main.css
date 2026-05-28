@@ -1,3 +1,30 @@
+/* JetBrains Mono */
+@font-face {
+  font-family: 'Local JetBrains Mono';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/jetbrains-mono-v24-latin-regular.woff2') format('woff2');
+}
+
+/* Lora */
+@font-face {
+  font-family: 'Local Lora';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('../fonts/lora-v37-latin-regular.woff2') format('woff2');
+}
+
+/* Source Serif 4 */
+@font-face {
+  font-family: 'Local Source Serif 4';
+  font-style: normal;
+  font-weight: 300 900; 
+  font-display: swap;
+  src: url('../fonts/source-serif-4-v14-latin-regular.woff2') format('woff2');
+}
+
 :root {
   --bg-base: #f0e9dc;
   --bg-surface: #e8dfd0;
@@ -30,9 +57,10 @@
   --amber: #c4891a;
   --amber-dim: rgba(196, 137, 26, 0.11);
 
-  --font-display: 'Lora', Georgia, serif;
-  --font-body: 'Source Serif 4', Georgia, serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  /* Using local font families with fallbacks if needed */
+  --font-display: 'Local Lora', 'Lora', Georgia, serif;
+  --font-body: 'Local Source Serif 4', 'Source Serif 4', Georgia, serif;
+  --font-mono: 'Local JetBrains Mono', 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 /* ── Reset ── */
