@@ -27,7 +27,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     <a href="${rootPrefix}index.html" class="nav-link" id="nav-home">Home</a>
                     <a href="${lessonPrefix}01-ml-ecosystem.html" class="nav-link" id="nav-curriculum">Curriculum</a>
                     <a href="${rootPrefix}about.html" class="nav-link" id="nav-about">About</a>
-                    <a href="${rootPrefix}pratical.html" class="nav-link" id="nav-practical">Practical</a>
+                    <a href="${rootPrefix}pratical.html" class="nav-link" id="nav-practical">ML Lifecycle</a>
+                    <a href="${rootPrefix}cheatsheet.html" class="nav-link" id="nav-cheatsheet">Cheat Sheet</a>
+                    <a href="${rootPrefix}mlops.html" class="nav-link" id="nav-mlops">MLOps</a>
                     <a href="${rootPrefix}index.html#tools" class="nav-link">Tools</a>
                     <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="nav-link">GitHub</a>
                 </div>
@@ -58,6 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <a href="${rootPrefix}index.html" class="mobile-nav-link">Home</a>
             <a href="${lessonPrefix}01-ml-ecosystem.html" class="mobile-nav-link">Curriculum</a>
             <a href="${rootPrefix}about.html" class="mobile-nav-link">About</a>
+            <a href="${rootPrefix}pratical.html" class="mobile-nav-link">ML Lifecycle</a>
+            <a href="${rootPrefix}cheatsheet.html" class="mobile-nav-link">Cheat Sheet</a>
+            <a href="${rootPrefix}mlops.html" class="mobile-nav-link">MLOps</a>
             <a href="https://github.com/Muhammad-waqas1/zerotoml" target="_blank" rel="noopener" class="mobile-nav-link">GitHub ↗</a>
         </div>
     </nav>
@@ -79,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         @Muhammad-waqas1
                     </a>
                 </div>
-                <div class="grid grid-cols-2 gap-8 sm:grid-cols-4">
+                <div class="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
                     <div>
                         <h4 class="text-xs font-mono uppercase tracking-wider mb-4" style="color:var(--text-muted)">Start Here</h4>
                         <ul class="space-y-2 text-sm font-serif" style="color:var(--text-dim)">
@@ -96,6 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
                             <li><a href="${lessonPrefix}04-ensemble.html" class="hover:text-[var(--sky)] transition-colors">4.5 Ensembles</a></li>
                             <li><a href="${lessonPrefix}07-architecture.html" class="hover:text-[var(--sky)] transition-colors">7.2 Neural Nets</a></li>
                             <li><a href="${lessonPrefix}09-cloud.html" class="hover:text-[var(--sky)] transition-colors">9.4 Deployment</a></li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="text-xs font-mono uppercase tracking-wider mb-4" style="color:var(--text-muted)">References</h4>
+                        <ul class="space-y-2 text-sm font-serif" style="color:var(--text-dim)">
+                            <li><a href="${rootPrefix}pratical.html" class="hover:text-[var(--sky)] transition-colors">ML Lifecycle</a></li>
+                            <li><a href="${rootPrefix}cheatsheet.html" class="hover:text-[var(--sky)] transition-colors">Cheat Sheet</a></li>
+                            <li><a href="${rootPrefix}mlops.html" class="hover:text-[var(--sky)] transition-colors">MLOps Guide</a></li>
                         </ul>
                     </div>
                     <div>
@@ -119,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
             </div>
             <div class="border-t mt-10 pt-6 flex flex-col sm:flex-row justify-between items-center gap-3 text-xs font-mono" style="border-color:var(--border);color:var(--text-dim)">
                 <span>© 2025 ZeroToML — MIT Licensed · <a href="https://github.com/Muhammad-waqas1" target="_blank" rel="noopener" class="hover:text-[var(--sky)] transition-colors">Muhammad Waqas</a></span>
-                <span>9 modules · 33 lessons · 3 tools · 100% free</span>
+                <span>9 modules · 33 lessons · 3 tools · 3 reference guides · 100% free</span>
             </div>
         </div>
     </footer>
@@ -154,6 +167,8 @@ document.addEventListener("DOMContentLoaded", () => {
     else if (isInLessonsSubfolder) document.getElementById("nav-curriculum")?.classList.add("active");
     else if (currentFile === "about.html") document.getElementById("nav-about")?.classList.add("active");
     else if (currentFile === "pratical.html") document.getElementById("nav-practical")?.classList.add("active");
+    else if (currentFile === "cheatsheet.html") document.getElementById("nav-cheatsheet")?.classList.add("active");
+    else if (currentFile === "mlops.html") document.getElementById("nav-mlops")?.classList.add("active");
 
     // 8. Mobile Menu Toggler logic
     const menuBtn = document.getElementById("mobile-menu-btn");

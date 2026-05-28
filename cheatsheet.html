@@ -1,0 +1,1322 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ML Library Reference | ZeroToML</title>
+    <meta name="description"
+        content="Syntax reference for every major ML library — NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, XGBoost, LightGBM, PyTorch, TensorFlow/Keras — with worked examples." />
+    <meta name="author" content="Muhammad Waqas" />
+    <link rel="canonical" href="https://Muhammad-waqas1.github.io/zerotoml/cheatsheet.html" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+
+    <script>hljs.highlightAll();</script>
+
+    <link rel="icon" type="image/svg+xml" href="images/zerotoml.png" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script src="assets/js/layout.js" defer></script>
+    <style>
+        html,
+        body {
+            overflow-x: clip;
+            max-width: 100%;
+        }
+
+        #domain-nav {
+            background: rgba(240, 233, 220, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 39;
+        }
+
+        .domain-tab {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 0.875rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            border-radius: 0.375rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+        }
+
+        .domain-tab:hover {
+            color: var(--text-ink);
+            background: var(--bg-elevated);
+        }
+
+        .domain-tab.active {
+            color: #f0e9dc;
+            background: var(--sky);
+            border-color: rgba(74, 143, 168, 0.3);
+        }
+
+        .domain-scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            padding: 0.5rem 1rem;
+        }
+
+        .domain-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .domain-section {
+            padding-top: 5rem;
+            scroll-margin-top: 7rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 3rem;
+        }
+
+        .domain-section:last-child {
+            border-bottom: none;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .code-wrap {
+            position: relative;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin: 1rem 0 1.5rem;
+            max-width: 100%;
+        }
+
+        .code-wrap pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0;
+            font-size: 0.8rem;
+            line-height: 1.65;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .code-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            background: #111;
+            color: #6b6050;
+            border-bottom: 1px solid #333;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            color: #888;
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            z-index: 1;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #eee;
+        }
+
+        .ref-table-wrap {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            margin: 1rem 0 1.75rem;
+            border-radius: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .ref-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.855rem;
+            min-width: 480px;
+        }
+
+        .ref-table th {
+            text-align: left;
+            padding: 0.6rem 0.875rem;
+            background: var(--bg-surface);
+            border-bottom: 2px solid var(--border);
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+        }
+
+        .ref-table td {
+            padding: 0.55rem 0.875rem;
+            border-bottom: 1px solid var(--border-soft);
+            color: var(--text-body);
+            vertical-align: top;
+            line-height: 1.5;
+        }
+
+        .ref-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ref-table tr:hover td {
+            background: var(--bg-surface);
+        }
+
+        code.inline {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            padding: 0.12em 0.38em;
+            border-radius: 0.25rem;
+            color: var(--terra);
+        }
+
+        .note-box {
+            padding: 1rem 1.25rem;
+            border-radius: 0.625rem;
+            margin: 1.25rem 0;
+            border: 1px solid;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text-body);
+            line-height: 1.65;
+        }
+
+        .note-box.sky {
+            border-color: rgba(74, 143, 168, 0.35);
+            background: var(--sky-dim);
+        }
+
+        .note-box.sage {
+            border-color: rgba(92, 138, 88, 0.35);
+            background: var(--sage-dim);
+        }
+
+        .note-box.terra {
+            border-color: rgba(184, 92, 42, 0.35);
+            background: var(--terra-dim);
+        }
+
+        .note-box.amber {
+            border-color: rgba(196, 137, 26, 0.35);
+            background: var(--amber-dim);
+        }
+
+        .sub-heading {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-ink);
+            margin: 2.25rem 0 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+
+    <div id="navbar-placeholder"></div>
+
+    <section class="pt-32 pb-14 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-40 pointer-events-none"></div>
+        <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl pointer-events-none"
+            style="background:radial-gradient(ellipse,rgba(92,138,88,0.1) 0%,transparent 70%)"></div>
+        <div class="max-w-5xl mx-auto relative">
+            <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+                <a href="index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+                <span style="color:var(--border-strong)">/</span>
+                <span style="color:var(--text-muted)">ML Library Reference</span>
+            </nav>
+            <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-5"
+                style="color:var(--text-ink)">
+                ML Library<br /><span class="text-gradient">Reference</span>
+            </h1>
+            <p class="font-serif text-xl leading-relaxed max-w-3xl mb-8" style="color:var(--text-muted)">
+                Syntax, patterns, and worked examples for the nine libraries that cover the full
+                ML workflow — from raw arrays to deployed neural networks.
+            </p>
+            <div class="flex flex-wrap gap-2">
+                <span class="tag">NumPy</span>
+                <span class="tag">Pandas</span>
+                <span class="tag">Matplotlib</span>
+                <span class="tag">Seaborn</span>
+                <span class="tag">Scikit-learn</span>
+                <span class="tag">XGBoost</span>
+                <span class="tag">LightGBM</span>
+                <span class="tag">PyTorch</span>
+                <span class="tag">TF / Keras</span>
+            </div>
+        </div>
+    </section>
+
+    <div id="domain-nav" class="sticky top-16">
+        <div class="domain-scroll max-w-[1400px] mx-auto" style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 6px;
+            padding: 8px;
+            background-color: #e8dfd0;
+        ">
+            <a href="#numpy" class="domain-tab">NumPy</a>
+            <a href="#pandas" class="domain-tab">Pandas</a>
+            <a href="#matplotlib" class="domain-tab">Matplotlib</a>
+            <a href="#seaborn" class="domain-tab">Seaborn</a>
+            <a href="#sklearn" class="domain-tab">Scikit-learn</a>
+            <a href="#xgboost" class="domain-tab">XGBoost</a>
+            <a href="#lightgbm" class="domain-tab">LightGBM</a>
+            <a href="#pytorch" class="domain-tab">PyTorch</a>
+            <a href="#tensorflow" class="domain-tab">TF / Keras</a>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 pb-24">
+
+        <section id="numpy" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">NumPy</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                NumPy provides the <code class="inline">ndarray</code> — a fixed-type, multi-dimensional array that
+                executes
+                mathematical operations in compiled C rather than interpreted Python. This makes it 10–100× faster than
+                equivalent list-based code and forms the data representation layer beneath every other ML library.
+                Install with <code class="inline">pip install numpy</code>, import as <code
+                    class="inline">import numpy as np</code>.
+            </p>
+
+            <p class="sub-heading">Creating arrays</p>
+            <div class="code-wrap">
+                <span class="code-label">array creation</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import numpy as np
+
+# From Python sequences
+a = np.array([1, 2, 3, 4, 5])
+b = np.array([[1, 2, 3],
+              [4, 5, 6]])          # shape (2, 3)
+
+# Factory functions
+np.zeros((3, 4))                   # all 0.0, float64
+np.ones((2, 3))                    # all 1.0
+np.eye(4)                          # 4×4 identity matrix
+np.full((2, 3), 7)                 # fill with constant
+
+# Ranges
+np.arange(0, 10, 2)               # [0 2 4 6 8]
+np.linspace(0, 1, 5)              # 5 evenly spaced points in [0, 1]
+
+# Random — set seed once for reproducibility
+np.random.seed(42)
+np.random.rand(3, 3)              # uniform [0, 1)
+np.random.randn(3, 3)             # standard normal N(0,1)
+np.random.randint(0, 10, (3, 3)) # integers</code></pre>
+            </div>
+
+            <p class="sub-heading">Inspection</p>
+            <div class="ref-table-wrap">
+                <table class="ref-table">
+                    <tr>
+                        <th>Attribute / Method</th>
+                        <th>Returns</th>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">a.shape</code></td>
+                        <td>Tuple of dimension sizes, e.g. <code class="inline">(100, 3)</code></td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">a.ndim</code></td>
+                        <td>Number of axes — 1 for vector, 2 for matrix, 3+ for tensor</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">a.dtype</code></td>
+                        <td>Element type — <code class="inline">float64</code>, <code class="inline">int32</code>, etc.
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">a.size</code></td>
+                        <td>Total element count (product of all shape values)</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">a.nbytes</code></td>
+                        <td>Memory consumed in bytes</td>
+                    </tr>
+                </table>
+            </div>
+
+            <p class="sub-heading">Indexing and slicing</p>
+            <div class="code-wrap">
+                <span class="code-label">indexing</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">a = np.array([[10, 20, 30],
+              [40, 50, 60],
+              [70, 80, 90]])
+
+a[0, 0]      # 10  — row 0, col 0 (zero-indexed)
+a[1, 2]      # 60
+a[-1, -1]    # 90  — last row, last col
+
+# Slicing  [start : stop : step]
+a[0, :]      # [10 20 30]  — entire row 0
+a[:, 1]      # [20 50 80]  — entire column 1
+a[0:2, 1:]   # [[20 30], [50 60]]
+
+# Boolean indexing
+a[a > 50]    # [60 70 80 90]
+
+# Fancy indexing
+a[[0, 2], :]  # rows 0 and 2</code></pre>
+            </div>
+
+            <p class="sub-heading">Operations and aggregations</p>
+            <div class="code-wrap">
+                <span class="code-label">math</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">a = np.array([1.0, 2.0, 3.0, 4.0])
+b = np.array([10.0, 20.0, 30.0, 40.0])
+
+# Element-wise (no loop needed)
+a + b        # [11 22 33 44]
+a * b        # [10 40 90 160]
+a ** 2       # [1  4  9  16]
+a + 5        # [6  7  8   9]  — scalar broadcast
+
+# Aggregations
+a.sum()      # 10.0
+a.mean()     # 2.5
+a.std()      # standard deviation
+a.min()      # 1.0
+a.max()      # 4.0
+a.argmin()   # 0  — index of minimum
+a.argmax()   # 3  — index of maximum
+
+# Axis-based — axis=0 collapses rows, axis=1 collapses columns
+m = np.array([[1, 2], [3, 4]])
+m.sum(axis=0)   # [4 6]  — sum each column
+m.sum(axis=1)   # [3 7]  — sum each row
+
+# Linear algebra
+np.dot(a, a)              # dot product
+np.linalg.norm(a)         # L2 norm
+A = np.array([[1,2],[3,4]])
+np.linalg.inv(A)          # matrix inverse
+np.linalg.det(A)          # determinant
+vals, vecs = np.linalg.eig(A)</code></pre>
+            </div>
+
+            <p class="sub-heading">Reshaping</p>
+            <div class="code-wrap">
+                <span class="code-label">reshape</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">a = np.arange(12)         # [0 1 2 ... 11]
+
+a.reshape(3, 4)            # 3×4 — total elements must be equal
+a.reshape(3, -1)           # same — -1 infers the missing dimension
+a.reshape(-1, 1)           # column vector: shape (12, 1)
+a.flatten()                # 1D copy
+
+# Stacking
+x = np.array([1, 2, 3])
+y = np.array([4, 5, 6])
+np.hstack([x, y])          # [1 2 3 4 5 6]
+np.vstack([x, y])          # [[1 2 3], [4 5 6]]</code></pre>
+            </div>
+        </section>
+
+        <section id="pandas" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Pandas</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                Pandas provides the <code class="inline">DataFrame</code> — a labelled two-dimensional table analogous
+                to a
+                spreadsheet — and the <code class="inline">Series</code> for a single column. It handles the entire
+                data wrangling phase: loading files, cleaning missing values, filtering rows, grouping, and merging
+                datasets before they reach a model. Install as <code class="inline">pip install pandas</code>,
+                import as <code class="inline">import pandas as pd</code>.
+            </p>
+
+            <p class="sub-heading">Creating and loading</p>
+            <div class="code-wrap">
+                <span class="code-label">create / load</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import pandas as pd
+
+# From a dict — keys become column names
+df = pd.DataFrame({
+    'name':  ['Alice', 'Bob', 'Carol'],
+    'age':   [24, 32, 28],
+    'score': [88.5, 72.1, 95.0]
+})
+
+# File I/O
+df = pd.read_csv('data.csv')
+df = pd.read_csv('data.csv', index_col='id', nrows=1000)
+df = pd.read_excel('data.xlsx', sheet_name=0)
+df = pd.read_json('data.json')
+
+df.to_csv('output.csv', index=False)
+df.to_excel('output.xlsx', index=False)</code></pre>
+            </div>
+
+            <p class="sub-heading">Exploration — run these first on any new dataset</p>
+            <div class="code-wrap">
+                <span class="code-label">explore</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">df.shape            # (rows, cols)
+df.dtypes           # data type of each column
+df.head()           # first 5 rows
+df.tail()           # last 5 rows
+df.sample(5)        # 5 random rows
+df.info()           # column names, non-null counts, dtypes
+df.describe()       # count / mean / std / min / quartiles / max
+df.isnull().sum()   # missing values per column
+df.duplicated().sum()</code></pre>
+            </div>
+
+            <p class="sub-heading">Selecting data</p>
+            <div class="code-wrap">
+                <span class="code-label">selection</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python"># Column selection
+df['age']                      # Series
+df[['name', 'age']]            # DataFrame
+
+# iloc — position-based (integers)
+df.iloc[0]                     # row 0
+df.iloc[0:5]                   # rows 0–4
+df.iloc[0:5, 1:3]              # rows 0–4, columns 1–2
+
+# loc — label-based
+df.loc[0, 'age']               # row label 0, column 'age'
+
+# Boolean filtering
+df[df['age'] > 30]
+df[df['score'].between(70, 90)]
+df[(df['age'] > 25) & (df['score'] > 80)]   # AND  — use &, not 'and'
+df[(df['age'] < 25) | (df['score'] > 90)]   # OR   — use |, not 'or'
+df.query("age > 30 and score > 70")</code></pre>
+            </div>
+
+            <p class="sub-heading">Modifying data</p>
+            <div class="code-wrap">
+                <span class="code-label">modify</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python"># Add columns
+df['grade']  = df['score'] / 100
+df['passed'] = df['score'] >= 60
+df['label']  = df['score'].apply(lambda x: 'A' if x >= 90 else 'B')
+
+# Rename
+df.rename(columns={'name': 'full_name'}, inplace=True)
+
+# Drop
+df.drop(columns=['grade'], inplace=True)
+df.drop(index=[0, 1],  inplace=True)
+
+# Type conversion
+df['age']  = df['age'].astype(float)
+df['date'] = pd.to_datetime(df['date'])
+
+# Sort
+df.sort_values('score', ascending=False)
+df.sort_values(['age', 'score'], ascending=[True, False])</code></pre>
+            </div>
+
+            <p class="sub-heading">Missing values</p>
+            <div class="code-wrap">
+                <span class="code-label">missing data</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">df.isnull().sum()               # count per column
+df.isnull().mean()              # fraction missing per column
+
+df.dropna()                     # drop any row with NaN
+df.dropna(thresh=5)             # keep rows with ≥5 non-NaN values
+
+df.fillna(0)
+df['age'].fillna(df['age'].mean())
+df['city'].fillna('Unknown')
+df.ffill()                      # forward fill
+df.bfill()                      # backward fill</code></pre>
+            </div>
+
+            <p class="sub-heading">GroupBy</p>
+            <div class="code-wrap">
+                <span class="code-label">groupby</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">df.groupby('dept')['salary'].mean()
+df.groupby('dept')['salary'].agg(['mean', 'min', 'max', 'count'])
+df.groupby('dept')['salary'].sum().reset_index()
+df.groupby('dept')['salary'].apply(lambda x: x.max() - x.min())</code></pre>
+            </div>
+
+            <p class="sub-heading">Merging</p>
+            <div class="code-wrap">
+                <span class="code-label">merge / concat</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">pd.merge(df1, df2, on='id', how='inner')   # matching rows only
+pd.merge(df1, df2, on='id', how='left')    # all rows from df1
+pd.merge(df1, df2, on='id', how='outer')   # all rows from both
+
+pd.concat([df1, df2], axis=0)   # stack rows
+pd.concat([df1, df2], axis=1)   # stack columns</code></pre>
+            </div>
+        </section>
+
+        <section id="matplotlib" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Matplotlib</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                Matplotlib is Python's foundational plotting library. The <code class="inline">pyplot</code> interface
+                (<code class="inline">import matplotlib.pyplot as plt</code>) provides a stateful API for creating
+                figures. Most ML workflows use it directly for training curves, confusion matrices, and
+                feature distribution plots. Always call <code class="inline">plt.tight_layout()</code> before
+                saving and <code class="inline">plt.show()</code> to display.
+            </p>
+
+            <p class="sub-heading">Line, scatter, bar, histogram</p>
+            <div class="code-wrap">
+                <span class="code-label">basic plots</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import matplotlib.pyplot as plt
+import numpy as np
+
+x = np.linspace(0, 10, 200)
+
+# Line plot
+plt.figure(figsize=(8, 4))
+plt.plot(x, np.sin(x), color='steelblue', linewidth=2, label='sin')
+plt.plot(x, np.cos(x), color='orange',    linewidth=2, label='cos')
+plt.xlabel('x')
+plt.ylabel('y')
+plt.title('Trigonometric functions')
+plt.legend()
+plt.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('plot.png', dpi=150)
+plt.show()
+
+# Scatter plot
+plt.figure(figsize=(6, 5))
+plt.scatter(np.random.randn(100), np.random.randn(100),
+            alpha=0.6, c='steelblue', edgecolors='white', s=50)
+plt.xlabel('x')
+plt.ylabel('y')
+plt.show()
+
+# Bar chart
+cats   = ['A', 'B', 'C', 'D']
+values = [23, 45, 12, 67]
+plt.figure(figsize=(6, 4))
+plt.bar(cats, values, color='steelblue')
+plt.ylabel('Count')
+plt.show()
+
+# Histogram
+data = np.random.randn(1000)
+plt.figure(figsize=(7, 4))
+plt.hist(data, bins=30, color='steelblue', edgecolor='white', alpha=0.85)
+plt.xlabel('Value')
+plt.ylabel('Frequency')
+plt.show()</code></pre>
+            </div>
+
+            <p class="sub-heading">Subplots</p>
+            <div class="code-wrap">
+                <span class="code-label">subplots</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+
+axes[0].plot(x, np.sin(x), color='steelblue')
+axes[0].set_title('Sine')
+axes[0].set_xlabel('x')
+
+axes[1].plot(x, np.cos(x), color='orange')
+axes[1].set_title('Cosine')
+axes[1].set_xlabel('x')
+
+plt.suptitle('Functions', fontsize=14)
+plt.tight_layout()
+plt.show()
+
+# 2×2 grid
+fig, axes = plt.subplots(2, 2, figsize=(10, 8))
+# Access panels as axes[row, col]</code></pre>
+            </div>
+
+            <p class="sub-heading">Heatmap — confusion matrix</p>
+            <div class="code-wrap">
+                <span class="code-label">heatmap</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">cm     = np.array([[85, 5, 10], [3, 90, 7], [2, 4, 94]])
+labels = ['Cat', 'Dog', 'Bird']
+
+fig, ax = plt.subplots(figsize=(5, 4))
+im = ax.imshow(cm, cmap='Blues')
+plt.colorbar(im, ax=ax)
+
+for i in range(len(labels)):
+    for j in range(len(labels)):
+        ax.text(j, i, cm[i, j], ha='center', va='center', fontsize=12)
+
+ax.set_xticks(range(len(labels))); ax.set_xticklabels(labels)
+ax.set_yticks(range(len(labels))); ax.set_yticklabels(labels)
+ax.set_xlabel('Predicted')
+ax.set_ylabel('Actual')
+ax.set_title('Confusion Matrix')
+plt.tight_layout()
+plt.show()</code></pre>
+            </div>
+        </section>
+
+        <section id="seaborn" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Seaborn</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                Seaborn is a statistical visualisation library built on top of Matplotlib. It accepts Pandas
+                DataFrames directly — pass column names instead of arrays — and renders publication-quality plots
+                with significantly less code. Call <code class="inline">sns.set_theme()</code> once at the top
+                of a notebook to apply the clean Seaborn style. Install as <code
+                    class="inline">pip install seaborn</code>.
+            </p>
+
+            <div class="code-wrap">
+                <span class="code-label">seaborn reference</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import seaborn as sns
+import matplotlib.pyplot as plt
+
+sns.set_theme(style='whitegrid')
+
+df = sns.load_dataset('penguins').dropna()
+
+# Distribution — histogram + kernel density estimate
+sns.histplot(df['flipper_length_mm'], bins=30, kde=True)
+plt.show()
+
+# Box plot — distribution by category, outliers visible
+sns.boxplot(x='species', y='flipper_length_mm', data=df)
+plt.show()
+
+# Violin plot — box plot + full distribution shape
+sns.violinplot(x='species', y='flipper_length_mm', data=df)
+plt.show()
+
+# Scatter with categorical colour
+sns.scatterplot(x='bill_length_mm', y='bill_depth_mm',
+                hue='species', data=df, alpha=0.7)
+plt.show()
+
+# Correlation heatmap
+corr = df.select_dtypes('number').corr()
+sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', center=0)
+plt.show()
+
+# Pair plot — scatterplot grid across all numeric columns
+sns.pairplot(df, hue='species', plot_kws={'alpha': 0.5})
+plt.show()
+
+# Count plot — bar chart of category frequency
+sns.countplot(x='species', data=df, palette='Set2')
+plt.show()
+
+# Regression line overlay
+sns.regplot(x='body_mass_g', y='flipper_length_mm', data=df,
+            scatter_kws={'alpha': 0.4}, line_kws={'color': 'red'})
+plt.show()</code></pre>
+            </div>
+        </section>
+
+        <section id="sklearn" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Scikit-learn</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                Scikit-learn is the standard library for classical ML. Every estimator — whether a linear model,
+                decision tree, or preprocessor — follows the same interface:
+                <code class="inline">estimator.fit(X, y)</code> to train,
+                <code class="inline">estimator.predict(X)</code> to infer,
+                <code class="inline">estimator.transform(X)</code> for preprocessors.
+                This consistency means switching between algorithms requires changing one line.
+            </p>
+
+            <p class="sub-heading">Train/test split and cross-validation</p>
+            <div class="code-wrap">
+                <span class="code-label">splitting</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">from sklearn.model_selection import train_test_split, cross_val_score
+import numpy as np
+
+X = np.random.rand(1000, 10)
+y = np.random.randint(0, 2, 1000)
+
+# 80/20 split — stratify keeps the class ratio identical in both splits
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# 5-fold cross-validation
+from sklearn.linear_model import LogisticRegression
+model  = LogisticRegression()
+scores = cross_val_score(model, X, y, cv=5, scoring='accuracy')
+print(f"{scores.mean():.3f} ± {scores.std():.3f}")</code></pre>
+            </div>
+
+            <p class="sub-heading">Preprocessing</p>
+            <div class="code-wrap">
+                <span class="code-label">scaling and encoding</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">from sklearn.preprocessing import StandardScaler, MinMaxScaler, LabelEncoder, OneHotEncoder
+
+# Always fit on training data only, then transform both sets
+scaler           = StandardScaler()
+X_train_scaled   = scaler.fit_transform(X_train)   # fit + transform
+X_test_scaled    = scaler.transform(X_test)         # transform only — no refit
+
+# Label encoding (ordinal target variable)
+le          = LabelEncoder()
+y_encoded   = le.fit_transform(['cat', 'dog', 'cat', 'bird'])
+le.inverse_transform([1, 2])                        # back to string labels
+
+# One-hot encoding (categorical features)
+enc         = OneHotEncoder(sparse_output=False)
+enc.fit_transform([['red'], ['blue'], ['green']])</code></pre>
+            </div>
+
+            <p class="sub-heading">Common estimators</p>
+            <div class="code-wrap">
+                <span class="code-label">algorithms</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">from sklearn.linear_model     import LogisticRegression, LinearRegression, Ridge, Lasso
+from sklearn.tree             import DecisionTreeClassifier
+from sklearn.ensemble         import RandomForestClassifier, GradientBoostingClassifier
+from sklearn.neighbors        import KNeighborsClassifier
+from sklearn.svm              import SVC
+
+# All follow the same fit / predict pattern
+models = {
+    'Logistic Regression':  LogisticRegression(max_iter=1000),
+    'Random Forest':         RandomForestClassifier(n_estimators=100, random_state=42),
+    'KNN':                   KNeighborsClassifier(n_neighbors=5),
+    'SVM':                   SVC(kernel='rbf', C=1.0),
+    'Gradient Boosting':     GradientBoostingClassifier(n_estimators=100),
+}
+
+for name, model in models.items():
+    model.fit(X_train, y_train)
+    print(f"{name}: {model.score(X_test, y_test):.3f}")</code></pre>
+            </div>
+
+            <p class="sub-heading">Evaluation metrics</p>
+            <div class="code-wrap">
+                <span class="code-label">metrics</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">from sklearn.metrics import (
+    accuracy_score, precision_score, recall_score, f1_score,
+    confusion_matrix, classification_report,
+    mean_absolute_error, mean_squared_error, r2_score
+)
+import numpy as np
+
+y_true = [0, 1, 1, 0, 1, 1]
+y_pred = [0, 1, 0, 0, 1, 1]
+
+print(accuracy_score(y_true, y_pred))       # 0.833
+print(precision_score(y_true, y_pred))      # TP / (TP + FP)
+print(recall_score(y_true, y_pred))         # TP / (TP + FN)
+print(f1_score(y_true, y_pred))
+print(classification_report(y_true, y_pred))
+
+# Regression
+y_true_r = [3.0, -0.5, 2.0, 7.0]
+y_pred_r = [2.5,  0.0, 2.0, 8.0]
+print(mean_absolute_error(y_true_r, y_pred_r))
+print(np.sqrt(mean_squared_error(y_true_r, y_pred_r)))  # RMSE
+print(r2_score(y_true_r, y_pred_r))</code></pre>
+            </div>
+
+            <p class="sub-heading">Pipelines and hyperparameter search</p>
+            <div class="code-wrap">
+                <span class="code-label">pipeline + gridsearch</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">from sklearn.pipeline       import Pipeline
+from sklearn.preprocessing  import StandardScaler
+from sklearn.linear_model   import LogisticRegression
+from sklearn.model_selection import GridSearchCV
+
+# Pipeline applies steps in order — no data leakage between train and test
+pipe = Pipeline([
+    ('scaler', StandardScaler()),
+    ('model',  LogisticRegression(max_iter=1000))
+])
+
+param_grid = {
+    'model__C':        [0.01, 0.1, 1, 10],
+    'model__max_iter': [500, 1000]
+}
+search = GridSearchCV(pipe, param_grid, cv=5, scoring='accuracy', n_jobs=-1)
+search.fit(X_train, y_train)
+print(search.best_params_)
+print(f"{search.best_score_:.3f}")</code></pre>
+            </div>
+        </section>
+
+        <section id="xgboost" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">XGBoost</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                XGBoost builds an additive ensemble of decision trees where each new tree is fitted to the residual
+                errors
+                of all previous trees. It applies L1 and L2 regularisation directly in the objective function and
+                uses second-order gradient information for faster convergence. It consistently wins on tabular data.
+                Install with <code class="inline">pip install xgboost</code>.
+            </p>
+
+            <div class="code-wrap">
+                <span class="code-label">xgboost classification and regression</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import xgboost as xgb
+from sklearn.datasets        import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.metrics         import accuracy_score
+
+X, y = load_breast_cancer(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+
+model = xgb.XGBClassifier(
+    n_estimators      = 200,
+    max_depth         = 4,
+    learning_rate     = 0.1,
+    subsample         = 0.8,
+    colsample_bytree  = 0.8,
+    eval_metric       = 'logloss',
+    random_state      = 42
+)
+
+model.fit(
+    X_tr, y_tr,
+    eval_set  = [(X_te, y_te)],
+    verbose   = 50
+)
+
+print(f"Accuracy: {accuracy_score(y_te, model.predict(X_te)):.3f}")
+
+# Feature importance
+xgb.plot_importance(model, max_num_features=10)
+
+# Persist
+model.save_model('xgb.json')
+loaded = xgb.XGBClassifier()
+loaded.load_model('xgb.json')</code></pre>
+            </div>
+
+            <p class="sub-heading">Key hyperparameters</p>
+            <div class="ref-table-wrap">
+                <table class="ref-table">
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Effect</th>
+                        <th>Typical range</th>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">n_estimators</code></td>
+                        <td>Number of trees — more is better when paired with early stopping</td>
+                        <td>100–1000</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">max_depth</code></td>
+                        <td>Max tree depth — deeper means more complex, higher overfitting risk</td>
+                        <td>3–6</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">learning_rate</code></td>
+                        <td>Shrinkage applied to each tree's contribution</td>
+                        <td>0.01–0.3</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">subsample</code></td>
+                        <td>Fraction of rows sampled per tree</td>
+                        <td>0.6–1.0</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">colsample_bytree</code></td>
+                        <td>Fraction of features sampled per tree</td>
+                        <td>0.6–1.0</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">reg_alpha</code></td>
+                        <td>L1 regularisation — encourages sparse feature weights</td>
+                        <td>0–1</td>
+                    </tr>
+                    <tr>
+                        <td><code class="inline">reg_lambda</code></td>
+                        <td>L2 regularisation — smooth weight shrinkage</td>
+                        <td>0–10</td>
+                    </tr>
+                </table>
+            </div>
+        </section>
+
+        <section id="lightgbm" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">LightGBM</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                LightGBM uses histogram-based binning and leaf-wise (rather than level-wise) tree growth to train
+                dramatically faster than XGBoost on large datasets. It handles categorical features natively via
+                <code class="inline">categorical_feature</code>, uses significantly less memory, and supports
+                distributed training. On datasets above 100k rows it is generally the first choice.
+                Install with <code class="inline">pip install lightgbm</code>.
+            </p>
+
+            <div class="code-wrap">
+                <span class="code-label">lightgbm — sklearn api and native api</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import lightgbm as lgb
+from sklearn.datasets        import load_breast_cancer
+from sklearn.model_selection import train_test_split
+from sklearn.metrics         import accuracy_score
+
+X, y = load_breast_cancer(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Sklearn API
+model = lgb.LGBMClassifier(
+    n_estimators     = 500,
+    num_leaves       = 31,       # primary complexity control in LightGBM
+    learning_rate    = 0.05,
+    feature_fraction = 0.8,
+    bagging_fraction = 0.8,
+    bagging_freq     = 5,
+    random_state     = 42,
+    verbose          = -1
+)
+
+model.fit(
+    X_tr, y_tr,
+    eval_set  = [(X_te, y_te)],
+    callbacks = [lgb.early_stopping(50), lgb.log_evaluation(100)]
+)
+
+print(f"Accuracy: {accuracy_score(y_te, model.predict(X_te)):.3f}")
+print(f"Best iteration: {model.best_iteration_}")
+
+# Native API
+train_data = lgb.Dataset(X_tr, label=y_tr)
+val_data   = lgb.Dataset(X_te, label=y_te)
+params = {
+    'objective': 'binary',
+    'metric':    'binary_logloss',
+    'num_leaves': 31,
+    'learning_rate': 0.05,
+    'verbose': -1
+}
+bst    = lgb.train(params, train_data, num_boost_round=500,
+                   valid_sets=[val_data],
+                   callbacks=[lgb.early_stopping(50)])
+y_prob = bst.predict(X_te)             # probabilities
+y_pred = (y_prob > 0.5).astype(int)</code></pre>
+            </div>
+
+            <div class="note-box sky">
+                <strong>LightGBM vs XGBoost.</strong> Use LightGBM when your dataset has more than ~100k rows or when
+                training time is a constraint. Use XGBoost on smaller datasets or when you need the slightly richer
+                hyperparameter surface. On Kaggle competitions both are commonly tuned and ensembled together.
+            </div>
+        </section>
+
+        <section id="pytorch" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">PyTorch</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                PyTorch uses dynamic computation graphs (define-by-run), which makes debugging and custom model
+                architectures straightforward. Models are defined as Python classes inheriting
+                <code class="inline">nn.Module</code>. You write the training loop explicitly — this gives complete
+                control over every step. Install from
+                <a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener"
+                    style="color:var(--sky)">pytorch.org</a>
+                to get the correct CUDA-matched build.
+            </p>
+
+            <p class="sub-heading">Tensors</p>
+            <div class="code-wrap">
+                <span class="code-label">tensor basics</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import torch
+import numpy as np
+
+# Creation
+x = torch.tensor([1.0, 2.0, 3.0])
+x = torch.tensor([[1, 2], [3, 4]], dtype=torch.float32)
+x = torch.zeros(3, 4)
+x = torch.ones(3, 4)
+x = torch.randn(3, 4)
+
+# Metadata
+x.shape     # torch.Size([3, 4])
+x.dtype     # torch.float32
+x.device    # cpu or cuda
+
+# Move to GPU
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+x = x.to(device)
+
+# NumPy interop (CPU tensors only)
+t  = torch.from_numpy(np.array([1.0, 2.0]))
+np_arr = t.numpy()
+
+# Operations
+a = torch.tensor([1., 2., 3.])
+b = torch.tensor([4., 5., 6.])
+a + b
+torch.dot(a, b)
+torch.matmul(a.reshape(1,3), b.reshape(3,1))</code></pre>
+            </div>
+
+            <p class="sub-heading">Defining a model</p>
+            <div class="code-wrap">
+                <span class="code-label">nn.Module</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import torch.nn as nn
+
+class MLP(nn.Module):
+    def __init__(self, in_features, hidden, out_features):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, hidden),
+            nn.ReLU(),
+            nn.Dropout(0.2),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, out_features)
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+model = MLP(10, 64, 1)
+print(model)
+print(sum(p.numel() for p in model.parameters()), 'parameters')</code></pre>
+            </div>
+
+            <p class="sub-heading">Training loop</p>
+            <div class="code-wrap">
+                <span class="code-label">full training loop</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import torch
+import torch.optim as optim
+from torch.utils.data import TensorDataset, DataLoader
+
+X    = torch.randn(500, 10)
+y    = (X.sum(dim=1) > 0).float().unsqueeze(1)
+ds   = TensorDataset(X, y)
+tr_ds, val_ds = torch.utils.data.random_split(ds, [400, 100])
+tr_loader  = DataLoader(tr_ds,  batch_size=32, shuffle=True)
+val_loader = DataLoader(val_ds, batch_size=64)
+
+device    = 'cuda' if torch.cuda.is_available() else 'cpu'
+model     = MLP(10, 64, 1).to(device)
+criterion = nn.BCEWithLogitsLoss()
+optimizer = optim.Adam(model.parameters(), lr=1e-3)
+
+for epoch in range(50):
+    model.train()
+    for xb, yb in tr_loader:
+        xb, yb = xb.to(device), yb.to(device)
+        optimizer.zero_grad()
+        loss = criterion(model(xb), yb)
+        loss.backward()
+        optimizer.step()
+
+    model.eval()
+    with torch.no_grad():
+        val_loss = sum(criterion(model(xb.to(device)), yb.to(device)).item()
+                       for xb, yb in val_loader)
+    if (epoch + 1) % 10 == 0:
+        print(f"Epoch {epoch+1:3d} | val loss {val_loss/len(val_loader):.4f}")
+
+# Persist
+torch.save(model.state_dict(), 'model.pth')
+model.load_state_dict(torch.load('model.pth'))
+model.eval()</code></pre>
+            </div>
+        </section>
+
+        <section id="tensorflow" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">TensorFlow /
+                Keras</h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                Keras is TensorFlow's high-level API. You describe a model declaratively in layers, call
+                <code class="inline">model.compile()</code> to set the loss and optimiser, then
+                <code class="inline">model.fit()</code> to run the training loop automatically. This makes
+                standard architectures faster to write than PyTorch, at the cost of less training-loop
+                flexibility. Install with <code class="inline">pip install tensorflow</code>.
+            </p>
+
+            <p class="sub-heading">Sequential model</p>
+            <div class="code-wrap">
+                <span class="code-label">sequential api</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras import layers
+import numpy as np
+
+model = keras.Sequential([
+    layers.Input(shape=(10,)),
+    layers.Dense(64, activation='relu'),
+    layers.Dropout(0.2),
+    layers.Dense(64, activation='relu'),
+    layers.Dense(1,  activation='sigmoid')
+])
+
+model.compile(
+    optimizer = 'adam',
+    loss      = 'binary_crossentropy',
+    metrics   = ['accuracy']
+)
+
+model.summary()
+
+X_train = np.random.randn(800, 10).astype('float32')
+y_train = (X_train.sum(axis=1) > 0).astype('float32')
+X_val   = np.random.randn(200, 10).astype('float32')
+y_val   = (X_val.sum(axis=1)   > 0).astype('float32')
+
+history = model.fit(
+    X_train, y_train,
+    epochs          = 50,
+    batch_size      = 32,
+    validation_data = (X_val, y_val),
+    callbacks = [
+        keras.callbacks.EarlyStopping(patience=5, restore_best_weights=True),
+        keras.callbacks.ModelCheckpoint('best.keras', save_best_only=True)
+    ]
+)
+
+loss, acc = model.evaluate(X_val, y_val, verbose=0)
+print(f"Val accuracy: {acc:.3f}")
+
+y_prob = model.predict(X_val[:5])
+y_pred = (y_prob > 0.5).astype(int)</code></pre>
+            </div>
+
+            <p class="sub-heading">Loss functions and output activations</p>
+            <div class="ref-table-wrap">
+                <table class="ref-table">
+                    <tr>
+                        <th>Task</th>
+                        <th>Output activation</th>
+                        <th>Loss</th>
+                    </tr>
+                    <tr>
+                        <td>Binary classification</td>
+                        <td><code class="inline">sigmoid</code></td>
+                        <td><code class="inline">binary_crossentropy</code></td>
+                    </tr>
+                    <tr>
+                        <td>Multi-class (single label)</td>
+                        <td><code class="inline">softmax</code></td>
+                        <td><code class="inline">sparse_categorical_crossentropy</code></td>
+                    </tr>
+                    <tr>
+                        <td>Multi-label</td>
+                        <td><code class="inline">sigmoid</code></td>
+                        <td><code class="inline">binary_crossentropy</code></td>
+                    </tr>
+                    <tr>
+                        <td>Regression</td>
+                        <td>none (linear)</td>
+                        <td><code class="inline">mse</code> or <code class="inline">mae</code></td>
+                    </tr>
+                </table>
+            </div>
+
+            <p class="sub-heading">Plotting training history</p>
+            <div class="code-wrap">
+                <span class="code-label">training curves</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+axes[0].plot(history.history['loss'],     label='Train')
+axes[0].plot(history.history['val_loss'], label='Val')
+axes[0].set_title('Loss')
+axes[0].legend()
+
+axes[1].plot(history.history['accuracy'],     label='Train')
+axes[1].plot(history.history['val_accuracy'], label='Val')
+axes[1].set_title('Accuracy')
+axes[1].legend()
+
+plt.tight_layout()
+plt.show()
+
+# Save and reload
+model.save('model.keras')
+loaded = keras.models.load_model('model.keras')</code></pre>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const sections = document.querySelectorAll('.domain-section');
+        const tabs = document.querySelectorAll('.domain-tab');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    tabs.forEach(t => t.classList.toggle('active', t.getAttribute('href') === '#' + id));
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        sections.forEach(s => observer.observe(s));
+
+        const fadeObs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.05 });
+
+        document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+        function copyCode(btn) {
+            const code = btn.closest('.code-wrap').querySelector('code');
+            navigator.clipboard.writeText(code.textContent).then(() => {
+                btn.textContent = 'copied!';
+                btn.style.color = '#6fcf97';
+                setTimeout(() => { btn.textContent = 'copy'; btn.style.color = ''; }, 1800);
+            });
+        }
+    </script>
+</body>
+
+</html>

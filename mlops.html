@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MLOps & Deployment Reference | ZeroToML</title>
+    <meta name="description"
+        content="The complete MLOps reference — cloud providers, Docker, Kubernetes, Airflow, MLflow, W&B, model serving, monitoring, LLMOps, and full deployment guides for Django, Flask, and FastAPI." />
+    <meta name="author" content="Muhammad Waqas" />
+    <link rel="canonical" href="https://Muhammad-waqas1.github.io/zerotoml/mlops.html" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400..700;1,400..700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300..900;1,8..60,300..900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+        rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/vs2015.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/go.min.js"></script>
+
+    <script>hljs.highlightAll();</script>
+    <link rel="icon" type="image/svg+xml" href="images/zerotoml.png" />
+    <link rel="stylesheet" href="assets/css/main.css" />
+    <script src="assets/js/layout.js" defer></script>
+    <style>
+        html,
+        body {
+            overflow-x: clip;
+            max-width: 100%;
+        }
+
+        #domain-nav {
+            background: rgba(240, 233, 220, 0.96);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            z-index: 39;
+        }
+
+        .domain-tab {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.5rem 0.875rem;
+            font-family: var(--font-mono);
+            font-size: 0.72rem;
+            border-radius: 0.375rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.15s;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+        }
+
+        .domain-tab:hover {
+            color: var(--text-ink);
+            background: var(--bg-elevated);
+        }
+
+        .domain-tab.active {
+            color: #f0e9dc;
+            background: var(--sky);
+            border-color: rgba(74, 143, 168, 0.3);
+        }
+
+        .domain-scroll {
+            overflow-x: auto;
+            white-space: nowrap;
+            scrollbar-width: none;
+            padding: 0.5rem 1rem;
+        }
+
+        .domain-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .domain-section {
+            padding-top: 5rem;
+            scroll-margin-top: 7rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 3rem;
+        }
+
+        .domain-section:last-child {
+            border-bottom: none;
+        }
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(min(280px, 100%), 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .tool-card {
+            padding: 1.25rem;
+            border-radius: 0.875rem;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+            transition: border-color 0.2s;
+        }
+
+        .tool-card:hover {
+            border-color: var(--terra);
+        }
+
+        .tool-name {
+            font-family: var(--font-display);
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-ink);
+            margin-bottom: 0.15rem;
+        }
+
+        .tool-role {
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            color: var(--terra);
+            font-weight: 600;
+            margin-bottom: 0.6rem;
+        }
+
+        .tool-desc {
+            font-family: var(--font-body);
+            font-size: 0.855rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 0.75rem;
+        }
+
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3rem;
+        }
+
+        .tool-tag {
+            font-family: var(--font-mono);
+            font-size: 0.63rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 0.25rem;
+            background: var(--bg-base);
+            border: 1px solid var(--border);
+            color: var(--text-dim);
+        }
+
+        .code-wrap {
+            position: relative;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            margin: 1rem 0 1.5rem;
+            max-width: 100%;
+        }
+
+        .code-wrap pre[class*="language-"] {
+            margin: 0;
+            border-radius: 0;
+            font-size: 0.8rem;
+            line-height: 1.65;
+            overflow-x: auto;
+            max-width: 100%;
+        }
+
+        .code-label {
+            display: block;
+            font-family: var(--font-mono);
+            font-size: 0.68rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            background: #111;
+            color: #6b6050;
+            border-bottom: 1px solid #333;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.6rem;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.13);
+            color: #888;
+            font-family: var(--font-mono);
+            font-size: 0.66rem;
+            padding: 0.2rem 0.55rem;
+            border-radius: 0.3rem;
+            cursor: pointer;
+            transition: background 0.15s, color 0.15s;
+            z-index: 1;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.14);
+            color: #eee;
+        }
+
+        .note-box {
+            padding: 1rem 1.25rem;
+            border-radius: 0.625rem;
+            margin: 1.25rem 0;
+            border: 1px solid;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            color: var(--text-body);
+            line-height: 1.65;
+        }
+
+        .note-box.sky {
+            border-color: rgba(74, 143, 168, 0.35);
+            background: var(--sky-dim);
+        }
+
+        .note-box.sage {
+            border-color: rgba(92, 138, 88, 0.35);
+            background: var(--sage-dim);
+        }
+
+        .note-box.terra {
+            border-color: rgba(184, 92, 42, 0.35);
+            background: var(--terra-dim);
+        }
+
+        .note-box.amber {
+            border-color: rgba(196, 137, 26, 0.35);
+            background: var(--amber-dim);
+        }
+
+        code.inline {
+            font-family: var(--font-mono);
+            font-size: 0.875em;
+            background: var(--bg-elevated);
+            border: 1px solid var(--border-strong);
+            padding: 0.12em 0.38em;
+            border-radius: 0.25rem;
+            color: var(--terra);
+        }
+
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        @media (max-width: 640px) {
+            .compare-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .compare-card {
+            padding: 1.25rem;
+            border-radius: 0.875rem;
+            border: 1px solid var(--border);
+            background: var(--bg-surface);
+        }
+
+        .compare-card h4 {
+            font-family: var(--font-display);
+            font-weight: 700;
+            font-size: 1rem;
+            margin-bottom: 0.6rem;
+            color: var(--text-ink);
+        }
+
+        .compare-card ul {
+            font-family: var(--font-body);
+            font-size: 0.84rem;
+            color: var(--text-muted);
+            list-style: disc;
+            padding-left: 1.2rem;
+            line-height: 1.75;
+        }
+
+        .sub-heading {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-ink);
+            margin: 2.25rem 0 0.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">
+        <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7" />
+        </svg>
+    </button>
+
+    <div id="navbar-placeholder"></div>
+
+    <section class="pt-32 pb-14 px-4 relative overflow-hidden">
+        <div class="absolute inset-0 grid-bg opacity-40 pointer-events-none"></div>
+        <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[700px] h-[350px] rounded-full blur-3xl pointer-events-none"
+            style="background:radial-gradient(ellipse,rgba(184,92,42,0.09) 0%,transparent 70%)"></div>
+        <div class="max-w-5xl mx-auto relative">
+            <nav class="flex items-center gap-2 text-xs font-mono mb-8" style="color:var(--text-dim)">
+                <a href="index.html" class="hover:text-[var(--sky)] transition-colors">Home</a>
+                <span style="color:var(--border-strong)">/</span>
+                <span style="color:var(--text-muted)">MLOps & Deployment</span>
+            </nav>
+            <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-5"
+                style="color:var(--text-ink)">
+                MLOps &amp;<br /><span class="text-gradient">Deployment Reference</span>
+            </h1>
+            <p class="font-serif text-xl leading-relaxed max-w-3xl mb-8" style="color:var(--text-muted)">
+                Every tool in the modern MLOps stack — from cloud infrastructure and data pipelines through
+                model serving, monitoring, and LLMOps — with complete deployment examples for Django,
+                Flask, and FastAPI.
+            </p>
+            <div class="flex flex-wrap gap-2">
+                <span class="tag">Cloud</span>
+                <span class="tag">Docker · K8s</span>
+                <span class="tag">MLflow · W&amp;B</span>
+                <span class="tag">FastAPI · Triton</span>
+                <span class="tag">Monitoring</span>
+                <span class="tag">LLMOps</span>
+                <span class="tag">Deployment Guide</span>
+            </div>
+        </div>
+    </section>
+
+    <div id="domain-nav" class="sticky top-16">
+        <div class="domain-scroll max-w-[1400px] mx-auto" style="
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 6px;
+            padding: 8px;
+            background-color: #e8dfd0;
+        ">
+            <a href="#cloud" class="domain-tab">Cloud</a>
+            <a href="#containers" class="domain-tab">Containers</a>
+            <a href="#pipelines" class="domain-tab">Data Pipelines</a>
+            <a href="#versioning" class="domain-tab">Versioning</a>
+            <a href="#tracking" class="domain-tab">Experiment Tracking</a>
+            <a href="#cicd" class="domain-tab">CI/CD</a>
+            <a href="#serving" class="domain-tab">Model Serving</a>
+            <a href="#monitoring" class="domain-tab">Monitoring</a>
+            <a href="#llmops" class="domain-tab">LLMOps</a>
+            <a href="#hardware" class="domain-tab">Hardware</a>
+            <a href="#deployment" class="domain-tab">Deployment Guide</a>
+        </div>
+    </div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 pb-24">
+
+        <section id="cloud" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Core
+                Infrastructure &amp; Cloud Providers</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                Cloud providers supply on-demand compute, object storage, managed databases, and ML-specific
+                services. The choice between providers usually comes down to your team's existing ecosystem,
+                the managed ML platform on offer, and GPU availability. All three hyperscalers provide a
+                free tier or trial credits, making experimentation accessible before committing.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">AWS — Amazon Web Services</div>
+                    <div class="tool-role">Market leader · broadest service catalog</div>
+                    <p class="tool-desc">SageMaker covers the full ML lifecycle (data labelling, training, hosting). EC2
+                        provides GPU instances (p3, p4, g4dn). Lambda runs serverless inference. S3 stores models and
+                        datasets. ECR hosts container images.</p>
+                    <div class="tool-tags"><span class="tool-tag">SageMaker</span><span class="tool-tag">EC2
+                            GPU</span><span class="tool-tag">Lambda</span><span class="tool-tag">EKS</span><span
+                            class="tool-tag">S3</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Google Cloud Platform</div>
+                    <div class="tool-role">TPU access · AI-first platform</div>
+                    <p class="tool-desc">Vertex AI is the managed ML platform with AutoML, custom training, and model
+                        registry. Unique access to TPUs (Tensor Processing Units) for high-throughput deep learning.
+                        BigQuery ML runs SQL-based models on petabytes.</p>
+                    <div class="tool-tags"><span class="tool-tag">Vertex AI</span><span
+                            class="tool-tag">TPUs</span><span class="tool-tag">BigQuery ML</span><span
+                            class="tool-tag">Cloud Run</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Microsoft Azure</div>
+                    <div class="tool-role">Enterprise integration · exclusive OpenAI partner</div>
+                    <p class="tool-desc">Azure ML is the managed platform. Preferred by enterprises already in the
+                        Microsoft ecosystem (Active Directory, Office 365). Exclusive Azure OpenAI Service grants API
+                        access to GPT-4, DALL-E, and Whisper with enterprise SLAs.</p>
+                    <div class="tool-tags"><span class="tool-tag">Azure ML</span><span class="tool-tag">OpenAI
+                            Service</span><span class="tool-tag">AKS</span><span class="tool-tag">Blob Storage</span>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">CoreWeave</div>
+                    <div class="tool-role">GPU-specialised cloud</div>
+                    <p class="tool-desc">Infrastructure purpose-built for GPU workloads. Offers H100 and A100 clusters
+                        at competitive cost-per-FLOP compared to hyperscalers. Kubernetes-native API, low network
+                        latency between GPU nodes.</p>
+                    <div class="tool-tags"><span class="tool-tag">H100 / A100</span><span
+                            class="tool-tag">Kubernetes-native</span><span class="tool-tag">RDMA networking</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Lambda Labs</div>
+                    <div class="tool-role">Developer-friendly GPU rental</div>
+                    <p class="tool-desc">Straightforward hourly GPU pricing with no complex billing. On-demand A10,
+                        A100, H100 instances accessible via SSH or JupyterLab. Popular with researchers who need GPU
+                        access without a cloud contract.</p>
+                    <div class="tool-tags"><span class="tool-tag">Hourly billing</span><span class="tool-tag">SSH /
+                            Jupyter</span><span class="tool-tag">Persistent storage</span></div>
+                </div>
+            </div>
+            <div class="note-box sky">
+                <strong>Starting point.</strong> AWS and GCP both offer $300 free credits for new accounts.
+                For GPU training experiments, Lambda Labs is the most transparent on pricing.
+                Avoid locking into managed ML platforms (SageMaker, Vertex AI) until you understand
+                your team's actual requirements — their abstraction cost adds up.
+            </div>
+        </section>
+
+        <section id="containers" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Containerization
+                &amp; Orchestration</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                A container packages your application, runtime, libraries, and system dependencies into a single
+                portable image. This eliminates environment-mismatch failures between development, testing,
+                and production. Orchestrators manage running containers at scale across clusters of machines,
+                handling restarts, scaling, and network routing automatically.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Docker</div>
+                    <div class="tool-role">Container runtime · image builder</div>
+                    <p class="tool-desc">The universal container standard. A Dockerfile defines the environment
+                        reproducibly. Docker Compose manages multi-container applications locally (API + Redis +
+                        database). Every ML deployment starts here.</p>
+                    <div class="tool-tags"><span class="tool-tag">Dockerfile</span><span
+                            class="tool-tag">docker-compose</span><span class="tool-tag">Docker Hub</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Kubernetes (K8s)</div>
+                    <div class="tool-role">Container orchestration · production scale</div>
+                    <p class="tool-desc">Industry standard for running containers at scale. Handles automatic restart of
+                        failed containers, horizontal pod autoscaling, rolling updates with zero downtime, and service
+                        discovery. Required knowledge for any production ML platform role.</p>
+                    <div class="tool-tags"><span class="tool-tag">Pods</span><span
+                            class="tool-tag">Deployments</span><span class="tool-tag">Services</span><span
+                            class="tool-tag">HPA</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">K3s</div>
+                    <div class="tool-role">Lightweight Kubernetes</div>
+                    <p class="tool-desc">Certified minimal Kubernetes distribution with a ~70MB binary and 512MB RAM
+                        footprint instead of 4GB+. Suitable for edge deployments, on-premise servers, and learning
+                        Kubernetes without resource overhead.</p>
+                    <div class="tool-tags"><span class="tool-tag">Edge ML</span><span
+                            class="tool-tag">On-premise</span><span class="tool-tag">Single binary</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Helm</div>
+                    <div class="tool-role">Kubernetes package manager</div>
+                    <p class="tool-desc">Helm Charts are versioned, parameterised templates for Kubernetes resources.
+                        Instead of maintaining hundreds of lines of YAML, install a community chart with a single
+                        command and override values as needed.</p>
+                    <div class="tool-tags"><span class="tool-tag">Charts</span><span class="tool-tag">Values
+                            files</span><span class="tool-tag">Releases</span></div>
+                </div>
+            </div>
+
+            <p class="sub-heading">Dockerfile for an ML API</p>
+            <div class="code-wrap">
+                <span class="code-label">dockerfile</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-bash">FROM python:3.11-slim
+
+WORKDIR /app
+
+# Copy requirements before source code so Docker caches the pip layer
+# and only re-installs when requirements.txt changes
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# Run as non-root user
+RUN adduser --disabled-password --gecos '' appuser
+USER appuser
+
+EXPOSE 8000
+
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]</code></pre>
+            </div>
+
+            <div class="code-wrap">
+                <span class="code-label">docker — daily workflow</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-bash">docker build -t my-ml-api:v1.0 .
+docker run -p 8000:8000 my-ml-api:v1.0
+docker run -d --name ml-api -p 8000:8000 my-ml-api:v1.0
+docker logs ml-api -f
+docker exec -it ml-api /bin/bash
+
+docker-compose up -d
+docker-compose down</code></pre>
+            </div>
+        </section>
+
+        <section id="pipelines" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Data Pipeline
+                &amp; Feature Stores</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                Pipeline orchestrators schedule and execute the data ingestion, transformation, and loading steps that
+                feed ML training. Feature stores ensure that the feature transformations applied during training
+                are applied identically at inference time — eliminating training-serving skew, which is one of
+                the most common causes of production performance degradation.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Apache Airflow</div>
+                    <div class="tool-role">DAG-based workflow orchestrator</div>
+                    <p class="tool-desc">Pipelines are defined as Python DAGs (Directed Acyclic Graphs). Rich web UI for
+                        monitoring runs, retries, and backfills. 800+ community operators for connecting to databases,
+                        cloud storage, and ML services. Battle-tested at Airbnb, Lyft, and major banks.</p>
+                    <div class="tool-tags"><span class="tool-tag">DAGs</span><span
+                            class="tool-tag">Scheduling</span><span class="tool-tag">Backfill</span><span
+                            class="tool-tag">Web UI</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Prefect</div>
+                    <div class="tool-role">Python-first orchestration</div>
+                    <p class="tool-desc">Decorate any Python function with <code class="inline">@flow</code> and <code
+                            class="inline">@task</code> to make it an orchestrated workflow. Much less boilerplate than
+                        Airflow. Prefect Cloud provides managed deployment, scheduling, and observability.</p>
+                    <div class="tool-tags"><span class="tool-tag">@flow / @task</span><span
+                            class="tool-tag">Deployments</span><span class="tool-tag">Prefect Cloud</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Dagster</div>
+                    <div class="tool-role">Asset-oriented data platform</div>
+                    <p class="tool-desc">Models pipelines as Software-Defined Assets — the datasets, models, and metrics
+                        your pipeline produces — rather than tasks. This gives automatic lineage tracking, asset
+                        materialisation history, and better testing ergonomics.</p>
+                    <div class="tool-tags"><span class="tool-tag">Assets</span><span
+                            class="tool-tag">Lineage</span><span class="tool-tag">Sensors</span><span
+                            class="tool-tag">Partitions</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Mage</div>
+                    <div class="tool-role">Notebook-style pipeline builder</div>
+                    <p class="tool-desc">Build, test, and run pipelines in a visual notebook interface. Each block (data
+                        loader, transformer, exporter) is independently runnable with visible output. Supports
+                        streaming, batch, and real-time pipelines.</p>
+                    <div class="tool-tags"><span class="tool-tag">Visual editor</span><span
+                            class="tool-tag">Blocks</span><span class="tool-tag">Streaming</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Feast</div>
+                    <div class="tool-role">Open-source feature store</div>
+                    <p class="tool-desc">Defines and serves features consistently between training and serving through
+                        an offline store (for batch training) and an online store (for low-latency inference). Prevents
+                        feature drift by sharing a single definition.</p>
+                    <div class="tool-tags"><span class="tool-tag">Feature registry</span><span
+                            class="tool-tag">Point-in-time joins</span><span class="tool-tag">Online/offline</span>
+                    </div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Tecton</div>
+                    <div class="tool-role">Managed enterprise feature platform</div>
+                    <p class="tool-desc">Production-grade managed feature store with sub-10ms online serving, streaming
+                        feature pipelines, and monitoring built in. Used by FinTech and e-commerce companies with strict
+                        feature SLAs.</p>
+                    <div class="tool-tags"><span class="tool-tag">Real-time features</span><span class="tool-tag">SLA
+                            guarantees</span><span class="tool-tag">Monitoring</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Hopsworks</div>
+                    <div class="tool-role">Open-source ML data platform</div>
+                    <p class="tool-desc">Combines feature store, model registry, and experiment tracking in one
+                        deployable platform. Available on any cloud or on-premise. Strong support for feature groups,
+                        time-travel queries, and Great Expectations integration.</p>
+                    <div class="tool-tags"><span class="tool-tag">Feature store</span><span class="tool-tag">Model
+                            registry</span><span class="tool-tag">On-premise</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="versioning" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Version Control
+            </h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                ML reproducibility requires versioning three distinct artefacts: code (Git), data (DVC or LakeFS),
+                and models (MLflow, DVC, or a model registry). Without all three locked to the same commit,
+                reproducing a specific result — or rolling back a bad model — becomes unreliable.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Git</div>
+                    <div class="tool-role">Source code versioning</div>
+                    <p class="tool-desc">The universal distributed version control system. Non-negotiable for any ML
+                        project. Branch per experiment, tag releases, use pull requests to review changes to training
+                        code and model configs.</p>
+                    <div class="tool-tags"><span class="tool-tag">Branching</span><span
+                            class="tool-tag">Tags</span><span class="tool-tag">Pull requests</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">GitHub / GitLab / Bitbucket</div>
+                    <div class="tool-role">Remote Git hosting</div>
+                    <p class="tool-desc">GitHub has the largest open-source community and GitHub Actions for CI/CD.
+                        GitLab offers better built-in CI/CD pipelines and a stronger self-hosted option. Bitbucket
+                        integrates with Atlassian (Jira, Confluence) for enterprise teams.</p>
+                    <div class="tool-tags"><span class="tool-tag">Remote repos</span><span
+                            class="tool-tag">CI/CD</span><span class="tool-tag">Container registry</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">DVC — Data Version Control</div>
+                    <div class="tool-role">Git for large files and ML pipelines</div>
+                    <p class="tool-desc">DVC stores a small pointer file in Git while the actual large file (dataset,
+                        model weights) lives in S3, GCS, or Azure Blob. Also defines reproducible ML pipelines as stages
+                        with tracked inputs and outputs.</p>
+                    <div class="tool-tags"><span class="tool-tag">dvc add / push / pull</span><span
+                            class="tool-tag">Pipelines</span><span class="tool-tag">Remote storage</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Git LFS</div>
+                    <div class="tool-role">Large file storage for Git</div>
+                    <p class="tool-desc">Git extension that stores large files outside the repository and replaces them
+                        with text pointers. Simpler than DVC, natively supported on GitHub and GitLab. Suitable for
+                        models under 2GB without pipeline tracking needs.</p>
+                    <div class="tool-tags"><span class="tool-tag">git lfs track</span><span
+                            class="tool-tag">GitHub-native</span><span class="tool-tag">Pointer files</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">LakeFS</div>
+                    <div class="tool-role">Git semantics for data lakes</div>
+                    <p class="tool-desc">Provides branches, commits, and merges on top of an existing S3-compatible data
+                        lake without copying data. Create a branch to experiment with a new dataset version and merge it
+                        only if the model improves.</p>
+                    <div class="tool-tags"><span class="tool-tag">Data branches</span><span
+                            class="tool-tag">S3-compatible</span><span class="tool-tag">Lineage</span></div>
+                </div>
+            </div>
+
+            <p class="sub-heading">DVC commands</p>
+            <div class="code-wrap">
+                <span class="code-label">dvc workflow</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-bash">git init && dvc init
+
+# Configure remote storage
+dvc remote add -d myremote s3://mybucket/dvc-store
+
+# Track a dataset
+dvc add data/train.csv
+git add data/train.csv.dvc .gitignore
+git commit -m "track training dataset"
+dvc push
+
+# On another machine
+git clone https://github.com/you/project
+dvc pull</code></pre>
+            </div>
+        </section>
+
+        <section id="tracking" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Experiment
+                Tracking &amp; Model Registries</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                Without experiment tracking, the results of 50 training runs live in a Jupyter notebook
+                with no record of which hyperparameter combination produced the best validation score.
+                These tools automatically log parameters, metrics, and artefacts per run and provide
+                a searchable history. Model registries add lifecycle management: staging, production,
+                and archived versions with rollback capability.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">MLflow</div>
+                    <div class="tool-role">Open-source · self-hostable</div>
+                    <p class="tool-desc">Log metrics and parameters with two lines of code. Built-in model registry,
+                        artefact storage, and a local web UI on port 5000. Can be self-hosted on any cloud. The most
+                        widely deployed open-source tracking tool.</p>
+                    <div class="tool-tags"><span class="tool-tag">mlflow.log_metric()</span><span class="tool-tag">Model
+                            Registry</span><span class="tool-tag">REST API</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Weights &amp; Biases (W&amp;B)</div>
+                    <div class="tool-role">Managed SaaS · richest feature set</div>
+                    <p class="tool-desc">Real-time metric plots, system resource monitoring, artefact versioning,
+                        hyperparameter sweep orchestration, and dataset tables. The standard at most serious ML research
+                        teams. Free tier covers individual use.</p>
+                    <div class="tool-tags"><span class="tool-tag">wandb.init()</span><span
+                            class="tool-tag">Sweeps</span><span class="tool-tag">Artifacts</span><span
+                            class="tool-tag">Reports</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Comet ML</div>
+                    <div class="tool-role">Experiment and production platform</div>
+                    <p class="tool-desc">Covers experiment tracking, model production monitoring, and dataset management
+                        in a single platform. Strong auto-logging for PyTorch, TF, and scikit-learn with minimal code
+                        changes.</p>
+                    <div class="tool-tags"><span class="tool-tag">Auto-logging</span><span class="tool-tag">Model
+                            monitoring</span><span class="tool-tag">Dataset registry</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Neptune.ai</div>
+                    <div class="tool-role">Flexible metadata store</div>
+                    <p class="tool-desc">Schema-less metadata store that logs anything associated with an ML run —
+                        metrics, images, numpy arrays, interactive charts, dataframes. Particularly strong for teams
+                        doing image or NLP experiments with rich visualisation needs.</p>
+                    <div class="tool-tags"><span class="tool-tag">Flexible schema</span><span class="tool-tag">Rich
+                            media</span><span class="tool-tag">Comparison UI</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">ClearML</div>
+                    <div class="tool-role">Full open-source MLOps platform</div>
+                    <p class="tool-desc">Experiment tracking, data management, pipeline orchestration, and model serving
+                        in one open-source stack. Self-hostable. Automatic logging requires zero code changes in many
+                        frameworks — just add the ClearML agent.</p>
+                    <div class="tool-tags"><span class="tool-tag">Zero-code logging</span><span
+                            class="tool-tag">Pipelines</span><span class="tool-tag">Self-hostable</span></div>
+                </div>
+            </div>
+
+            <p class="sub-heading">MLflow tracking example</p>
+            <div class="code-wrap">
+                <span class="code-label">mlflow</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import mlflow
+import mlflow.sklearn
+from sklearn.ensemble        import RandomForestClassifier
+from sklearn.datasets        import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.metrics         import accuracy_score
+
+X, y   = load_iris(return_X_y=True)
+X_tr, X_te, y_tr, y_te = train_test_split(X, y, test_size=0.2, random_state=42)
+
+mlflow.set_experiment("iris-classification")
+
+with mlflow.start_run():
+    n_est, depth = 100, 5
+    mlflow.log_param("n_estimators", n_est)
+    mlflow.log_param("max_depth",    depth)
+
+    model = RandomForestClassifier(n_estimators=n_est, max_depth=depth)
+    model.fit(X_tr, y_tr)
+    acc = accuracy_score(y_te, model.predict(X_te))
+
+    mlflow.log_metric("accuracy", acc)
+    mlflow.sklearn.log_model(model, "random_forest")
+
+# View runs: mlflow ui  →  http://localhost:5000</code></pre>
+            </div>
+        </section>
+
+        <section id="cicd" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">CI/CD for Machine
+                Learning</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                ML CI/CD automates the path from a code commit to a deployed model update. A complete
+                pipeline runs unit tests on data processing code, optionally retrains if training data
+                changed, evaluates the new model against the previous production model, and promotes it
+                only if metrics improve. Failed quality gates block the deployment automatically.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">GitHub Actions</div>
+                    <div class="tool-role">The most accessible entry point</div>
+                    <p class="tool-desc">Workflows live in <code class="inline">.github/workflows/*.yml</code> alongside
+                        your code. Triggers on push, pull request, schedule, or custom events. 2000 free minutes/month
+                        for public repos. The natural choice if you already host on GitHub.</p>
+                    <div class="tool-tags"><span class="tool-tag">YAML workflows</span><span
+                            class="tool-tag">Marketplace actions</span><span class="tool-tag">Secrets</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">GitLab CI/CD</div>
+                    <div class="tool-role">Built into GitLab</div>
+                    <p class="tool-desc">Defined in <code class="inline">.gitlab-ci.yml</code> at the repo root. No
+                        external service required. Better suited for self-hosted deployments and teams wanting a single
+                        platform for Git, CI, and container registry.</p>
+                    <div class="tool-tags"><span class="tool-tag">.gitlab-ci.yml</span><span
+                            class="tool-tag">Runners</span><span class="tool-tag">Environments</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Argo Workflows</div>
+                    <div class="tool-role">Kubernetes-native pipeline engine</div>
+                    <p class="tool-desc">Each workflow step runs in its own container on Kubernetes. Ideal for ML
+                        pipelines where different stages need different environments — data preprocessing in a Python
+                        container, training in a CUDA container, evaluation in another.</p>
+                    <div class="tool-tags"><span class="tool-tag">K8s-native</span><span class="tool-tag">DAG
+                            workflows</span><span class="tool-tag">Artifact passing</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Tekton</div>
+                    <div class="tool-role">Cloud-native CI/CD primitives</div>
+                    <p class="tool-desc">Kubernetes Custom Resource Definitions for composable Tasks and Pipelines.
+                        Lower-level than Argo — you assemble reusable building blocks. Foundation of Red Hat OpenShift
+                        Pipelines. Suited for teams wanting maximum control.</p>
+                    <div class="tool-tags"><span class="tool-tag">Tasks</span><span
+                            class="tool-tag">Pipelines</span><span class="tool-tag">Tekton Hub</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">CML — Continuous Machine Learning</div>
+                    <div class="tool-role">ML reports in pull requests</div>
+                    <p class="tool-desc">By iterative.ai (the DVC team). Posts model metrics, comparison tables, and
+                        plots as comments directly on a GitHub or GitLab pull request. Reviewers see the metric delta
+                        before approving a merge.</p>
+                    <div class="tool-tags"><span class="tool-tag">cml comment</span><span class="tool-tag">Metric
+                            reports</span><span class="tool-tag">DVC integration</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="serving" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Model Deployment
+                &amp; Serving</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                Model serving exposes a trained model's inference function over a network. The requirements span
+                a wide range — a Flask wrapper on a single VM for low-traffic internal tools, to a
+                multi-GPU Triton cluster processing thousands of requests per second. The right choice
+                depends on throughput requirements, hardware, latency budget, and operational complexity tolerance.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">FastAPI</div>
+                    <div class="tool-role">Python REST API standard</div>
+                    <p class="tool-desc">Async-native, auto-generates OpenAPI documentation at <code
+                            class="inline">/docs</code>, and uses Pydantic for request/response validation. The default
+                        choice for a new standalone ML API. Full example in the Deployment Guide section.</p>
+                    <div class="tool-tags"><span class="tool-tag">Async</span><span
+                            class="tool-tag">Pydantic</span><span class="tool-tag">Auto docs</span><span
+                            class="tool-tag">Uvicorn</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">NVIDIA Triton Inference Server</div>
+                    <div class="tool-role">High-throughput GPU inference</div>
+                    <p class="tool-desc">Serves PyTorch, TF, ONNX, and TensorRT models from a single server. Dynamic
+                        batching groups concurrent requests into GPU-optimal batch sizes automatically, maximising
+                        utilisation. REST and gRPC endpoints.</p>
+                    <div class="tool-tags"><span class="tool-tag">Dynamic batching</span><span
+                            class="tool-tag">Multi-model</span><span class="tool-tag">gRPC + REST</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">TorchServe</div>
+                    <div class="tool-role">Official PyTorch serving</div>
+                    <p class="tool-desc">Developed by AWS and Meta for PyTorch models. Packages a model into a <code
+                            class="inline">.mar</code> archive and serves it with built-in batching, model versioning,
+                        A/B testing, and a management REST API.</p>
+                    <div class="tool-tags"><span class="tool-tag">.mar archives</span><span class="tool-tag">Management
+                            API</span><span class="tool-tag">A/B testing</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">TF Serving</div>
+                    <div class="tool-role">Official TensorFlow serving</div>
+                    <p class="tool-desc">Production server for TensorFlow SavedModels. Point it at a versioned directory
+                        structure and it automatically discovers and serves new model versions with zero downtime. Runs
+                        on CPU or GPU.</p>
+                    <div class="tool-tags"><span class="tool-tag">SavedModel</span><span class="tool-tag">Auto
+                            versioning</span><span class="tool-tag">gRPC</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">BentoML</div>
+                    <div class="tool-role">Framework-agnostic model packaging</div>
+                    <p class="tool-desc">Packages any model — sklearn, PyTorch, XGBoost, or custom — into a
+                        self-contained Bento with its inference API and dependencies. One command deploys to Docker,
+                        Kubernetes, Lambda, or the managed BentoCloud.</p>
+                    <div class="tool-tags"><span class="tool-tag">Runners</span><span class="tool-tag">Adaptive
+                            batching</span><span class="tool-tag">BentoCloud</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Seldon Core / KServe</div>
+                    <div class="tool-role">ML on Kubernetes</div>
+                    <p class="tool-desc">Kubernetes operators that serve ML models via a custom resource definition —
+                        declare your model in YAML, the operator manages the container and scaling. KServe is the newer
+                        iteration and supports canary rollouts natively.</p>
+                    <div class="tool-tags"><span class="tool-tag">InferenceService CRD</span><span
+                            class="tool-tag">Canary rollouts</span><span class="tool-tag">Pipeline graphs</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">vLLM</div>
+                    <div class="tool-role">LLM inference engine</div>
+                    <p class="tool-desc">Uses PagedAttention to manage KV-cache GPU memory efficiently. Delivers 10–20×
+                        higher throughput than naive HuggingFace generation. Exposes an OpenAI-compatible REST API. The
+                        production standard for self-hosted LLMs.</p>
+                    <div class="tool-tags"><span class="tool-tag">PagedAttention</span><span class="tool-tag">Continuous
+                            batching</span><span class="tool-tag">OpenAI-compatible</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Ollama</div>
+                    <div class="tool-role">Local LLM runner</div>
+                    <p class="tool-desc"><code class="inline">ollama run llama3</code> downloads and runs an open-source
+                        LLM locally. Serves an OpenAI-compatible REST endpoint. Best for local development, prompt
+                        iteration, and private inference without cloud costs.</p>
+                    <div class="tool-tags"><span class="tool-tag">Local inference</span><span
+                            class="tool-tag">Modelfile</span><span class="tool-tag">OpenAI-compatible</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">TGI — Text Generation Inference</div>
+                    <div class="tool-role">Hugging Face production LLM server</div>
+                    <p class="tool-desc">Hugging Face's inference server for HF Hub models. Flash Attention 2,
+                        continuous batching, quantisation (GPTQ, AWQ, bitsandbytes), and streaming via Server-Sent
+                        Events. Deploys any supported model with one Docker command.</p>
+                    <div class="tool-tags"><span class="tool-tag">Flash Attention 2</span><span class="tool-tag">GPTQ /
+                            AWQ</span><span class="tool-tag">SSE streaming</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="monitoring" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Model Monitoring
+                &amp; Observability</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                Models degrade silently. Data drift (the input distribution shifts), concept drift (the
+                relationship between inputs and outputs changes), and upstream data quality issues all
+                cause prediction quality to erode over time. Monitoring catches these problems before
+                they produce material business impact.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">Prometheus</div>
+                    <div class="tool-role">Metrics collection and alerting</div>
+                    <p class="tool-desc">Time-series metrics database that scrapes a <code
+                            class="inline">/metrics</code> HTTP endpoint on your API at regular intervals. Stores
+                        request latency, error rates, prediction counts, and custom ML metrics. Pairs with Alertmanager
+                        for notification routing.</p>
+                    <div class="tool-tags"><span class="tool-tag">PromQL</span><span
+                            class="tool-tag">Scraping</span><span class="tool-tag">Alertmanager</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Grafana</div>
+                    <div class="tool-role">Dashboards and visualisation</div>
+                    <p class="tool-desc">Connects to Prometheus, InfluxDB, Elasticsearch, and 50+ other sources to
+                        render live dashboards. Set threshold alerts to fire on Slack, PagerDuty, or email when a metric
+                        crosses a boundary.</p>
+                    <div class="tool-tags"><span class="tool-tag">Dashboards</span><span
+                            class="tool-tag">Alerting</span><span class="tool-tag">Multi-source</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Evidently AI</div>
+                    <div class="tool-role">ML-specific monitoring reports</div>
+                    <p class="tool-desc">Open-source library that generates interactive HTML reports and JSON metrics
+                        comparing the current data distribution to a reference baseline. Can run as a standalone
+                        monitoring service with scheduled checks and a UI.</p>
+                    <div class="tool-tags"><span class="tool-tag">Data drift</span><span class="tool-tag">Target
+                            drift</span><span class="tool-tag">Test suites</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Arize AI</div>
+                    <div class="tool-role">Enterprise ML observability</div>
+                    <p class="tool-desc">Managed observability platform. Log predictions and ground truth labels; Arize
+                        tracks performance, data quality, and drift over time with UMAP embedding visualisation for
+                        diagnosing NLP and vision model failures.</p>
+                    <div class="tool-tags"><span class="tool-tag">Embedding monitoring</span><span
+                            class="tool-tag">SHAP</span><span class="tool-tag">LLM tracing</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">WhyLogs / WhyLabs</div>
+                    <div class="tool-role">Lightweight statistical profiles</div>
+                    <p class="tool-desc">WhyLogs generates statistical sketches (distributions, null rates, cardinality)
+                        of data without storing the raw data itself — making it suitable for high-volume or sensitive
+                        data. WhyLabs is the managed monitoring dashboard.</p>
+                    <div class="tool-tags"><span class="tool-tag">Data sketching</span><span class="tool-tag">Low
+                            overhead</span><span class="tool-tag">Streaming</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">LangSmith</div>
+                    <div class="tool-role">LLM tracing and evaluation</div>
+                    <p class="tool-desc">LangChain's observability platform. Traces every step in an LLM chain with
+                        prompt content, token usage, latency, and cost. Supports human annotation, automatic evaluation
+                        datasets, and prompt version management.</p>
+                    <div class="tool-tags"><span class="tool-tag">LLM tracing</span><span class="tool-tag">Prompt
+                            versioning</span><span class="tool-tag">Evals</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Phoenix (Arize)</div>
+                    <div class="tool-role">Open-source LLM observability</div>
+                    <p class="tool-desc">Open-source local observability tool from the Arize team. Runs entirely in your
+                        environment — no data leaves your machine. Traces LLM calls, visualises embeddings, and
+                        evaluates retrieval quality for RAG pipelines.</p>
+                    <div class="tool-tags"><span class="tool-tag">Local tracing</span><span class="tool-tag">Embedding
+                            viz</span><span class="tool-tag">RAG eval</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="llmops" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">LLMOps &amp;
+                GenAI Orchestration</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                LLMOps covers the tooling layer built specifically for large language model applications —
+                chaining LLM calls, retrieving relevant context (RAG), routing queries to tools or agents,
+                and evaluating output quality. These tools emerged from 2022 onward and are maturing rapidly.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">LangChain</div>
+                    <div class="tool-role">LLM application framework</div>
+                    <p class="tool-desc">Chains, agents, tools, and memory abstractions for building LLM applications.
+                        Supports 50+ LLM providers and 100+ vector databases. Most popular starting point for RAG
+                        systems and multi-step agent workflows.</p>
+                    <div class="tool-tags"><span class="tool-tag">Chains</span><span class="tool-tag">Agents</span><span
+                            class="tool-tag">RAG</span><span class="tool-tag">Memory</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">LlamaIndex</div>
+                    <div class="tool-role">Data framework for LLMs</div>
+                    <p class="tool-desc">Specialises in connecting LLMs to structured and unstructured data sources.
+                        Best-in-class RAG: ingest PDFs, databases, APIs into a vector store and query them with natural
+                        language. Stronger than LangChain for complex retrieval tasks.</p>
+                    <div class="tool-tags"><span class="tool-tag">Document loaders</span><span class="tool-tag">Query
+                            engines</span><span class="tool-tag">Sub-question decomposition</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Haystack</div>
+                    <div class="tool-role">Production NLP pipelines</div>
+                    <p class="tool-desc">deepset's framework for search, question answering, and RAG systems. More
+                        structured API than LangChain — better suited for production NLP products requiring strong
+                        document store abstractions and evaluation pipelines.</p>
+                    <div class="tool-tags"><span class="tool-tag">Document stores</span><span
+                            class="tool-tag">Pipelines</span><span class="tool-tag">Evaluation</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Flowise</div>
+                    <div class="tool-role">Visual LLM flow builder</div>
+                    <p class="tool-desc">Drag-and-drop UI for building LangChain flows without writing code. Connect LLM
+                        nodes, retrievers, memory, and tool nodes visually. Exports flows to a deployable REST API.
+                        Useful for rapid prototyping with non-technical stakeholders.</p>
+                    <div class="tool-tags"><span class="tool-tag">No-code</span><span class="tool-tag">REST
+                            export</span><span class="tool-tag">Embedded chat</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Langfuse</div>
+                    <div class="tool-role">Open-source LLM engineering platform</div>
+                    <p class="tool-desc">Traces LLM calls with prompt content, token cost, and latency. Manages prompt
+                        versions with a registry, collects user feedback, and runs evaluation datasets. Self-hostable
+                        open-source alternative to LangSmith.</p>
+                    <div class="tool-tags"><span class="tool-tag">Tracing</span><span class="tool-tag">Prompt
+                            registry</span><span class="tool-tag">Self-hostable</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="hardware" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Hardware
+                Acceleration &amp; Runtime Optimisation</h2>
+            <p class="font-serif text-lg leading-relaxed mb-6" style="color:var(--text-muted)">
+                Training and inference performance depends heavily on hardware-specific optimisations.
+                Compiling a model for a target runtime — TensorRT for NVIDIA GPUs, ONNX Runtime for CPU,
+                OpenVINO for Intel — can reduce inference latency by 2–5× without changing the model architecture.
+            </p>
+            <div class="tool-grid">
+                <div class="tool-card">
+                    <div class="tool-name">NVIDIA CUDA / cuDNN</div>
+                    <div class="tool-role">GPU compute foundation</div>
+                    <p class="tool-desc">CUDA is the parallel computing platform that allows Python code to execute on
+                        NVIDIA GPUs. cuDNN provides hand-optimised implementations of convolutions, attention, and
+                        activation functions. Both install automatically with PyTorch GPU builds.</p>
+                    <div class="tool-tags"><span class="tool-tag">GPU parallelism</span><span
+                            class="tool-tag">torch.cuda</span><span class="tool-tag">Mixed precision</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">TensorRT</div>
+                    <div class="tool-role">NVIDIA inference optimiser</div>
+                    <p class="tool-desc">Takes a trained model and applies layer fusion, FP16/INT8 quantisation, and
+                        kernel auto-tuning to produce an engine optimised for a specific NVIDIA GPU. Typically delivers
+                        3–5× lower latency compared to PyTorch eager mode inference.</p>
+                    <div class="tool-tags"><span class="tool-tag">FP16 / INT8</span><span class="tool-tag">Layer
+                            fusion</span><span class="tool-tag">Kernel tuning</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">ONNX / ONNX Runtime</div>
+                    <div class="tool-role">Cross-framework interchange format</div>
+                    <p class="tool-desc">Export a model from PyTorch or TensorFlow to ONNX once; run it on any hardware
+                        via ONNX Runtime. ORT's CPU execution provider consistently outperforms PyTorch on CPU-only
+                        inference tasks and supports dynamic batch sizes.</p>
+                    <div class="tool-tags"><span class="tool-tag">Cross-framework</span><span class="tool-tag">CPU
+                            optimised</span><span class="tool-tag">Mobile / edge</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">Hugging Face Optimum</div>
+                    <div class="tool-role">Transformers on any hardware</div>
+                    <p class="tool-desc">One-line export of HF Transformers models to ONNX, TensorRT, or Intel OpenVINO.
+                        Handles graph optimisation and quantisation. Designed so switching inference backend requires
+                        minimal code changes.</p>
+                    <div class="tool-tags"><span class="tool-tag">ONNX export</span><span
+                            class="tool-tag">Quantisation</span><span class="tool-tag">Multi-backend</span></div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-name">OpenVINO</div>
+                    <div class="tool-role">Intel hardware optimisation</div>
+                    <p class="tool-desc">Intel's toolkit for deploying deep learning on Intel CPUs, integrated GPUs,
+                        VPUs, and FPGAs. Relevant when deploying on Intel-based edge devices or on-premise servers where
+                        NVIDIA GPUs are absent. INT8 quantisation gives 2–5× CPU inference speedup.</p>
+                    <div class="tool-tags"><span class="tool-tag">Intel CPU/GPU/VPU</span><span class="tool-tag">INT8
+                            quant</span><span class="tool-tag">Edge</span></div>
+                </div>
+            </div>
+
+            <p class="sub-heading">PyTorch to ONNX Runtime</p>
+            <div class="code-wrap">
+                <span class="code-label">pytorch → onnx → ort</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">import torch
+import onnxruntime as ort
+import numpy as np
+
+model.eval()
+dummy = torch.randn(1, 10)
+
+torch.onnx.export(
+    model, dummy, "model.onnx",
+    input_names    = ["features"],
+    output_names   = ["output"],
+    dynamic_axes   = {"features": {0: "batch_size"}}
+)
+
+session = ort.InferenceSession("model.onnx")
+x       = np.random.randn(5, 10).astype(np.float32)
+outputs = session.run(None, {"features": x})
+print(outputs[0])</code></pre>
+            </div>
+        </section>
+
+        <section id="deployment" class="domain-section fade-in">
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">Deployment Guide
+            </h2>
+            <p class="font-serif text-lg leading-relaxed mb-4" style="color:var(--text-muted)">
+                Three frameworks for exposing a trained model as a web API. The pattern is identical in all three:
+                load the model once when the process starts, accept serialised input over HTTP, run inference,
+                and return a JSON response. The differences are in how much surrounding infrastructure each
+                framework provides and the async model they use.
+            </p>
+
+            <div class="compare-grid">
+                <div class="compare-card" style="border-color:rgba(184,92,42,0.4)">
+                    <h4 style="color:var(--terra)">FastAPI</h4>
+                    <ul>
+                        <li>Async by default — handles concurrent requests without blocking</li>
+                        <li>Auto-generates <code class="inline">/docs</code> Swagger UI</li>
+                        <li>Pydantic validates every request and response</li>
+                        <li>Best choice for new standalone ML APIs</li>
+                    </ul>
+                </div>
+                <div class="compare-card">
+                    <h4>Flask</h4>
+                    <ul>
+                        <li>Synchronous — run with Gunicorn for production</li>
+                        <li>Minimal boilerplate, large extension ecosystem</li>
+                        <li>Good for adding ML to an existing Flask application</li>
+                        <li>Simpler mental model for smaller teams</li>
+                    </ul>
+                </div>
+                <div class="compare-card">
+                    <h4>Django</h4>
+                    <ul>
+                        <li>Full ORM, admin interface, and auth built in</li>
+                        <li>Use Django REST Framework for the API layer</li>
+                        <li>Higher overhead than Flask/FastAPI</li>
+                        <li>Right choice when ML is a feature inside a larger web product</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p class="sub-heading">FastAPI</p>
+            <div class="code-wrap">
+                <span class="code-label">fastapi ml api</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">"""
+Run: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+"""
+from fastapi            import FastAPI, HTTPException
+from pydantic           import BaseModel, Field
+from contextlib         import asynccontextmanager
+import joblib, numpy as np, logging
+
+logger = logging.getLogger(__name__)
+model  = None
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global model
+    model = joblib.load("model.pkl")   # loaded once at startup, shared across all requests
+    logger.info("Model loaded")
+    yield
+
+app = FastAPI(title="ML API", version="1.0.0", lifespan=lifespan)
+
+class PredictInput(BaseModel):
+    features: list[float] = Field(..., min_length=1)
+
+    model_config = {"json_schema_extra": {"example": {"features": [1.2, 0.5, 3.1]}}}
+
+class PredictOutput(BaseModel):
+    prediction: float
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "model_loaded": model is not None}
+
+@app.post("/predict", response_model=PredictOutput)
+def predict(req: PredictInput):
+    if model is None:
+        raise HTTPException(503, "Model not available")
+    try:
+        x    = np.array(req.features).reshape(1, -1)
+        pred = float(model.predict(x)[0])
+        return PredictOutput(prediction=pred)
+    except Exception as e:
+        logger.error(e)
+        raise HTTPException(500, "Inference failed")
+
+@app.post("/predict/batch")
+def predict_batch(inputs: list[PredictInput]):
+    x    = np.array([r.features for r in inputs])
+    preds = model.predict(x).tolist()
+    return {"predictions": preds, "count": len(preds)}</code></pre>
+            </div>
+
+            <p class="sub-heading">Flask</p>
+            <div class="code-wrap">
+                <span class="code-label">flask ml api</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python">"""
+Production: gunicorn -w 4 -b 0.0.0.0:5000 app:app
+Dev:        python app.py
+"""
+from flask import Flask, request, jsonify, abort
+import joblib, numpy as np, logging
+
+app = Flask(__name__)
+logging.basicConfig(level=logging.INFO)
+
+try:
+    model = joblib.load("model.pkl")
+except FileNotFoundError:
+    model = None
+    app.logger.error("model.pkl not found")
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "ok", "model_loaded": model is not None})
+
+@app.route("/predict", methods=["POST"])
+def predict():
+    if model is None:
+        abort(503, "Model not loaded")
+    data = request.get_json()
+    if not data or "features" not in data:
+        abort(400, "'features' key required")
+    try:
+        x    = np.array(data["features"]).reshape(1, -1)
+        pred = float(model.predict(x)[0])
+        prob = model.predict_proba(x)[0].tolist() if hasattr(model, "predict_proba") else None
+        return jsonify({"prediction": pred, "probability": prob})
+    except Exception as e:
+        app.logger.error(e)
+        abort(500, "Inference failed")
+
+@app.errorhandler(400); @app.errorhandler(500); @app.errorhandler(503)
+def handle_error(e):
+    return jsonify({"error": str(e.description)}), e.code
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000, debug=False)</code></pre>
+            </div>
+
+            <p class="sub-heading">Django with Django REST Framework</p>
+            <div class="code-wrap">
+                <span class="code-label">django + drf</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-python"># pip install django djangorestframework joblib
+# Add 'rest_framework' to INSTALLED_APPS
+
+# apps/predictor/apps.py
+from django.apps import AppConfig
+import joblib, logging, os
+
+logger = logging.getLogger(__name__)
+
+class PredictorConfig(AppConfig):
+    name  = "predictor"
+    model = None
+
+    def ready(self):
+        path = os.path.join(os.path.dirname(__file__), "model.pkl")
+        try:
+            PredictorConfig.model = joblib.load(path)
+            logger.info("Model loaded")
+        except Exception as e:
+            logger.error(f"Load failed: {e}")
+
+# apps/predictor/serializers.py
+from rest_framework import serializers
+
+class InputSerializer(serializers.Serializer):
+    features = serializers.ListField(child=serializers.FloatField(), min_length=1)
+
+# apps/predictor/views.py
+from rest_framework.views    import APIView
+from rest_framework.response import Response
+from rest_framework          import status
+import numpy as np
+from .serializers import InputSerializer
+from .apps        import PredictorConfig
+
+class PredictView(APIView):
+    def post(self, request):
+        s = InputSerializer(data=request.data)
+        if not s.is_valid():
+            return Response(s.errors, status=status.HTTP_400_BAD_REQUEST)
+        m = PredictorConfig.model
+        if m is None:
+            return Response({"error": "Model unavailable"}, status=503)
+        x    = np.array(s.validated_data["features"]).reshape(1, -1)
+        pred = float(m.predict(x)[0])
+        return Response({"prediction": pred})
+
+# apps/predictor/urls.py
+from django.urls import path
+from .views import PredictView
+urlpatterns = [path("predict/", PredictView.as_view())]</code></pre>
+            </div>
+
+            <p class="sub-heading">Deploying the containerised API</p>
+            <div class="code-wrap">
+                <span class="code-label">deployment targets</span>
+                <button class="copy-btn" onclick="copyCode(this)">copy</button>
+                <pre><code class="language-bash"># Render — connect GitHub repo, auto-detects Dockerfile, zero config
+
+# AWS ECR + ECS
+aws ecr get-login-password --region us-east-1 | \
+  docker login --username AWS --password-stdin 123456789.dkr.ecr.us-east-1.amazonaws.com
+docker build -t my-ml-api .
+docker tag  my-ml-api:latest 123456789.dkr.ecr.us-east-1.amazonaws.com/my-ml-api:latest
+docker push 123456789.dkr.ecr.us-east-1.amazonaws.com/my-ml-api:latest
+
+# Kubernetes deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ml-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ml-api
+  template:
+    metadata:
+      labels:
+        app: ml-api
+    spec:
+      containers:
+      - name: ml-api
+        image: your-registry/my-ml-api:latest
+        ports:
+        - containerPort: 8000
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "250m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8000
+          initialDelaySeconds: 10</code></pre>
+            </div>
+
+            <div class="note-box sage">
+                <strong>Production checklist.</strong> Load the model at process startup, not per request.
+                Run Gunicorn or Uvicorn workers — never the development server.
+                Always expose a <code class="inline">/health</code> endpoint.
+                Log every prediction with a unique ID.
+                Monitor the first 1000 production predictions before trusting automated alerting thresholds.
+            </div>
+        </section>
+
+    </div>
+
+    <div id="footer-placeholder"></div>
+
+    <script>
+        const sections = document.querySelectorAll('.domain-section');
+        const tabs = document.querySelectorAll('.domain-tab');
+
+        const observer = new IntersectionObserver(entries => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    tabs.forEach(t => t.classList.toggle('active', t.getAttribute('href') === '#' + id));
+                }
+            });
+        }, { rootMargin: '-20% 0px -70% 0px' });
+
+        sections.forEach(s => observer.observe(s));
+
+        const fadeObs = new IntersectionObserver(entries => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.05 });
+
+        document.querySelectorAll('.fade-in').forEach(el => fadeObs.observe(el));
+
+        function copyCode(btn) {
+            const code = btn.closest('.code-wrap').querySelector('code');
+            navigator.clipboard.writeText(code.textContent).then(() => {
+                btn.textContent = 'copied!';
+                btn.style.color = '#6fcf97';
+                setTimeout(() => { btn.textContent = 'copy'; btn.style.color = ''; }, 1800);
+            });
+        }
+    </script>
+</body>
+
+</html>

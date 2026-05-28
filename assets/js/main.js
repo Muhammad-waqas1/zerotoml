@@ -165,3 +165,12 @@
   }
 
 })();
+
+
+
+(function () {
+  const btn = document.getElementById('back-to-top');
+  window.addEventListener('scroll', () => {
+    btn.classList.toggle('visible', window.scrollY > 400);
+  }, { passive: true });
+})();

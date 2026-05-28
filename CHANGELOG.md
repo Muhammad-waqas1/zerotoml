@@ -5,6 +5,20 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [1.2.0] — 2026-05-26
+
+### Added
+
+- `cheatsheet.html`: Syntax reference for nine ML libraries — NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, XGBoost, LightGBM, PyTorch, TensorFlow/Keras. Each section includes a function reference table, worked code examples, and copy-paste code blocks. Sticky grid nav matches `pratical.html` style.
+- `mlops.html`: MLOps and deployment reference across eleven categories — cloud providers, Docker/K8s, data pipelines, version control, experiment tracking, CI/CD, model serving, monitoring, LLMOps, hardware acceleration, and a full deployment guide with working Django, Flask, and FastAPI examples plus Kubernetes manifests.
+
+### Changed
+
+- `layout.js`: Renamed "Practical" nav item to "ML Lifecycle". Added "Cheat Sheet" and "MLOps" to desktop nav, mobile menu, and active link detection. Expanded footer from 4 to 5 columns — added "References" column linking all three reference guides. Updated footer grid to `sm:grid-cols-3 lg:grid-cols-5`. Updated stat strip.
+- `index.html`: Replaced single ML Lifecycle card with a three-card "Reference Guides" section — one card per reference page with distinct accent colours (terra, sky, sage).
+- `about.html`: Added `#cheatsheet` and `#mlops-guide` subsections under Companion Tools. Updated stat pill to "3 Reference Guides".
+- `README.md`: Expanded `## Reference Guides` section to cover all three pages with badges and descriptions. Updated the Learning Loop diagram.
+
 ## [1.1.0] — 2026-05-22
 
 ### Added — Professional ML Lifecycle & Architectures
@@ -97,3 +111,4 @@ Format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 - Sidebar: removed "soon" labels and opacity dimming — all lessons render uniformly
 - Logo: updated from Σ to ML monogram
 - Navbar: added About and Tools links
+ 

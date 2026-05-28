@@ -35,20 +35,15 @@
 
 <body>
 
-    <!-- NAVBAR -->
     <div id="navbar-placeholder"></div>
 
     <!-- HERO -->
-    <section class="pt-20 pb-24 px-4 relative overflow-hidden">
+    <section class="pt-24 pb-20 px-4 relative overflow-hidden">
         <div class="absolute inset-0 grid-bg opacity-50 pointer-events-none"></div>
         <div class="absolute top-20 left-1/2 -translate-x-1/2 w-[600px] h-[300px] rounded-full blur-3xl pointer-events-none"
             style="background:radial-gradient(ellipse,rgba(74,143,168,0.14) 0%,transparent 70%)"></div>
         <div class="max-w-4xl mx-auto text-center relative">
-            <!-- <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-xs font-mono mb-8 tracking-widest uppercase fade-up"
-                style="border-color:rgba(74,143,168,0.4);background:var(--sky-dim);color:var(--sky)">
-                <span class="w-1.5 h-1.5 rounded-full animate-pulse" style="background:var(--sky)"></span>
-                Open Source · Free Forever · All 9 Modules Live
-            </div> -->
+           
             <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl leading-tight mb-6 fade-up delay-100"
                 style="color:var(--text-ink)">
                 Machine Learning<br /><span class="text-gradient">from First Principles</span>
@@ -293,78 +288,110 @@
         </div>
     </section>
 
-    <!-- PRACTICAL RESOURCES SECTION -->
+    <!-- REFERENCE PAGES SECTION -->
     <section id="practical" class="py-20 px-4">
         <div class="max-w-6xl mx-auto">
-            <div class="relative overflow-hidden rounded-2xl border p-8 sm:p-12"
-                style="border-color:rgba(184,92,42,0.35);background:var(--bg-surface)">
-                <!-- background accent -->
-                <div class="absolute inset-0 pointer-events-none opacity-30"
-                    style="background:radial-gradient(ellipse at 80% 50%,var(--terra-dim) 0%,transparent 65%)"></div>
-                <div class="relative grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-                    <div>
-                        <p class="font-mono text-sm uppercase tracking-widest mb-3" style="color:var(--terra)">Practical
-                            Resources</p>
-                        <h2 class="font-display text-3xl sm:text-4xl font-bold mb-4" style="color:var(--text-ink)">
-                            Professional ML Lifecycle<br />&amp; Architectures</h2>
-                        <p class="font-serif leading-relaxed mb-6" style="color:var(--text-muted)">Theory meets
-                            production. Ten real-world ML domains — Computer Vision, NLP/LLMs, Tabular ML, GenAI, Time
-                            Series, Recommendation Systems, GNNs, Audio, Anomaly Detection, and Multi-modal AI — each
-                            with full pipeline diagrams, folder structures, artifact checkpoints, and expert tips.</p>
-                        <div class="flex flex-wrap gap-2 mb-8">
-                            <span class="tag">10 ML Domains</span>
-                            <span class="tag">Pipeline Diagrams</span>
-                            <span class="tag">Folder Structures</span>
-                            <span class="tag">Production Patterns</span>
-                            <span class="tag">Expert Tips</span>
+            <p class="font-mono text-sm uppercase tracking-widest mb-3" style="color:var(--terra)">Reference Guides</p>
+            <h2 class="font-display text-3xl sm:text-4xl font-bold mb-3" style="color:var(--text-ink)">Beyond the
+                Curriculum</h2>
+            <p class="font-serif text-lg mb-10 max-w-2xl" style="color:var(--text-muted)">Three standalone reference
+                pages that sit alongside the modules — for when you need a syntax lookup, a production architecture, or
+                an MLOps tool decision.</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+                <a href="pratical.html"
+                    class="group relative overflow-hidden rounded-2xl border p-7 flex flex-col transition-all duration-200 hover:-translate-y-0.5"
+                    style="border-color:rgba(184,92,42,0.35);background:var(--bg-surface)">
+                    <div class="absolute inset-0 opacity-20 pointer-events-none"
+                        style="background:radial-gradient(ellipse at 90% 10%,var(--terra-dim) 0%,transparent 60%)">
+                    </div>
+                    <div class="relative">
+                        <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color:var(--terra)">
+                            Production</p>
+                        <h3 class="font-display text-xl font-bold mb-3" style="color:var(--text-ink)">ML Lifecycle &amp;
+                            Architectures</h3>
+                        <p class="font-serif text-sm leading-relaxed mb-6" style="color:var(--text-muted)">Ten
+                            production ML domains — Computer Vision, NLP/LLMs, Tabular ML, GenAI, Time Series,
+                            Recommendation Systems, and more — each with pipeline diagrams, folder structures, and
+                            artifact checkpoints.</p>
+                        <div class="flex flex-wrap gap-1.5 mb-6">
+                            <span class="tag" style="font-size:0.7rem">10 Domains</span>
+                            <span class="tag" style="font-size:0.7rem">Pipeline Diagrams</span>
+                            <span class="tag" style="font-size:0.7rem">Folder Structures</span>
                         </div>
-                        <a href="pratical.html" class="btn-primary inline-flex items-center gap-2">
-                            Explore ML Lifecycle
-                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <span
+                            class="font-mono text-sm font-semibold mt-auto inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all"
+                            style="color:var(--terra)">
+                            Open guide
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M13 7l5 5m0 0l-5 5m5-5H6" />
                             </svg>
-                        </a>
+                        </span>
                     </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
-                            <!-- <div class="text-2xl mb-2">👁️</div> -->
-                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">Computer
-                                Vision</div>
-                            <div class="text-xs font-mono" style="color:var(--text-dim)">CNN · YOLO · ViT</div>
+                </a>
+
+                <a href="cheatsheet.html"
+                    class="group relative overflow-hidden rounded-2xl border p-7 flex flex-col transition-all duration-200 hover:-translate-y-0.5"
+                    style="border-color:rgba(74,143,168,0.35);background:var(--bg-surface)">
+                    <div class="absolute inset-0 opacity-20 pointer-events-none"
+                        style="background:radial-gradient(ellipse at 90% 10%,var(--sky-dim) 0%,transparent 60%)"></div>
+                    <div class="relative">
+                        <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color:var(--sky)">Quick
+                            Reference</p>
+                        <h3 class="font-display text-xl font-bold mb-3" style="color:var(--text-ink)">ML Library Cheat
+                            Sheet</h3>
+                        <p class="font-serif text-sm leading-relaxed mb-6" style="color:var(--text-muted)">Syntax and
+                            worked examples for NumPy, Pandas, Matplotlib, Seaborn, Scikit-learn, XGBoost, LightGBM,
+                            PyTorch, and TensorFlow/Keras — all in one place with copy-paste code blocks.</p>
+                        <div class="flex flex-wrap gap-1.5 mb-6">
+                            <span class="tag" style="font-size:0.7rem">9 Libraries</span>
+                            <span class="tag" style="font-size:0.7rem">Code Examples</span>
+                            <span class="tag" style="font-size:0.7rem">Copy-paste Ready</span>
                         </div>
-                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
-                            <!-- <div class="text-2xl mb-2">🗣️</div> -->
-                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">NLP / LLMs
-                            </div>
-                            <div class="text-xs font-mono" style="color:var(--text-dim)">BERT · GPT · RAG</div>
-                        </div>
-                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
-                            <!-- <div class="text-2xl mb-2">📊</div> -->
-                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">Tabular ML
-                            </div>
-                            <div class="text-xs font-mono" style="color:var(--text-dim)">XGBoost · Feature Eng.</div>
-                        </div>
-                        <div class="p-4 rounded-xl border" style="border-color:var(--border);background:var(--bg-base)">
-                            <!-- <div class="text-2xl mb-2">⏱️</div> -->
-                            <div class="font-display font-bold text-sm mb-1" style="color:var(--text-ink)">Time Series
-                            </div>
-                            <div class="text-xs font-mono" style="color:var(--text-dim)">ARIMA · LSTM · Prophet</div>
-                        </div>
-                        <div class="p-4 rounded-xl border col-span-2"
-                            style="border-color:rgba(184,92,42,0.3);background:var(--terra-dim)">
-                            <div class="flex items-center gap-3">
-                                <!-- <div class="text-2xl">✨</div> -->
-                                <div>
-                                    <div class="font-display font-bold text-sm" style="color:var(--text-ink)">+6 more
-                                        domains</div>
-                                    <div class="text-xs font-mono" style="color:var(--text-dim)">GenAI · Rec Sys · GNN
-                                        · Audio · Anomaly · Multi-modal</div>
-                                </div>
-                            </div>
-                        </div>
+                        <span
+                            class="font-mono text-sm font-semibold mt-auto inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all"
+                            style="color:var(--sky)">
+                            Open guide
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </span>
                     </div>
-                </div>
+                </a>
+
+                <a href="mlops.html"
+                    class="group relative overflow-hidden rounded-2xl border p-7 flex flex-col transition-all duration-200 hover:-translate-y-0.5"
+                    style="border-color:rgba(92,138,88,0.35);background:var(--bg-surface)">
+                    <div class="absolute inset-0 opacity-20 pointer-events-none"
+                        style="background:radial-gradient(ellipse at 90% 10%,var(--sage-dim) 0%,transparent 60%)"></div>
+                    <div class="relative">
+                        <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color:var(--sage)">
+                            Infrastructure</p>
+                        <h3 class="font-display text-xl font-bold mb-3" style="color:var(--text-ink)">MLOps &amp;
+                            Deployment</h3>
+                        <p class="font-serif text-sm leading-relaxed mb-6" style="color:var(--text-muted)">The full
+                            MLOps stack — cloud providers, Docker, Kubernetes, data pipelines, experiment tracking,
+                            model serving, monitoring, LLMOps, hardware acceleration, and deployment guides for Django,
+                            Flask, and FastAPI.</p>
+                        <div class="flex flex-wrap gap-1.5 mb-6">
+                            <span class="tag" style="font-size:0.7rem">11 Categories</span>
+                            <span class="tag" style="font-size:0.7rem">50+ Tools</span>
+                            <span class="tag" style="font-size:0.7rem">Deployment Code</span>
+                        </div>
+                        <span
+                            class="font-mono text-sm font-semibold mt-auto inline-flex items-center gap-1.5 group-hover:gap-2.5 transition-all"
+                            style="color:var(--sage)">
+                            Open guide
+                            <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                            </svg>
+                        </span>
+                    </div>
+                </a>
+
             </div>
         </div>
     </section>
@@ -582,6 +609,7 @@
     </section>
 
     <!-- FOOTER -->
+
     <div id="footer-placeholder"></div>
 
     <script src="assets/js/main.js"></script>
